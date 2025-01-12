@@ -1,8 +1,9 @@
-import "../styles/globals.css";
+import Navbar from "@/components/reusable/NavBar";
+import "./globals.css";
 
 export const metadata = {
-  title: "Hello World App",
-  description: "A simple Next.js app to test Tailwind CSS",
+  title: "Lizdas",
+  description: "Learn and grow with Lizdas",
 };
 
 export default function RootLayout({
@@ -12,7 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-100">{children}</body>
+      <body>
+        <Navbar />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }
