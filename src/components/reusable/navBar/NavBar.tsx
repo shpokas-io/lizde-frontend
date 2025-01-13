@@ -1,7 +1,8 @@
+"use client";
 import { useState } from "react";
 import NavItem from "./NavItem";
 import Image from "next/image";
-// import BurgerMenu from "./BurgerMenu";
+import BurgerMenu from "./BurgerMenu";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,13 @@ const NavBar = () => {
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo section */}
         <div className="flex items-center space-x-2">
-          <Image src="/images/logo.png" alt="Logo" className="h-8 w-8" />
+          <Image
+            src="/home/shpokas/programming/lizdas_project/public/images/shaded.png"
+            alt="Logo"
+            width="50"
+            height="50"
+            className="h-8 w-8"
+          />
           <span className="text-xl font-bold text-gray-800">
             Lizdas_Project
           </span>
