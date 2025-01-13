@@ -1,5 +1,6 @@
 import { useState } from "react";
-// import NavItem from "./NavItem";
+import NavItem from "./NavItem";
+import Image from "next/image";
 // import BurgerMenu from "./BurgerMenu";
 
 const NavBar = () => {
@@ -21,7 +22,7 @@ const NavBar = () => {
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo section */}
         <div className="flex items-center space-x-2">
-          <img src="/images/logo.png" alt="Logo" className="h-8 w-8" />
+          <Image src="/images/logo.png" alt="Logo" className="h-8 w-8" />
           <span className="text-xl font-bold text-gray-800">
             Lizdas_Project
           </span>
