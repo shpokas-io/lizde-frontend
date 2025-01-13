@@ -6,8 +6,9 @@ export default function HeroSection() {
       className="relative bg-cover bg-center"
       style={{ backgroundImage: "url('/images/shaded.png')" }}
     >
+      {/* TODO: Find better solution for below comment  */}
       {/* Aspect Ratio or Padding-Based Height */}
-      <div className="pt-[50%] sm:pt-[60%] md:pt-[30%] lg:pt-[25%] relative">
+      <div className="pt-[70%] sm:pt-[60%] md:pt-[30%] lg:pt-[25%] relative">
         {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
