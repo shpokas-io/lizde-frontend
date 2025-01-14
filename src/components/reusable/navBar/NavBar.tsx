@@ -24,11 +24,11 @@ const NavBar = () => {
         {/* Logo section */}
         <div className="flex items-center space-x-2">
           <Image
-            src="/home/shpokas/programming/lizdas_project/public/images/shaded.png"
+            src="/images/about-section.jpg"
             alt="Logo"
             width="50"
             height="50"
-            className="h-8 w-8"
+            className="h-8 w-8 rounded-xl"
           />
           <span className="text-xl font-bold text-gray-800">
             Lizdas_Project
