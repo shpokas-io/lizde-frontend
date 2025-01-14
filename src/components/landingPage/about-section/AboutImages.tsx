@@ -1,5 +1,6 @@
 const AboutImage = () => {
   return (
+    // TODO: images should go after contet, now it goes one after another
     <div className="flex flex-col space-y-4">
       <img
         src="/images/about-section.jpg"

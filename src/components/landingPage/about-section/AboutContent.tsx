@@ -33,7 +33,7 @@ const AboutContent = () => {
           <li>Start getting clients and grow steadily with paid projects.</li>
         </ul>
       </div>
-
+      {/* TODO: BUtton should be last element of the section , no it is not */}
       {/* CTA */}
       <Button
         text="Get Started with a Free Class"
