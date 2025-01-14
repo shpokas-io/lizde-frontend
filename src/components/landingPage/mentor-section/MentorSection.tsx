@@ -1,3 +1,6 @@
+import MentorCTAButton from "./MentorCTAButton";
+import MentorVideo from "./MentorVideo";
+
 const MentorSection = () => {
   return (
     <section className="py-16 bg-white text-center">
