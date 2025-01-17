@@ -11,7 +11,7 @@ const MentorSection = () => {
         </h2>
 
         {/* Youtube Video */}
-        <MentorVideo videoUrl="https://www.youtube.com/embed/example" />
+        <MentorVideo videoUrl="https://www.youtube.com/watch?v=9Q_4vUDimdI" />
 
         {/* CTA btn */}
         <div className="mt-10 lg:hidden">
