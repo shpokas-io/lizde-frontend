@@ -7,7 +7,7 @@ const MentorVideo = ({ videoUrl }: MentorVideoProps) => {
 
   return (
     <div className="flex justify-center">
-      <div className="relative w-full max-w-lg h-0 pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-lg">
+      <div className="relative w-full h-0 pb-[56.25%] bg-black rounded-lg overflow-hidden shadow-lg">
         <iframe
           className="absolute inset-0 w-full h-full"
           src={embedUrl}
