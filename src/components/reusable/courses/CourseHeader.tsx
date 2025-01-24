@@ -14,7 +14,7 @@ export default function CourseHeader({
   progress,
 }: CourseHeaderProps) {
   return (
-    <div className="bg-white shadow-md">
+    <div className="bg-white shadow-md mt-16">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start">
           <img
