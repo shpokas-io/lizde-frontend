@@ -1,7 +1,7 @@
-import BackButton from "@/components/reusable/BackButton";
-import CourseHeader from "@/components/reusable/courses/CourseHeader";
-import CourseSection from "@/components/reusable/courses/CourseSection";
-import Footer from "@/components/reusable/courses/Footer";
+import BackButton from "@/components/common/BackButton";
+import CourseHeader from "@/components/coursesPage/CourseHeader";
+import CourseSection from "@/components/coursesPage/CourseSection";
+import Footer from "@/components/layout/Footer";
 
 export default function CoursesPage() {
   return (

@@ -1,4 +1,4 @@
-import Button from "@/components/reusable/Button";
+import Button from "@/components/common/Button";
 
 const AboutSection = () => {
   return (

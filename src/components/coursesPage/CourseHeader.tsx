@@ -1,4 +1,4 @@
-import ProgressBar from "@/components/reusable/courses/ProgressBar";
+import ProgressBar from "@/components/common/ProgressBar";
 
 interface CourseHeaderProps {
   title: string;
