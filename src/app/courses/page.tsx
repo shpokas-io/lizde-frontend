@@ -1,9 +1,16 @@
+import BackButton from "@/components/reusable/BackButton";
 import CourseHeader from "@/components/reusable/courses/CourseHeader";
 import CourseSection from "@/components/reusable/courses/CourseSection";
 import Footer from "@/components/reusable/courses/Footer";
+
 export default function CoursesPage() {
   return (
     <div className="bg-gray-100 text-black">
+      {/* Back Button */}
+      <div className="container mx-auto px-4 py-4">
+        <BackButton href="/" />
+      </div>
+
       {/* Course Header */}
       <CourseHeader
         title="Hardcore Mixing"
