@@ -5,8 +5,7 @@ const BackButton = ({ href }: { href: string }) => {
   return (
     <Link
       href={href}
-      className="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium"
-      style={{ marginTop: "64px" }}
+      className="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium gap-2"
     >
       <FaArrowLeft className="mr-2" />
       Back to Home
