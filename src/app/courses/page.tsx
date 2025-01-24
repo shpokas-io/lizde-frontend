@@ -3,7 +3,7 @@ import CourseSection from "@/components/reusable/courses/CourseSection";
 import Footer from "@/components/reusable/courses/Footer";
 export default function CoursesPage() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 text-black">
       {/* Course Header */}
       <CourseHeader
         title="Hardcore Mixing"
