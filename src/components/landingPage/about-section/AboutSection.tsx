@@ -8,27 +8,26 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Text */}
           <div>
-            <h3 className="text-xl font-bold mb-4">This is for you if:</h3>
+            <h3 className="text-xl font-bold mb-4">
+              Šis kursas skirtas tau, jei:
+            </h3>
             <ul className="space-y-2 list-disc list-inside">
               <li>
-                You&apos;re an ambitious engineer/mixer who is at an
-                intermediate or semi-professional level.
+                Esi ambicingas kūrėjas, norintis namų sąlygomis kokybiškai
+                įsirašyti savo dainas.
+              </li>
+              <li>Kuri alternatyvių žanrų muziką.</li>
+              <li>
+                Tavo įrašams trūksta aiškumo ir švaraus skambesio, kokį girdi
+                mėgstamiausiuose įrašuose.
               </li>
               <li>
-                You work primarily with rock genres including metal, hardcore,
-                punk, pop-rock, etc.
+                Jautiesi pasimetęs be aiškaus žingsnis po žingsnio plano, kaip
+                užbaigti projektus laiku ir kokybiškai.
               </li>
               <li>
-                You&apos;re not getting the impact, clarity, and polish that you
-                hear on your favorite records.
-              </li>
-              <li>
-                You&apos;re lacking a clear step-by-step process to finish
-                projects on time with consistently great results.
-              </li>
-              <li>
-                You&apos;ve hit a wall after years of trying to teach yourself
-                with free content online.
+                Po metų bandymų savarankiškai mokytis nemokamu turiniu internetu
+                jauti, kad įstrigai.
               </li>
             </ul>
           </div>
@@ -76,7 +75,7 @@ const AboutSection = () => {
         {/* Button */}
         <div className="text-center">
           <Button
-            text="Get Started with a Free Class"
+            text="Pradėk dabar"
             href="/free-class"
             className="bg-orange-500 text-white text-lg font-bold py-4 px-6 rounded-lg hover:bg-orange-600 transition"
           />
