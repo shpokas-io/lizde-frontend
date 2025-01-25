@@ -7,14 +7,12 @@ import Footer from "@/components/layout/Footer";
 export default function CoursesPage() {
   return (
     <div className="bg-gray-100 text-black">
-      {/* Back Button */}
-      <div className="container mx-auto max-w-screen-lg px-4 py-6">
+      {/* Header Row */}
+      <div className="container mx-auto max-w-screen-lg px-4 py-6 flex flex-col sm:flex-row sm:justify-between sm:items-center">
         <BackButton href="/" />
-      </div>
-
-      {/* Search Bar */}
-      <div className="container mx-auto max-w-screen-lg px-4 pb-4">
-        <SearcBar />
+        <div className="mt-4 sm:mt-0">
+          <SearcBar />
+        </div>
       </div>
 
       {/* Course Header */}
