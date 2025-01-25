@@ -1,4 +1,5 @@
 import BackButton from "@/components/common/BackButton";
+import SearcBar from "@/components/common/SearchBar";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
 import Footer from "@/components/layout/Footer";
@@ -9,6 +10,11 @@ export default function CoursesPage() {
       {/* Back Button */}
       <div className="container mx-auto max-w-screen-lg px-4 py-6">
         <BackButton href="/" />
+      </div>
+
+      {/* Search Bar */}
+      <div className="container mx-auto max-w-screen-lg px-4 pb-4">
+        <SearcBar />
       </div>
 
       {/* Course Header */}
