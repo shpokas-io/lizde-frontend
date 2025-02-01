@@ -60,7 +60,7 @@ const MentorSection = () => {
         {/* CTA Button */}
         <div className="mt-10">
           <Button
-            text="See Hundreds of Reviews & Case Studies"
+            text="Pradėk dabar"
             href="/reviews"
             className="bg-orange-500 text-white text-lg font-bold py-4 px-6 rounded-lg hover:bg-orange-600 transition"
           />

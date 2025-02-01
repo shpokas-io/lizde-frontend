@@ -29,9 +29,7 @@ const NavBar = () => {
             height={60}
             className="h-12 w-12 rounded-xl"
           />
-          <span className="text-2xl font-bold text-gray-800">
-            Lizdas_Project
-          </span>
+          <span className="text-2xl font-bold text-gray-800">Takadė</span>
         </div>
 
         {/* Desktop Navigation */}
