@@ -1,6 +1,6 @@
-import AboutSection from "@/components/landing/AboutSection";
-import HeroSection from "@/components/landing/HeroSection";
-import MentorSection from "@/components/landing/MentorSection";
+import AboutSection from "@/components/landingPage/AboutSection";
+import HeroSection from "@/components/landingPage/HeroSection";
+import MentorSection from "@/components/landingPage/MentorSection";
 
 export default function HomePage() {
   return (
