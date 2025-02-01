@@ -29,20 +29,20 @@ const MentorSection = () => {
     fetchMentorVideo();
   }, []);
 
-  // Function to convert YouTube URL to embed URL
+  // Convert YouTube URL to embed URL
   const getEmbedUrl = (url: string) => url.replace("watch?v=", "embed/");
 
   return (
     <section className="py-16 bg-white text-center">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl lg:text-4xl text-black font-bold mb-8">
-          A word from Lizde Mentors
+          Mentoriaus Pavelo žodis apie projektą
         </h2>
 
-        {/* Show video if fetched, otherwise show loading */}
+        {/* Video Container */}
         {videoUrl ? (
           <div className="flex justify-center">
-            <div className="relative w-full h-0 pb-[56.25%] max-w-screen-lg md:max-w-4xl bg-black rounded-lg overflow-hidden shadow-lg">
+            <div className="relative w-full max-w-3xl aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
               <iframe
                 className="absolute inset-0 w-full h-full"
                 src={getEmbedUrl(videoUrl)}
@@ -54,12 +54,16 @@ const MentorSection = () => {
             </div>
           </div>
         ) : (
-          <p className="text-gray-500">Loading video...</p>
+          <p className="text-gray-500">Vaizdo įrašas kraunasi...</p>
         )}
 
         {/* CTA Button */}
         <div className="mt-10">
-          <Button text="See Can you improve" href="/reviews" />
+          <Button
+            text="See Hundreds of Reviews & Case Studies"
+            href="/reviews"
+            className="bg-orange-500 text-white text-lg font-bold py-4 px-6 rounded-lg hover:bg-orange-600 transition"
+          />
         </div>
       </div>
     </section>
