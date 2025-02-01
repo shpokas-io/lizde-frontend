@@ -42,7 +42,7 @@ const MentorSection = () => {
         {/* Show video if fetched, otherwise show loading */}
         {videoUrl ? (
           <div className="flex justify-center">
-            <div className="relative w-full h-0 pb-[36.25%] max-w-screen-lg md:max-w-4xl bg-black rounded-lg overflow-hidden shadow-lg">
+            <div className="relative w-full h-0 pb-[56.25%] max-w-screen-lg md:max-w-4xl bg-black rounded-lg overflow-hidden shadow-lg">
               <iframe
                 className="absolute inset-0 w-full h-full"
                 src={getEmbedUrl(videoUrl)}
