@@ -1,21 +1,20 @@
-import Navbar from "@/components/layout/navBar/NavBar";
+import { ReactNode } from "react";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
+import NavBar from "@/components/layout/navBar/NavBar";
 
 export const metadata = {
   title: "Lizdas",
   description: "Learn and grow with Lizdas",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <NavBar />
+        <main className="pt-[60px]">{children}</main>
+        <Footer />
       </body>
     </html>
   );

@@ -9,7 +9,8 @@ const HeroBackground = ({ imageUrl }: HeroBackgroundProps) => {
       style={{
         backgroundImage: `url('${imageUrl}')`,
       }}
-    ></div>
+    />
   );
 };
+
 export default HeroBackground;

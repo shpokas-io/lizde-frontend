@@ -1,13 +1,13 @@
-import AboutSection from "@/components/landingPage/about-section/AboutSection";
-import HeroSection from "@/components/landingPage/hero-section/HeroSection";
-import MentorSection from "@/components/landingPage/mentor-section/MentorSection";
+import AboutSection from "@/components/landing/about/AboutSection";
+import HeroSection from "@/components/landing/hero/HeroSection";
+import MentorSection from "@/components/landing/mentor/MentorSection";
 
 export default function HomePage() {
   return (
-    <div>
+    <>
       <HeroSection />
       <AboutSection />
       <MentorSection />
-    </div>
+    </>
   );
 }

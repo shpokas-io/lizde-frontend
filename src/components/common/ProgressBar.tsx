@@ -8,7 +8,7 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
       <div
         className="bg-blue-600 h-4 rounded-full"
         style={{ width: `${progress}%` }}
-      ></div>
+      />
     </div>
   );
 }
