@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
-import NavBar from "@/components/layout/navBar/NavBar";
+import NavBar from "@/components/layout/NavBar";
 
 export const metadata = {
   title: "Lizdas",
