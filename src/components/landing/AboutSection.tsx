@@ -2,7 +2,7 @@ import Button from "@/components/common/Button";
 
 const AboutSection = () => {
   return (
-    <section className="bg-black text-white py-16">
+    <section className="bg-black text-white py-16 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 space-y-12">
         {/* Section Title */}
         <div className="text-center max-w-4xl mx-auto">
@@ -32,7 +32,7 @@ const AboutSection = () => {
           <img
             src="/images/about-section.jpg"
             alt="Engineer recording drums"
-            className="rounded-lg shadow-lg max-w-lg mx-auto"
+            className="rounded-lg shadow-lg w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto"
           />
         </div>
 
@@ -41,7 +41,7 @@ const AboutSection = () => {
           <img
             src="/images/about-section.jpg"
             alt="Engineer working in studio"
-            className="rounded-lg shadow-lg max-w-lg mx-auto lg:order-1"
+            className="rounded-lg shadow-lg w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto lg:order-1"
           />
           <div>
             <h3 className="text-2xl font-bold mb-6">Mes padėsim tau su:</h3>
