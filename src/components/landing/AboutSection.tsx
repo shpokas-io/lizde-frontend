@@ -3,7 +3,7 @@ import Button from "@/components/common/Button";
 const AboutSection = () => {
   return (
     <section className="bg-black text-white py-16 overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8 space-y-12">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-12">
         {/* Section Title */}
         <div className="text-center max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold leading-tight">
