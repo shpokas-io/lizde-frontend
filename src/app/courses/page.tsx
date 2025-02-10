@@ -116,7 +116,7 @@ export default function CoursesPage() {
               completed: true,
             },
             {
-              title: "Humanizavimas (da fuq is this xd?)",
+              title: "Humanizavimas",
               duration: "15 minutes",
               description:
                 "Kaip įsirašyti tik su 2 mikrafais ir su 2 mikrafais 4 tekeliais",
