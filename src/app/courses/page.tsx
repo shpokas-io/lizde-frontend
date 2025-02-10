@@ -178,9 +178,6 @@ export default function CoursesPage() {
           ]}
         />
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }
