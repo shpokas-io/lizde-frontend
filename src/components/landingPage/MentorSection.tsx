@@ -1,35 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
 import Button from "@/components/common/Button";
 
 const MentorSection = () => {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  // Hardcoded YouTube link for the POC
+  const videoUrl = "https://www.youtube.com/watch?v=9Q_4vUDimdI";
 
-  useEffect(() => {
-    const fetchMentorVideo = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/courses`
-        );
-        const data = await response.json();
-
-        if (Array.isArray(data) && data.length > 0) {
-          const mentorVideo = data.find(
-            (course) => course.title === "Mentor-video"
-          );
-          if (mentorVideo) {
-            setVideoUrl(mentorVideo.videoUrl);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching mentor video:", error);
-      }
-    };
-
-    fetchMentorVideo();
-  }, []);
-
-  // Convert YouTube URL to embed URL
+  // Convert YouTube URL to an embed URL
   const getEmbedUrl = (url: string) => url.replace("watch?v=", "embed/");
 
   return (
@@ -40,22 +16,18 @@ const MentorSection = () => {
         </h2>
 
         {/* Video Container */}
-        {videoUrl ? (
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-3xl aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src={getEmbedUrl(videoUrl)}
-                title="Mentor Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
+        <div className="flex justify-center">
+          <div className="relative w-full max-w-3xl aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src={getEmbedUrl(videoUrl)}
+              title="Mentor Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
-        ) : (
-          <p className="text-gray-500">Vaizdo įrašas kraunasi...</p>
-        )}
+        </div>
 
         {/* CTA Button */}
         <div className="mt-10">

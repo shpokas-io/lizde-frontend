@@ -2,7 +2,6 @@ import BackButton from "@/components/common/BackButton";
 import SearcBar from "@/components/common/SearchBar";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
-import Footer from "@/components/layout/Footer";
 
 export default function CoursesPage() {
   return (
