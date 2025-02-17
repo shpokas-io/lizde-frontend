@@ -1,6 +1,23 @@
+"use client";
+import { useEffect, useState } from "react";
 import Button from "@/components/common/Button";
 
 const HeroSection = () => {
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+
+  useEffect(() => {
+    function handleScroll() {
+      if (window.scrollY > 0) {
+        setShowScrollIndicator(false);
+      } else {
+        setShowScrollIndicator(true);
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section className="relative h-[90vh] md:h-[80vh] flex items-center justify-center">
       {/* Background Image */}
@@ -27,6 +44,28 @@ const HeroSection = () => {
           href="/courses"
         />
       </div>
+
+      {/* Bouncing Scroll Indicator */}
+      {showScrollIndicator && (
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+          <div className="w-8 h-8 animate-bounce-slow">
+            {/* You can use an arrow icon or any shape */}
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

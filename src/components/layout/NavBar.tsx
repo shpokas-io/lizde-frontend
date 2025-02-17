@@ -1,15 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaArrowUp } from "react-icons/fa";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   const navLinks = [
     { label: "About", href: "/about" },
     { label: "Courses", href: "/courses" },
-    // { label: "Videos", href: "/videos" },
     { label: "Log In", href: "/login" },
   ];
 
@@ -17,60 +18,100 @@ const NavBar = () => {
     setIsOpen(!isOpen);
   };
 
+  // Listen for window scroll to fade out navbar and show "Back to Top" button
+  useEffect(() => {
+    function handleScroll() {
+      setScrollY(window.scrollY);
+    }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Decide if navbar should be visible (scrollY < 50 => fully visible)
+  const navOpacity =
+    scrollY < 50 ? "opacity-100" : "opacity-0 pointer-events-none";
+
+  // Decide if "Back to Top" button is shown (scrollY > 300 => show)
+  const showBackToTop = scrollY > 300;
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-6 md:py-5">
-        {/* Logo */}
-        <div className="flex items-center space-x-3">
-          <Image
-            src="/images/about-section.jpg"
-            alt="Logo"
-            width={60}
-            height={60}
-            className="h-12 w-12 rounded-xl"
-          />
-          <span className="text-2xl font-bold text-gray-800">Takadė</span>
-        </div>
+    <>
+      <header
+        className={`
+          bg-white shadow-md fixed top-0 left-0 w-full z-50 
+          transition-opacity duration-300
+          ${navOpacity}
+        `}
+      >
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-2 md:py-2">
+          {/* Logo Container */}
+          <div className="flex items-center">
+            <div className="relative w-[100px] h-[60px]">
+              <Image
+                src="/images/logo-black.png"
+                alt="Takadė Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-gray-800 hover:text-gray-600 text-xl font-semibold"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-gray-800 text-3xl"
-          onClick={toggleMenu}
-        >
-          {isOpen ? "✖" : "☰"}
-        </button>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <div className="md:hidden bg-white shadow-lg">
-          <nav className="flex flex-col space-y-6 p-6 text-xl font-semibold">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-800 hover:text-gray-600"
+                className="text-gray-800 hover:text-gray-600 text-xl font-semibold"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-gray-800 text-3xl"
+            onClick={toggleMenu}
+          >
+            {isOpen ? "✖" : "☰"}
+          </button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden bg-white shadow-lg">
+            <nav className="flex flex-col space-y-6 p-6 text-xl font-semibold">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-800 hover:text-gray-600"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={handleBackToTop}
+          className="fixed bottom-6 right-6 bg-gray-800 text-white 
+                     p-3 rounded-full shadow-lg hover:bg-gray-700 
+                     transition-colors flex items-center justify-center z-50"
+        >
+          <FaArrowUp />
+        </button>
       )}
-    </header>
+    </>
   );
 };
 
