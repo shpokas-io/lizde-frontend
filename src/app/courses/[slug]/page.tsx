@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import BackButton from "@/components/common/BackButton";
-import { courseData } from "../../../lib/courseData";
+import { courseData } from "@/app/lib/courseData";
 
 interface Lesson {
   slug: string;
