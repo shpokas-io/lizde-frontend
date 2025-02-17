@@ -12,14 +12,11 @@ interface Lesson {
   completed: boolean;
 }
 
-// ✨ The shape Next 13+ expects for page props
-interface PageProps {
+interface LessonPageProps {
   params: { slug: string };
-  // If you aren’t using search params, you can still include it for type compatibility
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-// Next.js uses generateStaticParams to know which paths to pre-build
 export async function generateStaticParams() {
   return courseData.flatMap((section) =>
     section.lessons.map((lesson) => ({
@@ -40,7 +37,7 @@ function getEmbedUrl(url: string) {
   return url.replace("watch?v=", "embed/");
 }
 
-export default function LessonDetailPage({ params }: PageProps) {
+export default function LessonDetailPage({ params }: LessonPageProps) {
   const { slug } = params;
   const lesson = getLessonBySlug(slug);
 
