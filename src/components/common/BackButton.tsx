@@ -1,14 +1,20 @@
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 
-const BackButton = ({ href }: { href: string }) => {
+interface BackButtonProps {
+  href: string;
+  label?: string;
+}
+
+const BackButton = ({ href, label = "Back" }: BackButtonProps) => {
   return (
     <Link
       href={href}
-      className="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium gap-2"
+      className="inline-flex items-center gap-2 text-base font-medium text-gray-700 
+                 hover:text-gray-900 transition-colors"
     >
-      <FaArrowLeft className="mr-2" />
-      Back to Home
+      <FaArrowLeft />
+      {label}
     </Link>
   );
 };
