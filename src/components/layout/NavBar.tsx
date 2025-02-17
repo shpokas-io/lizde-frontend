@@ -8,8 +8,8 @@ const NavBar = () => {
 
   const navLinks = [
     { label: "About", href: "/about" },
-    { label: "Course", href: "/courses" },
-    { label: "Videos", href: "/videos" },
+    { label: "Courses", href: "/courses" },
+    // { label: "Videos", href: "/videos" },
     { label: "Log In", href: "/login" },
   ];
 

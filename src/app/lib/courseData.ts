@@ -25,7 +25,7 @@ export const courseData: CourseSectionData[] = [
         description:
           "Welcome to the course! You've taken a big step in making this investment...",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_1",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       {
@@ -35,7 +35,7 @@ export const courseData: CourseSectionData[] = [
         description:
           "The first step in the M3 Method for Massive Mixes is getting your mindset right...",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_2",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: false,
       },
     ],
@@ -49,7 +49,7 @@ export const courseData: CourseSectionData[] = [
         duration: "15 minutes",
         description: "Kaip užloadinti, ką pasirinkti...",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_3",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       {
@@ -58,7 +58,7 @@ export const courseData: CourseSectionData[] = [
         duration: "9 minutes",
         description: "Ką pasirinkti, kaip užloadinti",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_4",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       // ... more lessons
@@ -74,7 +74,7 @@ export const courseData: CourseSectionData[] = [
         description:
           "Kaip įsirašyti tik su 2 mikrafais ir su 2 mikrafais 4 tekeliais",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_5",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       // ... more lessons
@@ -89,7 +89,7 @@ export const courseData: CourseSectionData[] = [
         duration: "15 minutes",
         description: "lorem dummy text",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_6",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       // ... more lessons
@@ -104,7 +104,7 @@ export const courseData: CourseSectionData[] = [
         duration: "15 minutes",
         description: "lorem dummy text",
         videoThumbnail: "/images/about-section.jpg",
-        videoUrl: "https://www.youtube.com/watch?v=VIDEO_ID_7",
+        videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
       },
       // ... more lessons
