@@ -2,16 +2,13 @@ import Button from "@/components/common/Button";
 
 const AboutSection = () => {
   return (
-    <section className="bg-black text-white py-16 overflow-hidden">
+    <section id="about" className="bg-black text-white py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-12">
-        {/* Section Title */}
         <div className="text-center max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold leading-tight">
             Tavo kelias į alternatyvios muzikos subtilybęs prasideda čia!
           </h2>
         </div>
-
-        {/* First Block */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h3 className="text-2xl font-bold mb-6">
@@ -35,8 +32,6 @@ const AboutSection = () => {
             className="rounded-lg shadow-lg w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto"
           />
         </div>
-
-        {/* Second Block */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <img
             src="/images/about-section.jpg"
@@ -56,8 +51,6 @@ const AboutSection = () => {
             </ul>
           </div>
         </div>
-
-        {/* Button */}
         <div className="text-center">
           <Button
             text="Pradėk dabar"

@@ -9,16 +9,15 @@ const NavBar = () => {
   const [scrollY, setScrollY] = useState(0);
 
   const navLinks = [
-    { label: "About", href: "/about" },
+    { label: "About", href: "/#about" },
     { label: "Courses", href: "/courses" },
-    { label: "Log In", href: "/login" },
+    // { label: "Log In", href: "/login" },
   ];
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  // Listen for window scroll to fade out navbar and show "Back to Top" button
   useEffect(() => {
     function handleScroll() {
       setScrollY(window.scrollY);
@@ -27,11 +26,8 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Decide if navbar should be visible (scrollY < 50 => fully visible)
   const navOpacity =
     scrollY < 50 ? "opacity-100" : "opacity-0 pointer-events-none";
-
-  // Decide if "Back to Top" button is shown (scrollY > 300 => show)
   const showBackToTop = scrollY > 300;
 
   const handleBackToTop = () => {
@@ -48,7 +44,6 @@ const NavBar = () => {
         `}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-2 md:py-2">
-          {/* Logo Container */}
           <div className="flex items-center">
             <div className="relative w-[100px] h-[60px]">
               <Image
@@ -59,8 +54,6 @@ const NavBar = () => {
               />
             </div>
           </div>
-
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navLinks.map((link) => (
               <Link
@@ -72,8 +65,6 @@ const NavBar = () => {
               </Link>
             ))}
           </nav>
-
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-800 text-3xl"
             onClick={toggleMenu}
@@ -81,8 +72,6 @@ const NavBar = () => {
             {isOpen ? "✖" : "☰"}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden bg-white shadow-lg">
             <nav className="flex flex-col space-y-6 p-6 text-xl font-semibold">
@@ -99,8 +88,6 @@ const NavBar = () => {
           </div>
         )}
       </header>
-
-      {/* Back to Top Button */}
       {showBackToTop && (
         <button
           onClick={handleBackToTop}
