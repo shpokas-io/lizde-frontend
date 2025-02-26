@@ -1,18 +1,12 @@
 import { notFound } from "next/navigation";
 import BackButton from "@/components/common/BackButton";
 import Link from "next/link";
+import Image from "next/image";
 import { courseData } from "@/app/lib/courseData";
 import { FaFileDownload, FaFilePdf, FaFileAlt, FaFile, FaArrowRight, FaArrowLeft, FaPlay } from "react-icons/fa";
 
-interface Lesson {
-  slug: string;
-  title: string;
-  duration: string;
-  description: string;
-  videoUrl: string;
-  completed: boolean;
-  materials?: { name: string; url: string }[];
-}
+// Import the Lesson type directly from courseData
+import type { Lesson } from "@/app/lib/courseData";
 
 export async function generateStaticParams(): Promise<
   { params: { slug: string } }[]
@@ -128,9 +122,11 @@ export default async function LessonDetailPage({
                     className="group block bg-white hover:bg-blue-50 rounded-md border border-gray-200 overflow-hidden transition-all"
                   >
                     <div className="relative">
-                      <img
+                      <Image
                         src={getYouTubeThumbnail(nextLesson.videoUrl)}
                         alt={nextLesson.title}
+                        width={320}
+                        height={180}
                         className="w-full h-36 object-cover transition-transform group-hover:scale-105"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -160,7 +156,7 @@ export default async function LessonDetailPage({
             {/* Coming Up section ends here */}
 
             {/* Downloadable Materials - Separate box */}
-            {lesson.materials && lesson.materials.length > 0 && (
+            {lesson.materials && Array.isArray(lesson.materials) && lesson.materials.length > 0 && (
               <div className="mt-8 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                 <div className="flex items-center mb-4">
                   <FaFileDownload className="text-blue-600 mr-2 text-xl" />

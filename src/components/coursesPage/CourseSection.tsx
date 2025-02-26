@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface Lesson {
   slug: string;
@@ -41,9 +42,11 @@ export default function CourseSection({ title, lessons }: CourseSectionProps) {
                 <div className="absolute -left-12 -top-12 w-40 h-40 bg-indigo-400 opacity-10 rounded-full blur-2xl"></div>
                 
                 {/* Background image with overlay */}
-                <img
+                <Image
                   src={lesson.videoThumbnail}
                   alt={lesson.title}
+                  width={640}
+                  height={360}
                   className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                 />
                 

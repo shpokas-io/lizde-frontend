@@ -1,4 +1,5 @@
 import Button from "@/components/common/Button";
+import Image from "next/image";
 
 const AboutSection = () => {
   return (
@@ -26,16 +27,20 @@ const AboutSection = () => {
               </li>
             </ul>
           </div>
-          <img
+          <Image
             src="/images/about-section.jpg"
             alt="Engineer recording drums"
+            width={600}
+            height={400}
             className="rounded-lg shadow-lg w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto"
           />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <img
+          <Image
             src="/images/about-section.jpg"
             alt="Engineer working in studio"
+            width={600}
+            height={400}
             className="rounded-lg shadow-lg w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto lg:order-1"
           />
           <div>

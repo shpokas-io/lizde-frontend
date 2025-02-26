@@ -1,4 +1,5 @@
 import ProgressBar from "@/components/common/ProgressBar";
+import Image from "next/image";
 
 interface CourseHeaderProps {
   title: string;
@@ -20,9 +21,11 @@ export default function CourseHeader({
           <div className="lg:w-1/2 relative">
             <div className="absolute -top-2 -left-2 w-20 h-20 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
             <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-indigo-500 rounded-full opacity-20 blur-xl"></div>
-            <img
+            <Image
               src={imageUrl}
               alt={title}
+              width={600}
+              height={300}
               className="w-full rounded-xl shadow-lg object-cover relative z-10 max-h-[300px]"
             />
           </div>

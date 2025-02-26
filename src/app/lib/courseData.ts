@@ -1,3 +1,8 @@
+export interface Material {
+  name: string;
+  url: string;
+}
+
 export interface Lesson {
   slug: string;
   title: string;
@@ -6,13 +11,13 @@ export interface Lesson {
   videoThumbnail: string;
   videoUrl: string; // Hardcoded YouTube link
   completed: boolean;
-  materials: string;
+  materials?: Material[] | string;
 }
 
 export interface CourseSectionData {
   sectionTitle: string;
   lessons: Lesson[];
-  material: string;
+  material?: string;
 }
 
 export const courseData: CourseSectionData[] = [

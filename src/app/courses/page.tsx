@@ -1,5 +1,4 @@
 import BackButton from "@/components/common/BackButton";
-import SearchBar from "@/components/common/SearchBar";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
 import { courseData } from "../lib/courseData";
