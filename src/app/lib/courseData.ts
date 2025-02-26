@@ -6,11 +6,13 @@ export interface Lesson {
   videoThumbnail: string;
   videoUrl: string; // Hardcoded YouTube link
   completed: boolean;
+  materials: string;
 }
 
 export interface CourseSectionData {
   sectionTitle: string;
   lessons: Lesson[];
+  material: string;
 }
 
 export const courseData: CourseSectionData[] = [
@@ -27,6 +29,10 @@ export const courseData: CourseSectionData[] = [
         videoThumbnail: "/images/about-section.jpg",
         videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: true,
+        materials: [
+          { name: "Material 1", url: "https://swistranswer.com/link1" },
+          { name: "Material 2", url: "https://swistranswer.com/link2" },
+        ],
       },
       {
         slug: "your-mixing-mindset",
@@ -37,6 +43,10 @@ export const courseData: CourseSectionData[] = [
         videoThumbnail: "/images/about-section.jpg",
         videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
         completed: false,
+        materials: [
+          { name: "Material 1", url: "https://swistranswer.com/link1" },
+          { name: "Material 2", url: "https://swistranswer.com/link2" },
+        ],
       },
     ],
   },
