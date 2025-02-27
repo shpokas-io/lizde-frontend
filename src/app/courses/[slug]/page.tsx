@@ -5,21 +5,12 @@ import BackButton from "@/components/common/BackButton";
 import Link from "next/link";
 import Image from "next/image";
 import { courseData } from "@/app/lib/courseData";
-import { FaFileDownload, FaFilePdf, FaFileAlt, FaFile, FaArrowRight, FaArrowLeft, FaPlay, FaCheck } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { FaFileDownload, FaFilePdf, FaFileAlt, FaFile, FaArrowRight, FaArrowLeft, FaPlay } from "react-icons/fa";
+import { useEffect } from "react";
 import { useCourse } from "@/app/lib/CourseContext";
 
 // Import the Lesson type directly from courseData
 import type { Lesson } from "@/app/lib/courseData";
-
-// Add type declaration for YouTube API
-declare global {
-  interface Window {
-    onYouTubeIframeAPIReady: (() => void) | null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    YT: any;
-  }
-}
 
 function getAllLessons(): Lesson[] {
   return courseData.flatMap((section) => section.lessons);
@@ -49,68 +40,14 @@ export default function LessonDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const lesson = getLessonBySlug(slug);
-  const { isLessonCompleted, markLessonAsCompleted, updateLessonProgress } = useCourse();
-  
-  const [videoProgress, setVideoProgress] = useState(0);
-  const [showCompletedBanner, setShowCompletedBanner] = useState(false);
+  const { markLessonAsCompleted } = useCourse();
 
-  // Initialize on page load
+  // Mark lesson as completed when it's viewed
   useEffect(() => {
     if (!lesson) return;
-    setShowCompletedBanner(isLessonCompleted(slug));
-    
-    // Set up YouTube API for tracking progress
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    
-    // This function would be called once YouTube API is ready
-    window.onYouTubeIframeAPIReady = () => {
-      // We can't directly access iframes in this way due to security restrictions
-      // This is a placeholder - actual YouTube integration would require more work
-      console.log("YouTube API ready");
-    };
-    
-    return () => {
-      window.onYouTubeIframeAPIReady = null;
-    };
-  }, [slug, isLessonCompleted, lesson]);
-  
-  // Handle completion button click
-  const handleMarkAsCompleted = () => {
+    // Simply mark the lesson as completed when it's viewed
     markLessonAsCompleted(slug);
-    setShowCompletedBanner(true);
-  };
-
-  // Simulate video progress update
-  useEffect(() => {
-    // In a real implementation, this would be triggered by the YouTube Player API
-    // For this demo, we'll simulate progress with a timer
-    let timer: NodeJS.Timeout;
-    
-    if (!isLessonCompleted(slug)) {
-      timer = setInterval(() => {
-        setVideoProgress(prev => {
-          const newProgress = Math.min(prev + 5, 100);
-          updateLessonProgress(slug, newProgress);
-          
-          // Auto-complete when progress reaches 90%
-          if (newProgress >= 90) {
-            clearInterval(timer);
-            markLessonAsCompleted(slug);
-            setShowCompletedBanner(true);
-          }
-          
-          return newProgress;
-        });
-      }, 3000); // Update every 3 seconds for demo
-    }
-    
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [slug, markLessonAsCompleted, updateLessonProgress, isLessonCompleted]);
+  }, [slug, markLessonAsCompleted, lesson]);
 
   if (!lesson) {
     return notFound();
@@ -141,56 +78,7 @@ export default function LessonDetailPage() {
             </div>
 
             <h1 className="text-3xl font-bold my-4">{lesson.title}</h1>
-            <p className="text-gray-500 mb-2">Duration: {lesson.duration}</p>
             <p className="text-gray-700 mb-4">{lesson.description}</p>
-
-            {/* Progress and completion controls */}
-            <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="w-full md:w-2/3">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-xs font-medium text-gray-700">Video Progress</span>
-                    <span className="text-xs font-medium text-orange-600">{videoProgress}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div 
-                      className="bg-gradient-to-r from-orange-500 to-orange-600 h-2.5 rounded-full"
-                      style={{ width: `${videoProgress}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Watch 90% of the video to automatically mark as completed</p>
-                </div>
-                
-                <button 
-                  onClick={handleMarkAsCompleted}
-                  disabled={isLessonCompleted(slug)}
-                  className={`flex items-center px-4 py-2 rounded-lg text-white transition-colors ${
-                    isLessonCompleted(slug) 
-                      ? 'bg-green-500 cursor-default' 
-                      : 'bg-orange-500 hover:bg-orange-600'
-                  }`}
-                >
-                  {isLessonCompleted(slug) ? (
-                    <>
-                      <FaCheck className="mr-2" />
-                      Completed
-                    </>
-                  ) : (
-                    'Mark as Completed'
-                  )}
-                </button>
-              </div>
-            </div>
-            
-            {/* Completed banner */}
-            {showCompletedBanner && (
-              <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded flex items-center">
-                <FaCheck className="text-green-500 mr-2" />
-                <p className="font-semibold">
-                  You have completed this lesson!
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Right Aside */}
@@ -238,9 +126,6 @@ export default function LessonDetailPage() {
                         <div className="rounded-full bg-black bg-opacity-70 w-10 h-10 flex items-center justify-center group-hover:bg-orange-600 group-hover:scale-110 transition-all">
                           <FaPlay className="h-3 w-3 text-white ml-1" />
                         </div>
-                      </div>
-                      <div className="absolute top-2 right-2 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded">
-                        {nextLesson.duration}
                       </div>
                     </div>
                     <div className="p-3">

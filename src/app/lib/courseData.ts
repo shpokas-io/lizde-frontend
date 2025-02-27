@@ -6,12 +6,10 @@ export interface Material {
 export interface Lesson {
   slug: string;
   title: string;
-  duration: string;
   description: string;
   videoThumbnail: string;
   videoUrl: string; // Hardcoded YouTube link
   completed: boolean;
-  progress?: number; // Track video progress (0-100)
   materials?: Material[] | string;
 }
 

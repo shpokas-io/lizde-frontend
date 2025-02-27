@@ -47,12 +47,8 @@ export default function CourseLesson({ lesson }: CourseLessonProps) {
           </p>
         </div>
 
-        {/* Right side - duration and completion status */}
+        {/* Right side - completion status */}
         <div className="flex items-center gap-3 flex-shrink-0">
-          <span className="text-xs text-gray-500 whitespace-nowrap">
-            {lesson.duration}
-          </span>
-
           {lesson.completed ? (
             <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
               <svg

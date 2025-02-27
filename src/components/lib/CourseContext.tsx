@@ -1,5 +1,6 @@
 "use client";
 
+import { courseData } from "@/app/lib/courseData";
 import React, {
   createContext,
   useContext,
@@ -7,7 +8,6 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { courseData } from "./courseData";
 
 interface CourseContextType {
   completedLessons: string[]; // Array of lesson slugs
