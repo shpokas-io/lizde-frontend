@@ -38,7 +38,7 @@ const NavBar = () => {
     <>
       <header
         className={`
-          bg-white shadow-md fixed top-0 left-0 w-full z-50 
+          bg-background shadow-md fixed top-0 left-0 w-full z-50 
           transition-opacity duration-300
           ${navOpacity}
         `}
