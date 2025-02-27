@@ -1,18 +1,18 @@
 import { ReactNode } from "react";
+import { CourseProgressProvider } from "@/hooks/useCourseProgress";
 import Footer from "@/components/layout/Footer";
-import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
-import { CourseProvider } from "./lib/CourseContext";
+import "./globals.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-white text-gray-900">
-        <CourseProvider>
+        <CourseProgressProvider>
           <NavBar />
           <main className="pt-[80px]">{children}</main>
           <Footer />
-        </CourseProvider>
+        </CourseProgressProvider>
       </body>
     </html>
   );

@@ -2,13 +2,32 @@
 
 import BackButton from "@/components/common/BackButton";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
-import { useCourse } from "../lib/CourseContext";
-import { courseData } from "../lib/courseData";
-import CourseLesson from "@/components/coursesPage/CourseLesson";
+import CourseSection from "@/components/coursesPage/CourseSection";
+import LessonCard from "@/components/common/LessonCard";
+import { useCourseProgress } from "@/hooks/useCourseProgress";
+import { courseData, startHereLesson } from "@/services/courseData";
+import { LessonWithCompletionStatus } from "@/types/course";
 
+/**
+ * Courses page showing all available course sections and lessons
+ */
 export default function CoursesPage() {
-  const { getProgress, isLessonCompleted } = useCourse();
+  const { getProgress, isLessonCompleted } = useCourseProgress();
   const progress = getProgress();
+  
+  // Create a completion status map for quick lesson status lookup
+  const lessonCompletionMap: Record<string, boolean> = {};
+  courseData.forEach(section => {
+    section.lessons.forEach(lesson => {
+      lessonCompletionMap[lesson.slug] = isLessonCompleted(lesson.slug);
+    });
+  });
+  
+  // Prepare the start here lesson with completion status
+  const startHereLessonWithStatus: LessonWithCompletionStatus = {
+    ...startHereLesson,
+    completed: isLessonCompleted(startHereLesson.slug)
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-black">
@@ -43,79 +62,18 @@ export default function CoursesPage() {
               <h2 className="text-xl font-bold text-gray-900">Startas</h2>
             </div>
             <div className="px-4 py-2">
-              <CourseLesson
-                lesson={{
-                  slug: "start-here",
-                  title: "Start Here!",
-                  duration: "3 minutes",
-                  description:
-                    "Welcome to the course! You've taken a big step in making this investment...",
-                  videoThumbnail: "/images/about-section.jpg",
-                  videoUrl: "https://www.youtube.com/watch?v=9Q_4vUDimdI",
-                  completed: isLessonCompleted("start-here"),
-                }}
-              />
+              <LessonCard lesson={startHereLessonWithStatus} />
             </div>
           </div>
 
-          {/* Pirma savaitė */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 bg-orange-50 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Pirma savaitė</h2>
-            </div>
-            <div className="divide-y divide-gray-100">
-              {courseData[0].lessons.map((lesson) => (
-                <div key={lesson.slug} className="px-4 py-2">
-                  <CourseLesson
-                    lesson={{
-                      ...lesson,
-                      completed: isLessonCompleted(lesson.slug),
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Antra savaitė */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 bg-orange-50 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Antra savaitė</h2>
-            </div>
-            <div className="divide-y divide-gray-100">
-              {courseData[1].lessons.map((lesson) => (
-                <div key={lesson.slug} className="px-4 py-2">
-                  <CourseLesson
-                    lesson={{
-                      ...lesson,
-                      completed: isLessonCompleted(lesson.slug),
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Trečia savaitė */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 bg-orange-50 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">
-                Trečia savaitė
-              </h2>
-            </div>
-            <div className="divide-y divide-gray-100">
-              {courseData[2].lessons.map((lesson) => (
-                <div key={lesson.slug} className="px-4 py-2">
-                  <CourseLesson
-                    lesson={{
-                      ...lesson,
-                      completed: isLessonCompleted(lesson.slug),
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Course Sections - Using the reusable component */}
+          {courseData.map((section) => (
+            <CourseSection 
+              key={section.sectionTitle} 
+              section={section}
+              lessonCompletionMap={lessonCompletionMap}
+            />
+          ))}
         </div>
       </div>
     </div>
