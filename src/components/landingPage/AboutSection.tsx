@@ -60,7 +60,7 @@ const AboutSection = () => {
           <Button
             text="Pradėk dabar"
             href="/free-class"
-            className="bg-orange-500 text-white text-lg font-bold py-4 px-6 rounded-lg hover:bg-orange-600 transition"
+            className="bg-[#292f36] text-white text-lg font-bold py-4 px-6 rounded-lg hover:bg-[#1d2129] transition"
           />
         </div>
       </div>

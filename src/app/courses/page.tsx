@@ -14,19 +14,19 @@ import { LessonWithCompletionStatus } from "@/types/course";
 export default function CoursesPage() {
   const { getProgress, isLessonCompleted } = useCourseProgress();
   const progress = getProgress();
-  
+
   // Create a completion status map for quick lesson status lookup
   const lessonCompletionMap: Record<string, boolean> = {};
-  courseData.forEach(section => {
-    section.lessons.forEach(lesson => {
+  courseData.forEach((section) => {
+    section.lessons.forEach((lesson) => {
       lessonCompletionMap[lesson.slug] = isLessonCompleted(lesson.slug);
     });
   });
-  
+
   // Prepare the start here lesson with completion status
   const startHereLessonWithStatus: LessonWithCompletionStatus = {
     ...startHereLesson,
-    completed: isLessonCompleted(startHereLesson.slug)
+    completed: isLessonCompleted(startHereLesson.slug),
   };
 
   return (
@@ -58,8 +58,8 @@ export default function CoursesPage() {
         <div className="space-y-8 mt-12">
           {/* Startas Section */}
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 bg-orange-50 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Startas</h2>
+            <div className="px-6 py-4 bg-[#292f36] border-b border-gray-200">
+              <h2 className="text-xl font-bold text-white">Startas</h2>
             </div>
             <div className="px-4 py-2">
               <LessonCard lesson={startHereLessonWithStatus} />
@@ -67,11 +67,12 @@ export default function CoursesPage() {
           </div>
 
           {/* Course Sections - Using the reusable component */}
-          {courseData.map((section) => (
-            <CourseSection 
-              key={section.sectionTitle} 
+          {courseData.map((section, index) => (
+            <CourseSection
+              key={section.sectionTitle}
               section={section}
               lessonCompletionMap={lessonCompletionMap}
+              headerBgColor={index % 2 === 0 ? "#292f36" : "#26292c"}
             />
           ))}
         </div>

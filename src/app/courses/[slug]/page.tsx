@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { notFound, useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -17,11 +17,11 @@ export default function LessonDetailPage() {
   // Get the slug from the URL params
   const params = useParams();
   const slug = params.slug as string;
-  
+
   // Get lesson and course progress
   const lesson = getLessonBySlug(slug);
   const { markLessonAsCompleted } = useCourseProgress();
-  
+
   // Get previous and next lessons for navigation
   const { prevLesson, nextLesson } = getAdjacentLessons(slug);
 
@@ -36,9 +36,7 @@ export default function LessonDetailPage() {
   }
 
   // Process materials - ensure we're working with an array of Material objects
-  const materials = Array.isArray(lesson.materials) 
-    ? lesson.materials 
-    : [];
+  const materials = Array.isArray(lesson.materials) ? lesson.materials : [];
 
   return (
     <div className="bg-gray-100 min-h-screen text-black">
@@ -48,26 +46,24 @@ export default function LessonDetailPage() {
         <div className="mt-6 bg-white p-6 rounded shadow flex flex-col lg:flex-row gap-8">
           <div className="flex-1">
             {/* Video Player Component */}
-            <VideoPlayer 
-              videoUrl={lesson.videoUrl} 
-              title={lesson.title} 
-            />
+            <VideoPlayer videoUrl={lesson.videoUrl} title={lesson.title} />
 
             <h1 className="text-3xl font-bold mt-6 mb-3">{lesson.title}</h1>
-            <div className="h-1 w-20 bg-orange-500 rounded mb-6"></div>
+            <div className="h-1 w-20 bg-[#292f36] rounded mb-6"></div>
             <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">Description</h2>
-              <p className="text-gray-700 leading-relaxed">{lesson.description}</p>
+              <h2 className="text-lg font-semibold text-gray-800 mb-3">
+                Description
+              </h2>
+              <p className="text-gray-700 leading-relaxed">
+                {lesson.description}
+              </p>
             </div>
           </div>
 
           {/* Right Aside */}
           <aside className="w-full lg:w-80 self-start space-y-8">
             {/* Lesson Navigation Component */}
-            <LessonNavigation 
-              prevLesson={prevLesson} 
-              nextLesson={nextLesson} 
-            />
+            <LessonNavigation prevLesson={prevLesson} nextLesson={nextLesson} />
 
             {/* Lesson Materials Component */}
             {materials.length > 0 && (

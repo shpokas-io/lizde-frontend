@@ -11,10 +11,15 @@ interface LessonCardProps {
 /**
  * Reusable component for displaying lesson cards throughout the application
  */
-export default function LessonCard({ lesson, className = "" }: LessonCardProps) {
+export default function LessonCard({
+  lesson,
+  className = "",
+}: LessonCardProps) {
   return (
     <Link href={`/courses/${lesson.slug}`}>
-      <div className={`flex items-center gap-4 py-4 hover:bg-orange-50 transition-colors rounded-lg px-2 ${className}`}>
+      <div
+        className={`flex items-center gap-4 py-4 hover:bg-primary/5 transition-colors rounded-lg px-2 ${className}`}
+      >
         {/* Left side - thumbnail and play button */}
         <div className="relative min-w-[120px] h-[68px] rounded-md overflow-hidden">
           <Image
@@ -25,7 +30,7 @@ export default function LessonCard({ lesson, className = "" }: LessonCardProps) 
             className="object-cover h-full w-full"
           />
           <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-            <div className="bg-orange-500 rounded-full p-1.5">
+            <div className="bg-primary rounded-full p-1.5">
               <PlayIcon />
             </div>
           </div>
@@ -33,21 +38,21 @@ export default function LessonCard({ lesson, className = "" }: LessonCardProps) 
 
         {/* Middle - title and description */}
         <div className="flex-grow min-w-0">
-          <h3 className="font-medium text-gray-900 truncate">{lesson.title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2 mt-1">
-            {lesson.description.split('. ')[0]}...
+          <h3 className="font-medium text-text truncate">{lesson.title}</h3>
+          <p className="text-sm text-text-light line-clamp-2 mt-1">
+            {lesson.description.split(". ")[0]}...
           </p>
         </div>
 
         {/* Right side - completion status */}
         <div className="flex items-center gap-3 flex-shrink-0">
           {lesson.completed ? (
-            <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-accent-green flex items-center justify-center">
               <CheckIcon />
             </div>
           ) : (
-            <div className="w-6 h-6 rounded-full border-2 border-gray-200 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+            <div className="w-6 h-6 rounded-full border-2 border-border flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
             </div>
           )}
         </div>
