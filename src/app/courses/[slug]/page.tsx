@@ -51,9 +51,6 @@ export default function LessonDetailPage() {
             <h1 className="text-3xl font-bold mt-6 mb-3">{lesson.title}</h1>
             <div className="h-1 w-20 bg-[#292f36] rounded mb-6"></div>
             <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Description
-              </h2>
               <p className="text-gray-700 leading-relaxed">
                 {lesson.description}
               </p>
