@@ -23,7 +23,9 @@ export default function LessonMaterials({
     >
       <div className="flex items-center mb-4">
         <FaFileDownload className="text-[#292f36] mr-2 text-xl" />
-        <h2 className="text-lg font-bold">Downloadable Materials</h2>
+        <h2 className="text-lg font-bold text-gray-800">
+          Downloadable Materials
+        </h2>
       </div>
       <ul className="flex flex-col gap-3">
         {materials.map((material, index) => {

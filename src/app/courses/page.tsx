@@ -30,7 +30,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-black">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       {/* Top Navigation Bar */}
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-4">
         <div className="container mx-auto max-w-screen-xl">
