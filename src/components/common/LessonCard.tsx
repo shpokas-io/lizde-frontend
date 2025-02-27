@@ -34,8 +34,8 @@ export default function LessonCard({ lesson, className = "" }: LessonCardProps) 
         {/* Middle - title and description */}
         <div className="flex-grow min-w-0">
           <h3 className="font-medium text-gray-900 truncate">{lesson.title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-1">
-            {lesson.description}
+          <p className="text-sm text-gray-600 line-clamp-2 mt-1">
+            {lesson.description.split('. ')[0]}...
           </p>
         </div>
 

@@ -32,8 +32,9 @@ export default function CourseHeader({
           <div className="lg:w-1/2 space-y-6">
             <div>
               <span className="bg-orange-100 text-orange-700 text-xs uppercase font-bold px-3 py-1 rounded-full">Your Journey</span>
-              <h1 className="text-4xl font-bold mt-3 bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">{title}</h1>
-              <p className="text-gray-600 mt-4 leading-relaxed">{description}</p>
+              <h1 className="text-4xl font-bold mt-3 mb-5 bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">{title}</h1>
+              <div className="h-px w-full bg-gradient-to-r from-orange-300 to-transparent mb-5"></div>
+              <p className="text-gray-600 leading-relaxed bg-white/50 p-4 rounded-lg shadow-sm border border-orange-100/50">{description}</p>
             </div>
             <div>
               <div className="flex justify-between mb-2">

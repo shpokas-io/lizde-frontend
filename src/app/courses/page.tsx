@@ -49,7 +49,7 @@ export default function CoursesPage() {
         {/* Course Hero/Header */}
         <CourseHeader
           title="Tavo muzikos karjėra prasideda čia"
-          description="Start getting label-quality mixes so you can attract better artists, increase your rates, work on your own terms, and build an awesome career as a mixer."
+          description="Start getting label-quality mixes so you can attract better artists, increase your rates, work on your own terms, and build an awesome career as a mixer. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis. Proin ut sagittis eros. Vivamus id ex ut neque egestas varius. Phasellus facilisis eros ac enim ultricies, ac efficitur orci malesuada."
           imageUrl="/images/about-section.jpg"
           progress={progress}
         />
