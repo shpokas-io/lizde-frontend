@@ -18,6 +18,16 @@ const HeroSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <section className="relative h-[90vh] md:h-[80vh] flex items-center justify-center">
       {/* Background Image */}
@@ -45,13 +55,16 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* Bouncing Scroll Indicator */}
+      {/* Clickable Bouncing Scroll Indicator */}
       {showScrollIndicator && (
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+        <button
+          onClick={scrollToAbout}
+          className="absolute bottom-6 left-1/2 transform -translate-x-1/2 cursor-pointer focus:outline-none"
+          aria-label="Scroll to about section"
+        >
           <div className="w-8 h-8 animate-bounce-slow">
-            {/* You can use an arrow icon or any shape */}
             <svg
-              className="w-8 h-8 text-white"
+              className="w-8 h-8 text-white hover:text-gray-300 transition-colors"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -64,7 +77,7 @@ const HeroSection = () => {
               />
             </svg>
           </div>
-        </div>
+        </button>
       )}
     </section>
   );
