@@ -35,21 +35,36 @@ export default function LessonDetailPage() {
   // Get previous and next lessons for navigation
   const { prevLesson, nextLesson } = getAdjacentLessons(slug);
 
-  // Mark lesson as completed when it's viewed and video is ready
+  // Add a loading timeout to prevent infinite loading state
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      // If still loading after 5 seconds, force exit loading state
+      setIsLoading(false);
+    }, 5000);
+
+    return () => clearTimeout(loadingTimeout);
+  }, []);
+
+  // Set loading to false when we have the lesson data
+  useEffect(() => {
+    if (lesson) {
+      // Add a small delay to prevent flash of loading state
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [lesson]);
+
+  // Mark lesson as completed when video is ready
   useEffect(() => {
     if (!lesson || !videoReady) return;
 
     try {
       markLessonAsCompleted(slug);
-      setIsLoading(false);
     } catch (err) {
       console.error("Error marking lesson as completed:", err);
-      setError(
-        err instanceof Error
-          ? err
-          : new Error("Failed to mark lesson as completed")
-      );
-      setIsLoading(false);
     }
   }, [slug, markLessonAsCompleted, lesson, videoReady]);
 

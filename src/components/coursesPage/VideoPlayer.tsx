@@ -1,10 +1,9 @@
-/**
- * Enhanced video player component with error handling and loading states
- */
-"use client";
-
 import { useState, useEffect } from "react";
-import { getEmbedUrl, isValidVideoUrl } from "@/utils/videoUtils";
+import {
+  getEmbedUrl,
+  getYouTubeThumbnail,
+  isYouTubeUrl,
+} from "@/utils/videoUtils";
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -14,6 +13,9 @@ interface VideoPlayerProps {
   onError?: (error: Error) => void;
 }
 
+/**
+ * Enhanced video player component with dynamic YouTube thumbnail
+ */
 export default function VideoPlayer({
   videoUrl,
   title,
@@ -25,22 +27,28 @@ export default function VideoPlayer({
   const [error, setError] = useState<Error | null>(null);
   const [embedUrl, setEmbedUrl] = useState("");
 
+  // Generate thumbnail URL for preview/loading state
+  const thumbnailUrl = isYouTubeUrl(videoUrl)
+    ? getYouTubeThumbnail(videoUrl, "maxres")
+    : "/images/video-placeholder.jpg";
+
   useEffect(() => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Validate the URL first
-      if (!videoUrl || !isValidVideoUrl(videoUrl)) {
-        throw new Error("Invalid or unsupported video URL");
+      if (!videoUrl) {
+        throw new Error("No video URL provided");
       }
 
-      // Get the embed URL
+      if (!isYouTubeUrl(videoUrl)) {
+        throw new Error("Unsupported video URL format");
+      }
+
       const url = getEmbedUrl(videoUrl);
       setEmbedUrl(url);
       setIsLoading(false);
 
-      // Call the onReady callback if provided
       if (onReady) {
         onReady();
       }
@@ -51,21 +59,25 @@ export default function VideoPlayer({
       );
       setIsLoading(false);
 
-      // Call the onError callback if provided
       if (onError && err instanceof Error) {
         onError(err);
       }
     }
   }, [videoUrl, onReady, onError]);
 
-  // Show loading state
+  // Show loading state with thumbnail as background
   if (isLoading) {
     return (
       <div
-        className={`relative w-full h-0 pb-[56.25%] bg-gray-200 animate-pulse rounded-lg ${className}`}
+        className={`relative w-full h-0 pb-[56.25%] bg-gray-200 rounded-lg ${className}`}
+        style={{
+          backgroundImage: `url(${thumbnailUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-gray-500">Loading video...</div>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+          <div className="w-16 h-16 border-4 border-t-white border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );

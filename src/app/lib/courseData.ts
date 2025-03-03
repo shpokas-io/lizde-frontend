@@ -1,9 +1,5 @@
 import { CourseSectionData } from "@/types/course";
 
-// Note: We're ignoring duration and completed properties in the data
-// that are not part of the official Lesson type definition
-
-// Export data with the formal type from types/course.ts
 export const courseData: CourseSectionData[] = [
   {
     // Pirma savaitė (Week 1) - 9 videos

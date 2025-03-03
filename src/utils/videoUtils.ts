@@ -1,155 +1,68 @@
 /**
- * Enhanced utility functions for handling video URLs and embeds
+ * Utility functions for handling video URLs and thumbnails
  */
-
-interface VideoProvider {
-  name: string;
-  urlPatterns: RegExp[];
-  getEmbedUrl: (url: string, videoId: string) => string;
-  getThumbnailUrl: (videoId: string) => string;
-  extractVideoId: (url: string) => string | null;
-}
-
-// YouTube provider implementation
-const youtubeProvider: VideoProvider = {
-  name: "youtube",
-  urlPatterns: [
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^\s&?/]+)/,
-    /youtube\.com\/shorts\/([^\s&?/]+)/,
-  ],
-  getEmbedUrl: (url, videoId) => {
-    // Add parameters for better embedding
-    const params = new URLSearchParams({
-      rel: "0", // Don't show related videos
-      showinfo: "0", // Don't show video title
-      autoplay: "0", // Don't autoplay
-      modestbranding: "1", // Minimal YouTube branding
-    });
-
-    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
-  },
-  getThumbnailUrl: (videoId) =>
-    `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-  extractVideoId: (url) => {
-    for (const pattern of youtubeProvider.urlPatterns) {
-      const match = url.match(pattern);
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-    return null;
-  },
-};
-
-// Vimeo provider implementation (for future expansion)
-const vimeoProvider: VideoProvider = {
-  name: "vimeo",
-  urlPatterns: [/vimeo\.com\/(?:video\/)?(\d+)/],
-  getEmbedUrl: (url, videoId) => `https://player.vimeo.com/video/${videoId}`,
-  getThumbnailUrl: (videoId) => `https://vumbnail.com/${videoId}.jpg`,
-  extractVideoId: (url) => {
-    const match = url.match(vimeoProvider.urlPatterns[0]);
-    return match && match[1] ? match[1] : null;
-  },
-};
-
-// List of supported providers
-const videoProviders: VideoProvider[] = [youtubeProvider, vimeoProvider];
 
 /**
- * Determines which video provider a URL belongs to
+ * Extracts YouTube video ID from a YouTube URL
+ * Supports various YouTube URL formats
  */
-export function getVideoProvider(url: string): VideoProvider | null {
-  if (!url) return null;
+export function getYouTubeId(url: string): string {
+  if (!url) return "";
 
-  return (
-    videoProviders.find((provider) =>
-      provider.urlPatterns.some((pattern) => pattern.test(url))
-    ) || null
-  );
-}
+  // Handle various YouTube URL formats
+  const regExp = /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
 
-/**
- * Extracts video ID from a URL
- */
-export function getVideoId(url: string): string {
-  try {
-    const provider = getVideoProvider(url);
-    if (!provider) {
-      console.warn(`Unsupported video URL format: ${url}`);
-      return "";
-    }
-
-    const videoId = provider.extractVideoId(url);
-    if (!videoId) {
-      console.warn(`Could not extract video ID from: ${url}`);
-      return "";
-    }
-
-    return videoId;
-  } catch (error) {
-    console.error("Error extracting video ID:", error);
-    return "";
+  if (match && match[2].length === 11) {
+    return match[2];
   }
+
+  // Log an error if URL doesn't match expected patterns
+  console.warn(`Could not extract YouTube ID from: ${url}`);
+  return "";
 }
 
 /**
- * Converts a video URL to an embed URL
+ * Converts a YouTube URL to an embed URL for iframe
  */
 export function getEmbedUrl(url: string): string {
-  try {
-    const provider = getVideoProvider(url);
-    if (!provider) {
-      console.warn(`Unsupported video URL: ${url}`);
-      // Return the original URL as fallback
-      return url;
-    }
+  const videoId = getYouTubeId(url);
+  if (!videoId) return url;
 
-    const videoId = provider.extractVideoId(url);
-    if (!videoId) {
-      console.warn(`Could not extract video ID from: ${url}`);
-      return url;
-    }
-
-    return provider.getEmbedUrl(url, videoId);
-  } catch (error) {
-    console.error("Error generating embed URL:", error);
-    return url;
-  }
+  // Add parameters for better embedding experience
+  return `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0`;
 }
 
 /**
- * Gets the thumbnail URL for a video
+ * Gets the thumbnail URL for a YouTube video with specified quality
+ * @param url YouTube video URL
+ * @param quality Thumbnail quality: 'default', 'mq' (medium), 'hq' (high), 'sd' (standard def), 'maxres'
+ * @returns URL to the YouTube thumbnail
  */
-export function getVideoThumbnail(url: string): string {
-  try {
-    const provider = getVideoProvider(url);
-    if (!provider) {
-      console.warn(`Unsupported video URL for thumbnail: ${url}`);
-      // Return a placeholder image
-      return "/images/video-placeholder.jpg";
-    }
+export function getYouTubeThumbnail(
+  url: string,
+  quality: "default" | "mq" | "hq" | "sd" | "maxres" = "hq"
+): string {
+  const videoId = getYouTubeId(url);
+  if (!videoId) return "/images/video-placeholder.jpg";
 
-    const videoId = provider.extractVideoId(url);
-    if (!videoId) {
-      console.warn(`Could not extract video ID for thumbnail from: ${url}`);
-      return "/images/video-placeholder.jpg";
-    }
+  const qualityMap = {
+    default: "default.jpg",
+    mq: "mqdefault.jpg",
+    hq: "hqdefault.jpg",
+    sd: "sddefault.jpg",
+    maxres: "maxresdefault.jpg",
+  };
 
-    return provider.getThumbnailUrl(videoId);
-  } catch (error) {
-    console.error("Error getting video thumbnail:", error);
-    return "/images/video-placeholder.jpg";
-  }
+  return `https://img.youtube.com/vi/${videoId}/${qualityMap[quality]}`;
 }
 
 /**
- * Validates if a string is a valid video URL from supported providers
+ * Checks if a URL is a valid YouTube URL
  */
-export function isValidVideoUrl(url: string): boolean {
+export function isYouTubeUrl(url: string): boolean {
   if (!url) return false;
 
-  return videoProviders.some((provider) =>
-    provider.urlPatterns.some((pattern) => pattern.test(url))
-  );
+  const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+  return youtubeRegex.test(url);
 }

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { LessonWithCompletionStatus } from "@/types/course";
 import { PlayIcon, CheckIcon } from "@/components/icons/Index";
+import { getYouTubeThumbnail, isYouTubeUrl } from "@/utils/videoUtils";
 
 interface LessonCardProps {
   lesson: LessonWithCompletionStatus;
@@ -10,11 +12,20 @@ interface LessonCardProps {
 
 /**
  * Reusable component for displaying lesson cards throughout the application
+ * Now with dynamic YouTube thumbnail extraction
  */
 export default function LessonCard({
   lesson,
   className = "",
 }: LessonCardProps) {
+  const [thumbnailError, setThumbnailError] = useState(false);
+
+  // Determine the thumbnail URL - use YouTube thumbnail if it's a YouTube URL
+  const thumbnailUrl =
+    !thumbnailError && isYouTubeUrl(lesson.videoUrl)
+      ? getYouTubeThumbnail(lesson.videoUrl, "hq")
+      : lesson.videoThumbnail || "/images/video-placeholder.jpg";
+
   return (
     <Link href={`/courses/${lesson.slug}`}>
       <div
@@ -23,11 +34,13 @@ export default function LessonCard({
         {/* Left side - thumbnail and play button */}
         <div className="relative min-w-[120px] h-[68px] rounded-md overflow-hidden">
           <Image
-            src={lesson.videoThumbnail}
+            src={thumbnailUrl}
             alt={lesson.title}
             width={120}
             height={68}
             className="object-cover h-full w-full"
+            onError={() => setThumbnailError(true)}
+            priority={false}
           />
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
             {/* Smaller, semi-transparent play button */}
