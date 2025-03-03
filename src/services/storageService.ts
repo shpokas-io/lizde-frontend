@@ -44,7 +44,7 @@ function safeGetItem<T>(key: string, defaultValue: T): T {
 /**
  * Safely set data in localStorage with proper error handling
  */
-function safeSetItem(key: string, value: any): boolean {
+function safeSetItem<T>(key: string, value: T): boolean {
   if (!isLocalStorageAvailable()) {
     return false;
   }

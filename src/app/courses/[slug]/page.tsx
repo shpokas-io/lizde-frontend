@@ -12,14 +12,13 @@ import {
   getAdjacentLessons,
   getSectionByLessonSlug,
 } from "@/utils/courseUtils";
-import { Material } from "@/types/course";
 
 /**
  * Lesson detail page component displaying a specific lesson with improved error handling
  */
 export default function LessonDetailPage() {
   // Component state
-  const [setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [videoReady, setVideoReady] = useState(false);
 
@@ -42,7 +41,7 @@ export default function LessonDetailPage() {
 
     try {
       markLessonAsCompleted(slug);
-      setLoading(false);
+      setIsLoading(false);
     } catch (err) {
       console.error("Error marking lesson as completed:", err);
       setError(
@@ -50,7 +49,7 @@ export default function LessonDetailPage() {
           ? err
           : new Error("Failed to mark lesson as completed")
       );
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [slug, markLessonAsCompleted, lesson, videoReady]);
 
@@ -58,7 +57,7 @@ export default function LessonDetailPage() {
   const handleVideoError = (err: Error) => {
     console.error("Video player error:", err);
     setError(err);
-    setLoading(false);
+    setIsLoading(false);
   };
 
   // Handle 404
@@ -92,6 +91,13 @@ export default function LessonDetailPage() {
             >
               Try Again
             </button>
+          </div>
+        ) : isLoading ? (
+          <div className="mt-6 bg-white p-6 rounded shadow flex items-center justify-center">
+            <div className="text-center py-12">
+              <div className="w-12 h-12 border-4 border-t-[#292f36] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading lesson content...</p>
+            </div>
           </div>
         ) : (
           <div className="mt-6 bg-white p-6 rounded shadow flex flex-col lg:flex-row gap-8">
@@ -136,7 +142,7 @@ export default function LessonDetailPage() {
 
               {/* Lesson Materials Component */}
               {materials.length > 0 && (
-                <LessonMaterials materials={materials as Material[]} />
+                <LessonMaterials materials={materials} />
               )}
             </aside>
           </div>
