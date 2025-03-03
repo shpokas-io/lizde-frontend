@@ -23,9 +23,6 @@ export default function LessonNavigation({
       className={`bg-white border border-gray-200 rounded-lg p-4 shadow-sm ${className}`}
     >
       <h2 className="text-lg font-bold mb-4 flex items-center border-b border-gray-100 pb-3">
-        <span className="bg-[#292f36]/10 text-[#292f36] rounded-full w-6 h-6 inline-flex items-center justify-center mr-2 text-sm">
-          <FaArrowRight className="text-xs" />
-        </span>
         Coming Up
       </h2>
       <div className="flex flex-col gap-3">
