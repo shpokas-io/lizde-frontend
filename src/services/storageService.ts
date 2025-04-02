@@ -1,6 +1,3 @@
-/**
- * Enhanced storage service for handling data persistence with error handling
- */
 import { CourseProgressData } from "@/types/course";
 
 const STORAGE_KEYS = {
@@ -9,9 +6,6 @@ const STORAGE_KEYS = {
   COURSE_PROGRESS: "courseProgress",
 };
 
-/**
- * Check if localStorage is available in the current environment
- */
 function isLocalStorageAvailable(): boolean {
   try {
     const testKey = "__test__";
@@ -24,9 +18,6 @@ function isLocalStorageAvailable(): boolean {
   }
 }
 
-/**
- * Safely get data from localStorage with proper error handling
- */
 function safeGetItem<T>(key: string, defaultValue: T): T {
   if (!isLocalStorageAvailable()) {
     return defaultValue;
@@ -41,9 +32,6 @@ function safeGetItem<T>(key: string, defaultValue: T): T {
   }
 }
 
-/**
- * Safely set data in localStorage with proper error handling
- */
 function safeSetItem<T>(key: string, value: T): boolean {
   if (!isLocalStorageAvailable()) {
     return false;
@@ -58,23 +46,14 @@ function safeSetItem<T>(key: string, value: T): boolean {
   }
 }
 
-/**
- * Gets completed lessons from localStorage
- */
 export function getCompletedLessons(): string[] {
   return safeGetItem<string[]>(STORAGE_KEYS.COMPLETED_LESSONS, []);
 }
 
-/**
- * Saves completed lessons to localStorage
- */
 export function saveCompletedLessons(completedLessons: string[]): boolean {
   return safeSetItem(STORAGE_KEYS.COMPLETED_LESSONS, completedLessons);
 }
 
-/**
- * Checks if a lesson is completed
- */
 export function isLessonCompleted(
   slug: string,
   completedLessons: string[]
@@ -82,9 +61,6 @@ export function isLessonCompleted(
   return completedLessons.includes(slug);
 }
 
-/**
- * Marks a lesson as completed
- */
 export function markLessonAsCompleted(
   slug: string,
   completedLessons: string[]
@@ -98,17 +74,11 @@ export function markLessonAsCompleted(
   return updatedLessons;
 }
 
-/**
- * Saves the last accessed lesson
- */
 export function saveLastAccessedLesson(slug: string): boolean {
   const now = new Date().toISOString();
   return safeSetItem(STORAGE_KEYS.LAST_ACCESSED, { slug, timestamp: now });
 }
 
-/**
- * Gets the last accessed lesson
- */
 export function getLastAccessedLesson(): {
   slug: string;
   timestamp: string;
@@ -116,9 +86,6 @@ export function getLastAccessedLesson(): {
   return safeGetItem(STORAGE_KEYS.LAST_ACCESSED, null);
 }
 
-/**
- * Gets the full course progress data
- */
 export function getCourseProgressData(): CourseProgressData {
   const completedLessons = getCompletedLessons();
   const lastAccessed = getLastAccessedLesson();
@@ -130,9 +97,6 @@ export function getCourseProgressData(): CourseProgressData {
   };
 }
 
-/**
- * Clears all course progress data (for testing or reset functionality)
- */
 export function clearCourseProgressData(): boolean {
   try {
     if (isLocalStorageAvailable()) {

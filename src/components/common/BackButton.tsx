@@ -8,15 +8,11 @@ interface BackButtonProps {
   icon?: React.ReactNode;
 }
 
-/**
- * Reusable navigation button that can be used for back navigation
- * or any navigation with a left-aligned icon
- */
-const BackButton = ({ 
-  href, 
-  label = "Back", 
+const BackButton = ({
+  href,
+  label = "Back",
   className = "",
-  icon = <FaArrowLeft className="h-4 w-4" />
+  icon = <FaArrowLeft className="h-4 w-4" />,
 }: BackButtonProps) => {
   return (
     <Link

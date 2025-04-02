@@ -10,17 +10,12 @@ interface LessonCardProps {
   className?: string;
 }
 
-/**
- * Reusable component for displaying lesson cards throughout the application
- * Now with dynamic YouTube thumbnail extraction
- */
 export default function LessonCard({
   lesson,
   className = "",
 }: LessonCardProps) {
   const [thumbnailError, setThumbnailError] = useState(false);
 
-  // Determine the thumbnail URL - use YouTube thumbnail if it's a YouTube URL
   const thumbnailUrl =
     !thumbnailError && isYouTubeUrl(lesson.videoUrl)
       ? getYouTubeThumbnail(lesson.videoUrl, "hq")
@@ -31,7 +26,6 @@ export default function LessonCard({
       <div
         className={`flex items-center gap-4 py-4 hover:bg-gray-100 transition-colors rounded-lg px-2 ${className}`}
       >
-        {/* Left side - thumbnail and play button */}
         <div className="relative min-w-[120px] h-[68px] rounded-md overflow-hidden">
           <Image
             src={thumbnailUrl}
@@ -43,14 +37,12 @@ export default function LessonCard({
             priority={false}
           />
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-            {/* Smaller, semi-transparent play button */}
             <div className="bg-white/80 rounded-full p-1.5 shadow-sm">
               <PlayIcon className="h-4 w-4 text-[#292f36]" />
             </div>
           </div>
         </div>
 
-        {/* Middle - title and description */}
         <div className="flex-grow min-w-0">
           <h3 className="font-medium text-gray-800 truncate">{lesson.title}</h3>
           <p className="text-sm text-gray-600 line-clamp-2 mt-1">
@@ -58,7 +50,6 @@ export default function LessonCard({
           </p>
         </div>
 
-        {/* Right side - completion status */}
         <div className="flex items-center gap-3 flex-shrink-0">
           {lesson.completed ? (
             <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">

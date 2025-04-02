@@ -13,42 +13,31 @@ import {
   getSectionByLessonSlug,
 } from "@/utils/courseUtils";
 
-/**
- * Lesson detail page component displaying a specific lesson with improved error handling
- */
 export default function LessonDetailPage() {
-  // Component state
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [videoReady, setVideoReady] = useState(false);
 
-  // Get the slug from the URL params
   const params = useParams();
   const slug = params.slug as string;
 
-  // Get lesson and course progress
   const lesson = getLessonBySlug(slug);
   const section = getSectionByLessonSlug(slug);
   const { markLessonAsCompleted, isLessonCompleted } = useCourseProgress();
   const lessonComplete = lesson ? isLessonCompleted(slug) : false;
 
-  // Get previous and next lessons for navigation
   const { prevLesson, nextLesson } = getAdjacentLessons(slug);
 
-  // Add a loading timeout to prevent infinite loading state
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
-      // If still loading after 5 seconds, force exit loading state
       setIsLoading(false);
     }, 5000);
 
     return () => clearTimeout(loadingTimeout);
   }, []);
 
-  // Set loading to false when we have the lesson data
   useEffect(() => {
     if (lesson) {
-      // Add a small delay to prevent flash of loading state
       const timer = setTimeout(() => {
         setIsLoading(false);
       }, 500);
@@ -57,7 +46,6 @@ export default function LessonDetailPage() {
     }
   }, [lesson]);
 
-  // Mark lesson as completed when video is ready
   useEffect(() => {
     if (!lesson || !videoReady) return;
 
@@ -68,19 +56,16 @@ export default function LessonDetailPage() {
     }
   }, [slug, markLessonAsCompleted, lesson, videoReady]);
 
-  // Handle video errors
   const handleVideoError = (err: Error) => {
     console.error("Video player error:", err);
     setError(err);
     setIsLoading(false);
   };
 
-  // Handle 404
   if (!lesson) {
     return notFound();
   }
 
-  // Process materials - ensure we're working with an array of Material objects
   const materials = Array.isArray(lesson.materials) ? lesson.materials : [];
 
   return (
@@ -117,7 +102,6 @@ export default function LessonDetailPage() {
         ) : (
           <div className="mt-6 bg-white p-6 rounded shadow flex flex-col lg:flex-row gap-8">
             <div className="flex-1">
-              {/* Video Player Component with error handling */}
               <VideoPlayer
                 videoUrl={lesson.videoUrl}
                 title={lesson.title}
@@ -128,7 +112,6 @@ export default function LessonDetailPage() {
               <h1 className="text-3xl font-bold mt-6 mb-3">{lesson.title}</h1>
               <div className="h-1 w-20 bg-[#292f36] rounded mb-6"></div>
 
-              {/* Lesson status indicator */}
               <div className="mb-4 flex items-center">
                 <div
                   className={`w-3 h-3 rounded-full mr-2 ${
@@ -147,15 +130,12 @@ export default function LessonDetailPage() {
               </div>
             </div>
 
-            {/* Right Aside */}
             <aside className="w-full lg:w-80 self-start space-y-8">
-              {/* Lesson Navigation Component */}
               <LessonNavigation
                 prevLesson={prevLesson}
                 nextLesson={nextLesson}
               />
 
-              {/* Lesson Materials Component */}
               {materials.length > 0 && (
                 <LessonMaterials materials={materials} />
               )}

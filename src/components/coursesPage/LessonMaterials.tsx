@@ -6,9 +6,6 @@ interface LessonMaterialsProps {
   className?: string;
 }
 
-/**
- * Component for displaying lesson downloadable materials
- */
 export default function LessonMaterials({
   materials,
   className = "",
@@ -29,7 +26,6 @@ export default function LessonMaterials({
       </div>
       <ul className="flex flex-col gap-3">
         {materials.map((material, index) => {
-          // Determine icon based on filename
           let FileIcon = FaFile;
           if (material.name.toLowerCase().endsWith(".pdf")) {
             FileIcon = FaFilePdf;

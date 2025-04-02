@@ -13,7 +13,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="pt-[80px]">{children}</main>
           <Footer />
         </CourseProgressProvider>
-        {/* test */}
       </body>
     </html>
   );

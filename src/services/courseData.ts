@@ -1,9 +1,5 @@
-/**
- * Course data structure containing all lessons and sections
- */
 import type { CourseSectionData, Lesson } from "@/types/course";
 
-// Special "start here" lesson that exists outside the regular sections
 export const startHereLesson: Lesson = {
   slug: "start-here",
   title: "Pradėk nuo čia!",
@@ -25,7 +21,6 @@ export const startHereLesson: Lesson = {
 
 export const courseData: CourseSectionData[] = [
   {
-    // Pirma savaitė (Week 1)
     sectionTitle: "Pirma savaitė",
     lessons: [
       {

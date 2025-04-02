@@ -32,7 +32,6 @@ body {
   }
 }
 
-/* Utility class for slow bounce */
 .animate-bounce-slow {
   animation: bounceSlow 0.7s infinite;
 }

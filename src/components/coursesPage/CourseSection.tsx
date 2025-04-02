@@ -7,15 +7,11 @@ interface CourseSectionProps {
   headerBgColor?: string;
 }
 
-/**
- * Displays a course section with a list of lessons
- */
 export default function CourseSection({
   section,
   lessonCompletionMap,
   headerBgColor = "var(--primary)",
 }: CourseSectionProps) {
-  // Prepare lessons with completion status
   const lessonsWithStatus = section.lessons.map((lesson) => ({
     ...lesson,
     completed: lessonCompletionMap[lesson.slug] || false,

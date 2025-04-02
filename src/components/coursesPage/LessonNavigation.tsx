@@ -10,9 +10,6 @@ interface LessonNavigationProps {
   className?: string;
 }
 
-/**
- * Component for navigating between lessons
- */
 export default function LessonNavigation({
   prevLesson,
   nextLesson,

@@ -7,7 +7,6 @@ export default function Footer() {
   return (
     <footer className="bg-[#21262b] text-center">
       <div className="container mx-auto px-4">
-        {/* Logo */}
         <div className="mb-6">
           <Image
             src="/images/logo-white.png"
@@ -18,7 +17,6 @@ export default function Footer() {
           />
         </div>
 
-        {/* Navigation Links */}
         <div className="mb-4">
           <Link
             href="/courses"
@@ -35,7 +33,6 @@ export default function Footer() {
           </Link>
         </div>
 
-        {/* Copyright */}
         <div className="text-gray-500 text-sm">© {currentYear} Takade</div>
       </div>
     </footer>

@@ -13,9 +13,6 @@ interface VideoPlayerProps {
   onError?: (error: Error) => void;
 }
 
-/**
- * Enhanced video player component with dynamic YouTube thumbnail
- */
 export default function VideoPlayer({
   videoUrl,
   title,
@@ -27,7 +24,6 @@ export default function VideoPlayer({
   const [error, setError] = useState<Error | null>(null);
   const [embedUrl, setEmbedUrl] = useState("");
 
-  // Generate thumbnail URL for preview/loading state
   const thumbnailUrl = isYouTubeUrl(videoUrl)
     ? getYouTubeThumbnail(videoUrl, "maxres")
     : "/images/video-placeholder.jpg";
@@ -65,7 +61,6 @@ export default function VideoPlayer({
     }
   }, [videoUrl, onReady, onError]);
 
-  // Show loading state with thumbnail as background
   if (isLoading) {
     return (
       <div
@@ -83,7 +78,6 @@ export default function VideoPlayer({
     );
   }
 
-  // Show error state
   if (error) {
     return (
       <div
@@ -101,7 +95,6 @@ export default function VideoPlayer({
     );
   }
 
-  // Regular video player
   return (
     <div
       className={`relative w-full h-0 pb-[56.25%] overflow-hidden rounded-lg shadow-lg ${className}`}

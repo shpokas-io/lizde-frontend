@@ -9,9 +9,6 @@ import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { courseData, startHereLesson } from "@/services/courseData";
 import { LessonWithCompletionStatus } from "@/types/course";
 
-/**
- * Courses page showing all available course sections and lessons with improved error handling
- */
 export default function CoursesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -22,7 +19,6 @@ export default function CoursesPage() {
     loading: progressLoading,
   } = useCourseProgress();
 
-  // Calculate progress once our data is ready
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -40,7 +36,6 @@ export default function CoursesPage() {
     }
   }, [progressLoading, getProgress]);
 
-  // Prepare the lessons completion data once our progress data is ready
   const [lessonCompletionMap, setLessonCompletionMap] = useState<
     Record<string, boolean>
   >({});
@@ -50,14 +45,12 @@ export default function CoursesPage() {
       if (!progressLoading) {
         const completionMap: Record<string, boolean> = {};
 
-        // Process the start here lesson
         if (startHereLesson) {
           completionMap[startHereLesson.slug] = isLessonCompleted(
             startHereLesson.slug
           );
         }
 
-        // Process all course sections
         courseData.forEach((section) => {
           section.lessons.forEach((lesson) => {
             completionMap[lesson.slug] = isLessonCompleted(lesson.slug);
@@ -71,7 +64,6 @@ export default function CoursesPage() {
     }
   }, [progressLoading, isLessonCompleted]);
 
-  // Prepare the start here lesson with completion status
   const startHereLessonWithStatus: LessonWithCompletionStatus | null =
     startHereLesson
       ? {
@@ -80,7 +72,6 @@ export default function CoursesPage() {
         }
       : null;
 
-  // Handle loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
@@ -92,7 +83,6 @@ export default function CoursesPage() {
     );
   }
 
-  // Handle error state
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
@@ -113,7 +103,6 @@ export default function CoursesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Top Navigation Bar */}
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-4">
         <div className="container mx-auto max-w-screen-xl">
           <div className="flex items-center justify-between">
@@ -151,9 +140,7 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto max-w-screen-xl px-4 py-8">
-        {/* Course Hero/Header */}
         <CourseHeader
           title="Tavo muzikos karjėra prasideda čia"
           description="Start getting label-quality mixes so you can attract better artists, increase your rates, work on your own terms, and build an awesome career as a mixer."
@@ -161,9 +148,7 @@ export default function CoursesPage() {
           progress={progress}
         />
 
-        {/* Course Sections */}
         <div className="space-y-8 mt-12">
-          {/* Startas Section */}
           {startHereLessonWithStatus && (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-6 py-4 bg-[#292f36] border-b border-gray-200">
@@ -175,7 +160,6 @@ export default function CoursesPage() {
             </div>
           )}
 
-          {/* Course Sections - Using the reusable component */}
           {courseData.map((section, index) => (
             <CourseSection
               key={section.sectionTitle}

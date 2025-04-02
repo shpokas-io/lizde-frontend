@@ -1,7 +1,3 @@
-/**
- * Icon components for reusable UI elements
- */
-
 export function PlayIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg
@@ -36,7 +32,11 @@ export function CheckIcon({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-export function ArrowRightIcon({ className = "h-4 w-4" }: { className?: string }) {
+export function ArrowRightIcon({
+  className = "h-4 w-4",
+}: {
+  className?: string;
+}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,11 @@ export function ArrowRightIcon({ className = "h-4 w-4" }: { className?: string }
   );
 }
 
-export function ArrowLeftIcon({ className = "h-4 w-4" }: { className?: string }) {
+export function ArrowLeftIcon({
+  className = "h-4 w-4",
+}: {
+  className?: string;
+}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,3 @@
-/**
- * Core type definitions for course data structure
- */
-
 export interface Material {
   name: string;
   url: string;
@@ -13,21 +9,19 @@ export interface Lesson {
   description: string;
   videoThumbnail: string;
   videoUrl: string;
-  materials?: Material[]; // Fixed to only accept Material array, not string
-  duration?: number; // Optional duration in minutes
+  materials?: Material[];
+  duration?: number;
 }
 
 export interface CourseSectionData {
   sectionTitle: string;
   lessons: Lesson[];
-  description?: string; // Optional section description
+  description?: string;
 }
 
 export interface LessonWithCompletionStatus extends Lesson {
   completed: boolean;
 }
-
-// New types for better organization
 export interface CourseProgressData {
   completedLessons: string[];
   lastAccessedDate?: string;

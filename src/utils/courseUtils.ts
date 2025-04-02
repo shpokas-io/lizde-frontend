@@ -1,14 +1,7 @@
-/**
- * Enhanced utility functions for working with course data
- */
 import { courseData, startHereLesson } from "@/services/courseData";
 import type { Lesson, CourseSectionData } from "@/types/course";
 
-/**
- * Gets all lessons across all course sections including the start here lesson
- */
 export function getAllLessons(): Lesson[] {
-  // First ensure the startHereLesson exists
   if (!startHereLesson) {
     console.warn("Start here lesson is not defined");
     return courseData.flatMap((section) => section.lessons);
@@ -17,21 +10,16 @@ export function getAllLessons(): Lesson[] {
   return [startHereLesson, ...courseData.flatMap((section) => section.lessons)];
 }
 
-/**
- * Finds a lesson by its slug with proper error handling
- */
 export function getLessonBySlug(slug: string): Lesson | undefined {
   if (!slug) {
     console.error("Invalid slug provided to getLessonBySlug");
     return undefined;
   }
 
-  // Special case check for the start here lesson
   if (startHereLesson && slug === startHereLesson.slug) {
     return startHereLesson;
   }
 
-  // Check in regular course sections
   try {
     return courseData
       .flatMap((section) => section.lessons)
@@ -42,9 +30,6 @@ export function getLessonBySlug(slug: string): Lesson | undefined {
   }
 }
 
-/**
- * Gets the section containing a specific lesson
- */
 export function getSectionByLessonSlug(
   slug: string
 ): CourseSectionData | undefined {
@@ -55,9 +40,6 @@ export function getSectionByLessonSlug(
   );
 }
 
-/**
- * Gets the previous and next lessons based on the current lesson slug
- */
 export function getAdjacentLessons(currentSlug: string): {
   prevLesson: Lesson | null;
   nextLesson: Lesson | null;
@@ -71,7 +53,6 @@ export function getAdjacentLessons(currentSlug: string): {
     const allLessons = getAllLessons();
     const currentIndex = allLessons.findIndex((l) => l.slug === currentSlug);
 
-    // If lesson not found
     if (currentIndex === -1) {
       return { prevLesson: null, nextLesson: null };
     }
@@ -89,16 +70,12 @@ export function getAdjacentLessons(currentSlug: string): {
   }
 }
 
-/**
- * Calculates the total number of lessons in the course
- */
 export function getTotalLessonCount(): number {
   try {
     const sectionsCount = courseData.reduce(
       (acc, section) => acc + section.lessons.length,
       0
     );
-    // Add 1 for start-here lesson if it exists
     return startHereLesson ? sectionsCount + 1 : sectionsCount;
   } catch (error) {
     console.error("Error calculating total lesson count:", error);
@@ -106,9 +83,6 @@ export function getTotalLessonCount(): number {
   }
 }
 
-/**
- * Group lessons by their sections for easier navigation
- */
 export function getLessonsBySections(): {
   sectionTitle: string;
   lessons: Lesson[];
@@ -119,9 +93,6 @@ export function getLessonsBySections(): {
   }));
 }
 
-/**
- * Calculates the percentage completion for a specific section
- */
 export function getSectionCompletion(
   sectionTitle: string,
   completedLessons: string[]

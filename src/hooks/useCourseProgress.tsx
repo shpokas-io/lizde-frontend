@@ -1,6 +1,3 @@
-/**
- * Enhanced custom hook for managing course progress with error handling
- */
 "use client";
 
 import {
@@ -40,7 +37,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
   );
   const [loading, setLoading] = useState(true);
 
-  // Load saved data on mount
   useEffect(() => {
     try {
       setLoading(true);
@@ -49,7 +45,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
       setLastAccessedLesson(progressData.lastAccessedLesson || null);
     } catch (error) {
       console.error("Error loading course progress:", error);
-      // Fallback to empty state on error
       setCompletedLessons([]);
       setLastAccessedLesson(null);
     } finally {
@@ -57,7 +52,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save to localStorage when state changes
   useEffect(() => {
     try {
       if (!loading) {
@@ -68,7 +62,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   }, [completedLessons, loading]);
 
-  // Calculate overall course progress
   const getProgress = (): number => {
     try {
       const totalLessons = getTotalLessonCount();
@@ -80,7 +73,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Calculate progress for a specific section
   const getSectionProgress = (sectionTitle: string): number => {
     try {
       return getSectionCompletion(sectionTitle, completedLessons);
@@ -93,7 +85,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Mark a lesson as completed
   const markLessonAsCompleted = (slug: string) => {
     try {
       if (!slug) {
@@ -105,7 +96,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
         setCompletedLessons((prev) => [...prev, slug]);
       }
 
-      // Also update the last accessed lesson
       setLastAccessedLesson(slug);
       saveLastAccessedLesson(slug);
     } catch (error) {
@@ -113,7 +103,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Check if a lesson is completed
   const isLessonCompleted = (slug: string): boolean => {
     try {
       if (!slug) return false;
@@ -124,7 +113,6 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Reset all progress
   const resetProgress = () => {
     try {
       setCompletedLessons([]);
