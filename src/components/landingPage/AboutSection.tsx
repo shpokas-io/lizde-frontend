@@ -15,7 +15,7 @@ const AboutSection = () => {
             <h3 className="text-2xl font-bold mb-6">
               Šis kursas skirtas tau, jei:
             </h3>
-            <ul className="space-y-3 list-disc list-inside text-lg">
+            <ul className="space-y-3 list-disc pl-6 leading-relaxed list-inside text-lg">
               <li>Esi ambicingas kūrėjas</li>
               <li>Kuri alternatyvių žanrų muziką.</li>
               <li>Nori perprasti alternatyvios muzikos subtilybes.</li>
@@ -45,7 +45,7 @@ const AboutSection = () => {
           />
           <div>
             <h3 className="text-2xl font-bold mb-6">Mes padėsim tau su:</h3>
-            <ul className="space-y-3 list-disc list-inside text-lg">
+            <ul className="space-y-3 list-disc pl-6 leading-relaxed  list-inside text-lg">
               <li>Muzikos industrijos pagrindais</li>
               <li>Profesionaliu muzikos kūrimo procesu </li>
               <li>Garsų dizainu ir aranžuotėmis</li>
