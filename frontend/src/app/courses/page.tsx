@@ -74,10 +74,10 @@ export default function CoursesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#121212] text-gray-200 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-t-[#292f36] border-r-[#292f36] border-b-gray-200 border-l-gray-200 rounded-full animate-spin mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600">Loading your courses...</p>
+          <div className="w-16 h-16 border-4 border-t-orange-500 border-r-orange-500 border-b-gray-700 border-l-gray-700 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-lg text-gray-400">Loading your courses...</p>
         </div>
       </div>
     );
@@ -85,14 +85,14 @@ export default function CoursesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
+      <div className="min-h-screen bg-[#121212] text-gray-200 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8 bg-[#1a1a1a] rounded-lg border border-gray-800">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-          <p className="text-gray-600 mb-6">{error.message}</p>
+          <p className="text-gray-400 mb-6">{error.message}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-5 py-2 bg-[#292f36] text-white rounded hover:bg-[#1d2129] transition"
+            className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full transition-all duration-200"
           >
             Try Again
           </button>
@@ -102,14 +102,14 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-4">
-        <div className="container mx-auto max-w-screen-xl">
+    <div className="min-h-screen bg-[#121212] text-gray-200">
+      <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
+        <div className="container mx-auto max-w-screen-xl px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <BackButton href="/" label="Home" />
-              <div className="hidden sm:block h-6 w-px bg-gray-300 mx-4"></div>
-              <h1 className="text-xl font-bold text-gray-900 hidden sm:block">
+              <div className="hidden sm:block h-6 w-px bg-gray-800 mx-4"></div>
+              <h1 className="text-xl font-bold text-gray-200 hidden sm:block">
                 My Learning Path
               </h1>
             </div>
@@ -117,7 +117,7 @@ export default function CoursesPage() {
             {lastAccessedLesson && (
               <a
                 href={`/courses/${lastAccessedLesson}`}
-                className="text-sm text-[#292f36] hover:text-[#1d2129] flex items-center"
+                className="text-sm text-orange-500 hover:text-orange-400 flex items-center"
               >
                 <span className="mr-2">Continue Learning</span>
                 <svg
@@ -150,9 +150,9 @@ export default function CoursesPage() {
 
         <div className="space-y-8 mt-12">
           {startHereLessonWithStatus && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 bg-[#292f36] border-b border-gray-200">
-                <h2 className="text-xl font-bold text-white">Startas</h2>
+            <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 overflow-hidden">
+              <div className="px-6 py-4 bg-orange-500/10 border-b border-gray-800">
+                <h2 className="text-xl font-bold text-orange-500">Startas</h2>
               </div>
               <div className="px-4 py-2">
                 <LessonCard lesson={startHereLessonWithStatus} />
@@ -165,7 +165,7 @@ export default function CoursesPage() {
               key={section.sectionTitle}
               section={section}
               lessonCompletionMap={lessonCompletionMap}
-              headerBgColor={index % 2 === 0 ? "#292f36" : "#26292c"}
+              headerBgColor={index % 2 === 0 ? "bg-orange-500/10" : "bg-[#1a1a1a]"}
             />
           ))}
         </div>

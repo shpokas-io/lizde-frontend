@@ -7,10 +7,10 @@ import "./globals.css";
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-white text-gray-900">
+      <body className="bg-[#121212] text-gray-200">
         <CourseProgressProvider>
           <NavBar />
-          <main className="pt-[80px]">{children}</main>
+          <main>{children}</main>
           <Footer />
         </CourseProgressProvider>
       </body>
