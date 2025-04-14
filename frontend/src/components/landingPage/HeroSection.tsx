@@ -31,18 +31,24 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen bg-[#121212] overflow-hidden">
-      {/* Background Elements */}
+      {/* Background Image with Overlays */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-transparent to-[#121212] z-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent z-20" />
+        {/* Main Background Image */}
         <Image
-          src="/images/hero-background.jpg"
-          alt="Hero Background"
+          src="/images/background.jpg"
+          alt="Music Studio Setup"
           fill
-          className="object-cover object-center opacity-60"
+          className="object-cover object-center"
           priority
           quality={100}
         />
+        
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-transparent to-[#121212]/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/50 to-transparent" />
+        
+        {/* Optional: Texture Overlay */}
+        <div className="absolute inset-0 bg-[#121212]/30" />
       </div>
 
       {/* Main Content */}
@@ -75,26 +81,24 @@ const HeroSection = () => {
               <Button
                 text="Pradėk dabar"
                 href="/buy"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-[0_0_20px_rgba(249,115,22,0.3)]"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 
+                         rounded-full text-lg font-semibold transition-all duration-300 
+                         transform hover:scale-105 shadow-[0_0_20px_rgba(249,115,22,0.3)]"
               />
               <Button
                 text="Sužinok daugiau"
                 href="#about"
-                className="bg-transparent border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300"
+                className="bg-transparent border-2 border-orange-500 text-orange-500 
+                         hover:bg-orange-500 hover:text-white px-8 py-4 rounded-full 
+                         text-lg font-semibold transition-all duration-300"
               />
             </div>
           </div>
 
-          {/* Right Content - Featured Image */}
+          {/* Right Content - We can remove or modify this since we have a background image */}
           <div className="hidden lg:block relative h-[600px] w-full">
-            <div className="absolute inset-0 bg-gradient-radial from-orange-500/20 to-transparent rounded-full blur-3xl" />
-            <Image
-              src="/images/hero-featured.png"
-              alt="Music Production Setup"
-              fill
-              className="object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-700"
-              priority
-            />
+            {/* Optional: Add floating elements or highlights here */}
+            <div className="absolute inset-0 bg-gradient-radial from-orange-500/10 to-transparent rounded-full blur-3xl" />
           </div>
         </div>
       </div>
@@ -107,7 +111,7 @@ const HeroSection = () => {
           aria-label="Scroll to about section"
         >
           <div className="flex flex-col items-center gap-2">
-                                  <span className="text-orange-500 text-sm font-medium">Sužinok daugiau</span>
+            <span className="text-orange-500 text-sm font-medium">Sužinok daugiau</span>
             <div className="w-8 h-8 animate-bounce">
               <svg
                 className="w-full h-full text-orange-500"
