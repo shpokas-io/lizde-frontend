@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user && pathname === '/auth/login') {
+      if (session?.user && (pathname === '/' || pathname === '/auth/login')) {
         router.push('/courses');
       } else if (!session?.user && pathname.startsWith('/courses')) {
         router.push('/auth/login');
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/courses`,
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}`,
         },
       });
       if (error) throw error;
