@@ -69,38 +69,46 @@ export default function LessonDetailPage() {
   const materials = Array.isArray(lesson.materials) ? lesson.materials : [];
 
   return (
-    <div className="bg-gray-100 min-h-screen text-black">
-      <div className="container mx-auto max-w-screen-lg px-4 py-8">
-        <div className="flex items-center justify-between">
-          <BackButton href="/courses" label="Back to Courses Page" />
-          {section && (
-            <div className="text-sm text-gray-600">
-              Section:{" "}
-              <span className="font-medium">{section.sectionTitle}</span>
-            </div>
-          )}
+    <div className="bg-[#121212] min-h-screen text-gray-200">
+      <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
+        <div className="container mx-auto max-w-screen-lg px-4 py-4">
+          <div className="flex items-center justify-between">
+            <BackButton href="/courses" label="Back to Courses Page" />
+            {section && (
+              <div className="text-sm text-gray-400">
+                Section:{" "}
+                <span className="font-medium text-orange-500">{section.sectionTitle}</span>
+              </div>
+            )}
+          </div>
         </div>
+      </div>
 
-        {error ? (
-          <div className="mt-6 bg-red-50 p-4 rounded-lg border border-red-200 text-red-700">
+      {error ? (
+        <div className="container mx-auto max-w-screen-lg px-4 py-8">
+          <div className="mt-6 bg-[#1a1a1a] p-4 rounded-lg border border-red-500/50 text-red-400">
             <h2 className="text-lg font-medium mb-2">Error Loading Lesson</h2>
             <p>{error.message}</p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              className="mt-3 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
             >
               Try Again
             </button>
           </div>
-        ) : isLoading ? (
-          <div className="mt-6 bg-white p-6 rounded shadow flex items-center justify-center">
+        </div>
+      ) : isLoading ? (
+        <div className="container mx-auto max-w-screen-lg px-4 py-8">
+          <div className="mt-6 bg-[#1a1a1a] p-6 rounded-lg border border-gray-800 flex items-center justify-center">
             <div className="text-center py-12">
-              <div className="w-12 h-12 border-4 border-t-[#292f36] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading lesson content...</p>
+              <div className="w-12 h-12 border-4 border-t-orange-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-400">Loading lesson content...</p>
             </div>
           </div>
-        ) : (
-          <div className="mt-6 bg-white p-6 rounded shadow flex flex-col lg:flex-row gap-8">
+        </div>
+      ) : (
+        <div className="container mx-auto max-w-screen-lg px-4 py-8">
+          <div className="mt-6 bg-[#1a1a1a] p-6 rounded-lg border border-gray-800 flex flex-col lg:flex-row gap-8">
             <div className="flex-1">
               <VideoPlayer
                 videoUrl={lesson.videoUrl}
@@ -109,22 +117,22 @@ export default function LessonDetailPage() {
                 onError={handleVideoError}
               />
 
-              <h1 className="text-3xl font-bold mt-6 mb-3">{lesson.title}</h1>
-              <div className="h-1 w-20 bg-[#292f36] rounded mb-6"></div>
+              <h1 className="text-3xl font-bold mt-6 mb-3 text-white">{lesson.title}</h1>
+              <div className="h-1 w-20 bg-orange-500 rounded mb-6"></div>
 
               <div className="mb-4 flex items-center">
                 <div
                   className={`w-3 h-3 rounded-full mr-2 ${
-                    lessonComplete ? "bg-green-500" : "bg-gray-300"
+                    lessonComplete ? "bg-green-500" : "bg-gray-500"
                   }`}
                 ></div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-400">
                   {lessonComplete ? "Completed" : "In Progress"}
                 </span>
               </div>
 
-              <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-sm">
-                <p className="text-gray-700 leading-relaxed">
+              <div className="bg-[#232323] p-5 rounded-lg border border-gray-800 shadow-sm">
+                <p className="text-gray-300 leading-relaxed">
                   {lesson.description}
                 </p>
               </div>
@@ -141,8 +149,8 @@ export default function LessonDetailPage() {
               )}
             </aside>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
