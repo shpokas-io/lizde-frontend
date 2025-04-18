@@ -10,7 +10,7 @@ interface CourseSectionProps {
 export default function CourseSection({
   section,
   lessonCompletionMap,
-  headerBgColor = "var(--primary)",
+  headerBgColor = "bg-orange-500/10",
 }: CourseSectionProps) {
   const lessonsWithStatus = section.lessons.map((lesson) => ({
     ...lesson,
@@ -18,14 +18,11 @@ export default function CourseSection({
   }));
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      <div
-        className="px-6 py-4 border-b border-gray-200"
-        style={{ backgroundColor: headerBgColor }}
-      >
+    <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 shadow-sm overflow-hidden">
+      <div className={`px-6 py-4 border-b border-gray-800 ${headerBgColor}`}>
         <h2 className="text-xl font-bold text-white">{section.sectionTitle}</h2>
       </div>
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-800">
         {lessonsWithStatus.map((lesson) => (
           <div key={lesson.slug} className="px-4 py-2">
             <LessonCard lesson={lesson} />
