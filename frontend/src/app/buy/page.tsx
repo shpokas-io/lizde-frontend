@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaCheck, FaPlay } from "react-icons/fa";
 
 export default function BuyPage() {
-  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro'>('pro');
+  const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro">("pro");
 
   const features = [
     "Access to all course materials",
@@ -20,14 +20,9 @@ export default function BuyPage() {
 
   const plans = {
     basic: {
-      name: "Basic",
-      price: "€499",
+      name: "Muzikos kursas",
+      price: "€250",
       features: features.slice(0, 4),
-    },
-    pro: {
-      name: "Pro",
-      price: "€799",
-      features: features,
     },
   };
 
@@ -41,8 +36,8 @@ export default function BuyPage() {
               Start Your Music Production Journey Today
             </h1>
             <p className="text-xl text-gray-400 mb-8">
-              Join thousands of successful producers who have transformed their music career
-              with our comprehensive course
+              Join thousands of successful producers who have transformed their
+              music career with our comprehensive course
             </p>
           </div>
         </div>
@@ -92,23 +87,26 @@ export default function BuyPage() {
           </div>
 
           {/* Pricing Plans */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="flex justify-center">
             {Object.entries(plans).map(([key, plan]) => (
               <div
                 key={key}
                 className={`
                   relative bg-[#1a1a1a] rounded-2xl p-8 border-2 
                   transition-all duration-200 cursor-pointer
-                  ${selectedPlan === key 
-                    ? 'border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.2)]' 
-                    : 'border-gray-800 hover:border-gray-700'
+                  ${
+                    selectedPlan === key
+                      ? "border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.2)]"
+                      : "border-gray-800 hover:border-gray-700"
                   }
                 `}
-                onClick={() => setSelectedPlan(key as 'basic' | 'pro')}
+                onClick={() => setSelectedPlan(key as "basic" | "pro")}
               >
                 <div className="text-center mb-8">
                   <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                  <div className="text-3xl font-bold text-orange-500">{plan.price}</div>
+                  <div className="text-3xl font-bold text-orange-500">
+                    {plan.price}
+                  </div>
                 </div>
 
                 <ul className="space-y-4 mb-8">
@@ -125,9 +123,10 @@ export default function BuyPage() {
                   className={`
                     block w-full py-4 px-6 rounded-full text-center font-semibold text-lg
                     transition-all duration-200 transform hover:scale-105
-                    ${selectedPlan === key
-                      ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.3)]'
-                      : 'bg-[#232323] hover:bg-[#2a2a2a] text-gray-300'
+                    ${
+                      selectedPlan === key
+                        ? "bg-orange-500 hover:bg-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.3)]"
+                        : "bg-[#232323] hover:bg-[#2a2a2a] text-gray-300"
                     }
                   `}
                 >
@@ -140,4 +139,4 @@ export default function BuyPage() {
       </div>
     </div>
   );
-} 
+}
