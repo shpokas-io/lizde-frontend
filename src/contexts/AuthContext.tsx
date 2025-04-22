@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
   useEffect(() => {
     // Check active sessions and sets the user
@@ -36,15 +37,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user && (pathname === '/' || pathname === '/auth/login')) {
-        router.push('/courses');
+      if (session?.user) {
+        // Only redirect to courses in production
+        if (!isDevelopment && (pathname === '/' || pathname === '/auth/login')) {
+          router.push('/courses');
+        }
       } else if (!session?.user && pathname.startsWith('/courses')) {
         router.push('/auth/login');
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [pathname, router]);
+  }, [pathname, router, isDevelopment]);
 
   const signInWithGoogle = async () => {
     try {

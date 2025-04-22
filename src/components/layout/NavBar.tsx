@@ -70,6 +70,15 @@ const NavBar = () => {
               >
                 About
               </Link>
+              {!user && (
+                <Link
+                  href="/buy"
+                  className="text-gray-200 hover:text-orange-500 text-sm font-medium
+                         transition-colors duration-200"
+                >
+                  Buy
+                </Link>
+              )}
               {user && (
                 <Link
                   href="/courses"
@@ -144,6 +153,16 @@ const NavBar = () => {
             >
               About
             </Link>
+            {!user && (
+              <Link
+                href="/buy"
+                onClick={() => setIsOpen(false)}
+                className="text-gray-200 hover:text-orange-500 text-2xl font-medium
+                       transition-colors duration-200"
+              >
+                Buy
+              </Link>
+            )}
             {user && (
               <Link
                 href="/courses"
