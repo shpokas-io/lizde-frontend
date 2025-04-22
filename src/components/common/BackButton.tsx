@@ -17,8 +17,8 @@ const BackButton = ({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-2 text-base font-medium text-gray-700 
-                 hover:text-gray-900 transition-colors ${className}`}
+      className={`inline-flex items-center gap-2 text-base font-medium text-orange-500 
+                 hover:text-orange-400 transition-colors ${className}`}
     >
       {icon}
       {label}
