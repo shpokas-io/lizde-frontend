@@ -12,7 +12,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/auth");
   const isCoursePage = pathname?.startsWith("/courses");
-  const shouldShowNavbar = !isAuthPage && !isCoursePage;
+  const isCartPage = pathname === "/cart";
+  const shouldShowNavbar = !isAuthPage && !isCoursePage && !isCartPage;
 
   return (
     <html lang="en">
