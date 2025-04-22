@@ -8,8 +8,11 @@ import LessonCard from "@/components/common/LessonCard";
 import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { courseData, startHereLesson } from "@/services/courseData";
 import { LessonWithCompletionStatus } from "@/types/course";
+import { useAuth } from "@/contexts/AuthContext";
+import LockedContent from "@/components/LockedContent";
 
 export default function CoursesPage() {
+  const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const {
@@ -23,7 +26,7 @@ export default function CoursesPage() {
 
   useEffect(() => {
     try {
-      if (!progressLoading) {
+      if (!progressLoading && !authLoading) {
         setProgress(getProgress());
         setIsLoading(false);
       }
@@ -34,7 +37,7 @@ export default function CoursesPage() {
       );
       setIsLoading(false);
     }
-  }, [progressLoading, getProgress]);
+  }, [progressLoading, getProgress, authLoading]);
 
   const [lessonCompletionMap, setLessonCompletionMap] = useState<
     Record<string, boolean>
@@ -42,7 +45,7 @@ export default function CoursesPage() {
 
   useEffect(() => {
     try {
-      if (!progressLoading) {
+      if (!progressLoading && !authLoading) {
         const completionMap: Record<string, boolean> = {};
 
         if (startHereLesson) {
@@ -62,7 +65,7 @@ export default function CoursesPage() {
     } catch (err) {
       console.error("Error preparing lesson completion data:", err);
     }
-  }, [progressLoading, isLessonCompleted]);
+  }, [progressLoading, isLessonCompleted, authLoading]);
 
   const startHereLessonWithStatus: LessonWithCompletionStatus | null =
     startHereLesson
@@ -72,7 +75,7 @@ export default function CoursesPage() {
         }
       : null;
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <div className="min-h-screen bg-[#121212] text-gray-200 flex items-center justify-center">
         <div className="text-center">
@@ -96,6 +99,22 @@ export default function CoursesPage() {
           >
             Try Again
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user?.hasCourseAccess) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-gray-200">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto">
+            <BackButton href="/" label="Home" />
+            <LockedContent 
+              title="Course Content Locked" 
+              description="Purchase the course to access all materials and start learning today!"
+            />
+          </div>
         </div>
       </div>
     );

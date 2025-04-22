@@ -15,6 +15,10 @@ create policy "Users can view their own course access"
     on public.user_courses for select
     using (auth.uid() = user_id);
 
+create policy "Users can update their own course access"
+    on public.user_courses for update
+    using (auth.uid() = user_id);
+
 create policy "Service role can manage all course access"
     on public.user_courses for all
     using (auth.role() = 'service_role');

@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import NavBar from "@/components/layout/NavBar";
 import "./globals.css";
 import { usePathname } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -20,6 +21,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="bg-[#121212] text-gray-200">
         <AuthProvider>
           <CourseProgressProvider>
+            <Toaster 
+              position="top-center"
+              toastOptions={{
+                style: {
+                  background: '#333',
+                  color: '#fff',
+                },
+                success: {
+                  duration: 3000,
+                },
+                error: {
+                  duration: 4000,
+                },
+              }}
+            />
             {shouldShowNavbar && <NavBar />}
             <main>{children}</main>
             <Footer />
