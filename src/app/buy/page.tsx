@@ -119,7 +119,7 @@ export default function BuyPage() {
                 </ul>
 
                 <Link
-                  href="/auth/login"
+                  href="/auth/register"
                   className={`
                     block w-full py-4 px-6 rounded-full text-center font-semibold text-lg
                     transition-all duration-200 transform hover:scale-105

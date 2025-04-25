@@ -1,55 +1,27 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Link from "next/link";
 import { FaLock } from "react-icons/fa";
+import Link from "next/link";
 
 interface LockedContentProps {
   title: string;
-  description?: string;
+  description: string;
 }
 
 export default function LockedContent({ title, description }: LockedContentProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative bg-[#1a1a1a] rounded-2xl p-8 border border-gray-800 overflow-hidden"
-    >
-      {/* Blur overlay */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10" />
-      
-      {/* Lock icon animation */}
-      <motion.div
-        animate={{
-          scale: [1, 1.1, 1],
-          rotate: [0, -5, 5, -5, 0],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20"
-      >
-        <FaLock className="w-16 h-16 text-orange-500" />
-      </motion.div>
-
-      {/* Content */}
-      <div className="relative z-30 text-center">
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        {description && (
-          <p className="text-gray-400 mb-8">{description}</p>
-        )}
+    <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 p-8 my-8 text-center">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center">
+          <FaLock className="w-8 h-8 text-orange-500" />
+        </div>
+        <h2 className="text-2xl font-bold text-white">{title}</h2>
+        <p className="text-gray-400 max-w-md mx-auto mb-6">{description}</p>
         <Link
-          href="/cart"
-          className="inline-block py-3 px-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold
-          transition-all duration-200 transform hover:scale-105 shadow-[0_0_20px_rgba(249,115,22,0.3)]"
+          href="/auth/login"
+          className="inline-flex items-center px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
         >
-          Unlock Course
+          Sign In to Access
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 } 
