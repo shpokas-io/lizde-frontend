@@ -1,7 +1,12 @@
-import { courseData, startHereLesson } from "@/services/courseData";
+import { getCourseData, getStartHereLesson, getLessonBySlug as getLessonBySlugFromDb } from "@/services/courseService";
 import type { Lesson, CourseSectionData } from "@/types/course";
 
-export function getAllLessons(): Lesson[] {
+export async function getAllLessons(): Promise<Lesson[]> {
+  const [courseData, startHereLesson] = await Promise.all([
+    getCourseData(),
+    getStartHereLesson()
+  ]);
+
   if (!startHereLesson) {
     console.warn("Start here lesson is not defined");
     return courseData.flatMap((section) => section.lessons);
@@ -10,47 +15,37 @@ export function getAllLessons(): Lesson[] {
   return [startHereLesson, ...courseData.flatMap((section) => section.lessons)];
 }
 
-export function getLessonBySlug(slug: string): Lesson | undefined {
+export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   if (!slug) {
     console.error("Invalid slug provided to getLessonBySlug");
-    return undefined;
+    return null;
   }
 
-  if (startHereLesson && slug === startHereLesson.slug) {
-    return startHereLesson;
-  }
-
-  try {
-    return courseData
-      .flatMap((section) => section.lessons)
-      .find((lesson) => lesson.slug === slug);
-  } catch (error) {
-    console.error("Error finding lesson by slug:", error);
-    return undefined;
-  }
+  return await getLessonBySlugFromDb(slug);
 }
 
-export function getSectionByLessonSlug(
+export async function getSectionByLessonSlug(
   slug: string
-): CourseSectionData | undefined {
+): Promise<CourseSectionData | undefined> {
   if (!slug) return undefined;
 
+  const courseData = await getCourseData();
   return courseData.find((section) =>
     section.lessons.some((lesson) => lesson.slug === slug)
   );
 }
 
-export function getAdjacentLessons(currentSlug: string): {
+export async function getAdjacentLessons(currentSlug: string): Promise<{
   prevLesson: Lesson | null;
   nextLesson: Lesson | null;
-} {
+}> {
   if (!currentSlug) {
     console.error("Invalid slug provided to getAdjacentLessons");
     return { prevLesson: null, nextLesson: null };
   }
 
   try {
-    const allLessons = getAllLessons();
+    const allLessons = await getAllLessons();
     const currentIndex = allLessons.findIndex((l) => l.slug === currentSlug);
 
     if (currentIndex === -1) {
@@ -70,8 +65,11 @@ export function getAdjacentLessons(currentSlug: string): {
   }
 }
 
-export function getTotalLessonCount(): number {
+export async function getTotalLessonCount(): Promise<number> {
   try {
+    const courseData = await getCourseData();
+    const startHereLesson = await getStartHereLesson();
+    
     const sectionsCount = courseData.reduce(
       (acc, section) => acc + section.lessons.length,
       0
@@ -83,30 +81,28 @@ export function getTotalLessonCount(): number {
   }
 }
 
-export function getLessonsBySections(): {
+export async function getLessonsBySections(): Promise<{
   sectionTitle: string;
   lessons: Lesson[];
-}[] {
+}[]> {
+  const courseData = await getCourseData();
   return courseData.map((section) => ({
     sectionTitle: section.sectionTitle,
     lessons: section.lessons,
   }));
 }
 
-export function getSectionCompletion(
+export async function getSectionCompletion(
   sectionTitle: string,
   completedLessons: string[]
-): number {
+): Promise<number> {
+  const courseData = await getCourseData();
   const section = courseData.find((s) => s.sectionTitle === sectionTitle);
-
   if (!section) return 0;
-
-  const totalLessons = section.lessons.length;
-  if (totalLessons === 0) return 0;
 
   const completedInSection = section.lessons.filter((lesson) =>
     completedLessons.includes(lesson.slug)
   ).length;
 
-  return Math.round((completedInSection / totalLessons) * 100);
+  return (completedInSection / section.lessons.length) * 100;
 }
