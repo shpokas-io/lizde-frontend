@@ -4,9 +4,10 @@ import Link from "next/link";
 interface LockedContentProps {
   title: string;
   description: string;
+  isAuthenticated?: boolean;
 }
 
-export default function LockedContent({ title, description }: LockedContentProps) {
+export default function LockedContent({ title, description, isAuthenticated = false }: LockedContentProps) {
   return (
     <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 p-8 my-8 text-center">
       <div className="flex flex-col items-center justify-center gap-4">
@@ -16,10 +17,10 @@ export default function LockedContent({ title, description }: LockedContentProps
         <h2 className="text-2xl font-bold text-white">{title}</h2>
         <p className="text-gray-400 max-w-md mx-auto mb-6">{description}</p>
         <Link
-          href="/auth/login"
+          href={isAuthenticated ? "/cart" : "/auth/login"}
           className="inline-flex items-center px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
         >
-          Sign In to Access
+          {isAuthenticated ? "Purchase Course" : "Sign In to Access"}
         </Link>
       </div>
     </div>

@@ -63,14 +63,15 @@ export default function CoursesPage() {
           progress={progress}
         />
 
-        {!user && (
+        {(!user || !user.hasCourseAccess) && (
           <LockedContent
             title="Course Locked"
-            description="Please sign in to access the course content."
+            description={user ? "Please purchase the course to access the content." : "Please sign in to access the course content."}
+            isAuthenticated={!!user}
           />
         )}
 
-        {user && (
+        {user && user.hasCourseAccess && (
           <>
             {startHereLesson && (
               <div className="mb-8">
