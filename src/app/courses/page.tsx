@@ -21,44 +21,59 @@ export default function CoursesPage() {
   } = useCourse();
 
   const [progress, setProgress] = useState(0);
-  const [lessonCompletionMap, setLessonCompletionMap] = useState<Record<string, boolean>>({});
+  const [lessonCompletionMap, setLessonCompletionMap] = useState<
+    Record<string, boolean>
+  >({});
 
   useEffect(() => {
     if (!courseLoading && !authLoading) {
       setProgress(getProgress());
       const completionMap: Record<string, boolean> = {};
-      
+
       // Add start here lesson to completion map
       if (startHereLesson) {
-        completionMap[startHereLesson.slug] = isLessonCompleted(startHereLesson.slug);
+        completionMap[startHereLesson.slug] = isLessonCompleted(
+          startHereLesson.slug
+        );
       }
 
       // Add all other lessons to completion map
-      courseData.forEach(section => {
-        section.lessons.forEach(lesson => {
+      courseData.forEach((section) => {
+        section.lessons.forEach((lesson) => {
           completionMap[lesson.slug] = isLessonCompleted(lesson.slug);
         });
       });
 
       setLessonCompletionMap(completionMap);
     }
-  }, [courseLoading, authLoading, getProgress, courseData, startHereLesson, isLessonCompleted]);
+  }, [
+    courseLoading,
+    authLoading,
+    getProgress,
+    courseData,
+    startHereLesson,
+    isLessonCompleted,
+  ]);
 
   if (courseLoading || authLoading) {
     return <div className="min-h-screen bg-[#1a1a1a] p-4">Loading...</div>;
   }
 
   if (courseError) {
-    return <div className="min-h-screen bg-[#1a1a1a] p-4 text-red-500">Error: {courseError.message}</div>;
+    return (
+      <div className="min-h-screen bg-[#1a1a1a] p-4 text-red-500">
+        Error: {courseError.message}
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] p-4">
       <div className="max-w-4xl mx-auto">
         <BackButton href="/" label="Home" />
-        <CourseHeader 
-          title="Tavo muzikos karjėra prasideda čia"
-          description="Start getting label-quality mixes so you can attract better artists, increase your rates, work on your own terms, and build an awesome career as a mixer."
+        <CourseHeader
+          title="DIY dainų įrašymo pagrindai"
+          description="Šis kursas – tai praktinis gidas, kaip namų sąlygomis įrašyti, suvesti ir apdoroti muzikinį kūrinį nuo pradžios iki pabaigos, naudojant prieinamą įrangą ir garso apdorojimo įrankius."
           imageUrl="/images/about-section.jpg"
           progress={progress}
         />
@@ -66,7 +81,11 @@ export default function CoursesPage() {
         {(!user || !user.hasCourseAccess) && (
           <LockedContent
             title="Course Locked"
-            description={user ? "Please purchase the course to access the content." : "Please sign in to access the course content."}
+            description={
+              user
+                ? "Please purchase the course to access the content."
+                : "Please sign in to access the course content."
+            }
             isAuthenticated={!!user}
           />
         )}

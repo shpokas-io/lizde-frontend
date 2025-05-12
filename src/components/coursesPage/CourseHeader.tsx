@@ -32,7 +32,7 @@ export default function CourseHeader({
           <div className="lg:w-1/2 space-y-6">
             <div>
               <span className="bg-orange-500/10 text-orange-500 text-xs uppercase font-bold px-3 py-1 rounded-full">
-                Your Journey
+                Tavo augimo erdvė
               </span>
               <h1 className="text-4xl font-bold mt-3 mb-5 bg-gradient-to-r from-orange-500 to-orange-300 bg-clip-text text-transparent">
                 {title}

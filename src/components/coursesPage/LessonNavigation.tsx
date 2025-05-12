@@ -70,7 +70,7 @@ export default function LessonNavigation({
               </div>
               <div className="flex items-center mt-2 text-xs text-gray-500">
                 <FaArrowRight className="text-xs text-orange-500 mr-1" />
-                <span>Continue learning</span>
+                <span>Į kursą</span>
               </div>
             </div>
           </Link>
