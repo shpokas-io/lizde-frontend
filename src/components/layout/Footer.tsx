@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-import { FaGithub, FaInstagram, FaYoutube, FaSpotify } from "react-icons/fa";
+import { FaInstagram, FaYoutube, FaSpotify } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -14,9 +13,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#121212] text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Main Section: Logo + Text | Spacer | Contact Form */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
-          {/* Left: Logo and Description */}
           <div className="md:w-1/3">
             <Image
               src="/images/logo-white.png"
@@ -31,10 +28,8 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Optional Center Spacer */}
           <div className="hidden md:block md:flex-1" />
 
-          {/* Right: Contact Form */}
           <div className="md:w-1/3">
             <h3 className="text-orange-500 font-semibold mb-4 text-center md:text-left">
               Susisiek su mumis
@@ -59,10 +54,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="border-t border-gray-800 my-8" />
 
-        {/* Bottom Section: Copyright + Social */}
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-gray-400">
             © {currentYear} Takade. All rights reserved.
