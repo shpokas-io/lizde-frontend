@@ -150,7 +150,7 @@ const AboutSection = () => {
             </ul>
           </div>
           <Image
-            src="/images/about-section.jpg"
+            src="/images/landing_page_1.png"
             alt="Engineer recording drums"
             width={600}
             height={400}
@@ -159,7 +159,7 @@ const AboutSection = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <Image
-            src="/images/about-section.jpg"
+            src="/images/landing_page_2.png"
             alt="Engineer working in studio"
             width={600}
             height={400}
