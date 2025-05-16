@@ -17,8 +17,8 @@ import {
 
 interface CourseProgressContextType {
   completedLessons: string[];
-  getProgress: () => number;
-  getSectionProgress: (sectionTitle: string) => number;
+  getProgress: () => Promise<number>;
+  getSectionProgress: (sectionTitle: string) => Promise<number>;
   markLessonAsCompleted: (slug: string) => void;
   isLessonCompleted: (slug: string) => boolean;
   lastAccessedLesson: string | null;
@@ -62,9 +62,9 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   }, [completedLessons, loading]);
 
-  const getProgress = (): number => {
+  const getProgress = async (): Promise<number> => {
     try {
-      const totalLessons = getTotalLessonCount();
+      const totalLessons = await getTotalLessonCount();
       if (totalLessons === 0) return 0;
       return Math.round((completedLessons.length / totalLessons) * 100);
     } catch (error) {
@@ -73,9 +73,10 @@ export function CourseProgressProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const getSectionProgress = (sectionTitle: string): number => {
+  const getSectionProgress = async (sectionTitle: string): Promise<number> => {
     try {
-      return getSectionCompletion(sectionTitle, completedLessons);
+      const result = await getSectionCompletion(sectionTitle, completedLessons);
+      return result;
     } catch (error) {
       console.error(
         `Error calculating section progress for ${sectionTitle}:`,
