@@ -45,7 +45,7 @@ export default function CourseHeader({
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium text-gray-400">
-                  Course progress
+                  Kūrso progresas
                 </span>
                 <span className="text-sm font-medium text-orange-500">
                   {progress}%

@@ -36,9 +36,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#121212] text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          {/* Logo and Description */}
           <div className="md:col-span-1">
             <Image
               src="/images/logo-white.png"
@@ -77,9 +75,7 @@ export default function Footer() {
 
           {/* Newsletter Section */}
           <div>
-            <h3 className="text-orange-500 font-semibold mb-4">
-              Stay Updated
-            </h3>
+            <h3 className="text-orange-500 font-semibold mb-4">Stay Updated</h3>
             <form className="space-y-3">
               <input
                 type="email"
