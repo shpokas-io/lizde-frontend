@@ -163,7 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: session.user.email!,
           hasCourseAccess: hasAccess
         });
-        if (!isDevelopment && (pathname === '/' || pathname === '/auth/login')) {
+        if (!isDevelopment && pathname === '/auth/login') {
           router.push('/courses');
         }
       } else {
