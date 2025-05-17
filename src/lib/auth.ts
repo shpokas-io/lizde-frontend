@@ -1,25 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
-import { Database } from '@/types/database';
-
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function checkUserAccess(userId: string): Promise<boolean> {
   try {
-    const { data: userCourse, error } = await supabase
-      .from('user_courses')
-      .select('has_access')
-      .eq('user_id', userId)
-      .single();
-
-    if (error) {
-      console.error('Error checking user access:', error);
+    const response = await fetch(`${API_URL}/auth/check-access/${userId}`);
+    if (!response.ok) {
+      console.error('Error checking user access:', response.statusText);
       return false;
     }
-
-    return userCourse?.has_access ?? false;
+    const data = await response.json();
+    return data.hasAccess ?? false;
   } catch (error) {
     console.error('Error checking user access:', error);
     return false;

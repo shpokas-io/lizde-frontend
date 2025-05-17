@@ -3,9 +3,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import { Database } from '@/types/database';
 
-const supabase = createClient<Database>(
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
@@ -38,18 +38,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!user) return false;
     
     try {
-      const { data: userCourse, error } = await supabase
-        .from('user_courses')
-        .select('has_access')
-        .eq('user_id', user.id)
-        .single();
-
-      if (error) {
-        console.error('Error checking course access:', error);
+      const response = await fetch(`${API_URL}/auth/check-access/${user.id}`);
+      if (!response.ok) {
+        console.error('Error checking course access:', response.statusText);
         return false;
       }
-
-      return userCourse?.has_access ?? false;
+      const data = await response.json();
+      return data.hasAccess ?? false;
     } catch (error) {
       console.error('Error checking course access:', error);
       return false;
@@ -63,63 +58,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     try {
-      console.log(`Updating course access for user ${user.id} to ${hasAccess}`);
-      
-      // First check if the user has a record in user_courses
-      const { data: existingRecord, error: checkError } = await supabase
-        .from('user_courses')
-        .select('id, has_access')
-        .eq('user_id', user.id)
-        .single();
+      const response = await fetch(`${API_URL}/auth/update-access/${user.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ hasAccess }),
+      });
 
-      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "not found" error
-        console.error('Error checking existing record:', checkError);
-        throw checkError;
+      if (!response.ok) {
+        throw new Error('Failed to update course access');
       }
 
-      let updateError;
-      if (!existingRecord) {
-        console.log('No existing record found, creating new one');
-        const { data, error } = await supabase
-          .from('user_courses')
-          .insert([{ user_id: user.id, has_access: hasAccess }])
-          .select()
-          .single();
-        updateError = error;
-        console.log('Insert result:', data);
-      } else {
-        console.log(`Updating existing record (current access: ${existingRecord.has_access})`);
-        const { data, error } = await supabase
-          .from('user_courses')
-          .update({ has_access: hasAccess })
-          .eq('user_id', user.id)
-          .select()
-          .single();
-        updateError = error;
-        console.log('Update result:', data);
-      }
-
-      if (updateError) {
-        console.error('Error updating course access:', updateError);
-        throw updateError;
-      }
-
-      // Update local state
-      console.log('Updating local state with new access value');
       setUser(prev => prev ? { ...prev, hasCourseAccess: hasAccess } : null);
-      
-      // Verify the update
-      const { data: verifyData, error: verifyError } = await supabase
-        .from('user_courses')
-        .select('has_access')
-        .eq('user_id', user.id)
-        .single();
-        
-      if (verifyError) {
-        console.error('Error verifying update:', verifyError);
-      } else {
-        console.log('Verified access status:', verifyData.has_access);
-      }
     } catch (error) {
       console.error('Error in updateCourseAccess:', error);
       throw error;
@@ -201,16 +152,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const value = {
-    user,
-    loading,
-    signInWithGoogle,
-    signOut,
-    checkCourseAccess,
-    updateCourseAccess,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        signInWithGoogle,
+        signOut,
+        checkCourseAccess,
+        updateCourseAccess,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
