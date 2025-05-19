@@ -9,12 +9,22 @@ import "./globals.css";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+function ClientLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/auth");
   const isCoursePage = pathname?.startsWith("/courses");
   const shouldShowNavbar = !isAuthPage && !isCoursePage;
 
+  return (
+    <>
+      {shouldShowNavbar && <NavBar />}
+      <main>{children}</main>
+      <Footer />
+    </>
+  );
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-[#121212] text-gray-200">
@@ -35,9 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 },
               }}
             />
-            {shouldShowNavbar && <NavBar />}
-            <main>{children}</main>
-            <Footer />
+            <ClientLayout>{children}</ClientLayout>
           </CourseProgressProvider>
         </AuthProvider>
       </body>

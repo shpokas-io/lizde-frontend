@@ -8,8 +8,6 @@ const MentorSection = () => {
 
   return (
     <section className="py-24 bg-[#1a1a1a] text-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/path/to/pattern.png')] opacity-5" />
-      
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-4xl lg:text-5xl text-white font-bold mb-12">
           <span className="bg-gradient-to-r from-orange-500 to-orange-300 bg-clip-text text-transparent">

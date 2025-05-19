@@ -35,15 +35,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   const checkCourseAccess = async (): Promise<boolean> => {
-    if (!user) return false;
+    if (!user) {
+      console.log('No user found when checking course access');
+      return false;
+    }
     
     try {
-      const response = await fetch(`${API_URL}/auth/check-access/${user.id}`);
+      console.log('Checking course access for user:', user.id);
+      const response = await fetch(`${API_URL}/auth/access/${user.id}`);
       if (!response.ok) {
         console.error('Error checking course access:', response.statusText);
         return false;
       }
       const data = await response.json();
+      console.log('Course access response:', data);
       return data.hasAccess ?? false;
     } catch (error) {
       console.error('Error checking course access:', error);
@@ -58,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     try {
-      const response = await fetch(`${API_URL}/auth/update-access/${user.id}`, {
+      const response = await fetch(`${API_URL}/auth/access/${user.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,8 +74,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!response.ok) {
         throw new Error('Failed to update course access');
       }
-
-      setUser(prev => prev ? { ...prev, hasCourseAccess: hasAccess } : null);
     } catch (error) {
       console.error('Error in updateCourseAccess:', error);
       throw error;
@@ -80,20 +83,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        console.log('Initializing auth...');
         const { data: { session } } = await supabase.auth.getSession();
+        console.log('Session:', session);
+        
         if (session?.user) {
-          const hasAccess = await checkCourseAccess();
-          setUser({
+          console.log('User found in session:', session.user);
+          const user = {
             id: session.user.id,
             email: session.user.email!,
-            hasCourseAccess: hasAccess
-          });
+            hasCourseAccess: false
+          };
+          setUser(user);
+          
+          const hasAccess = await checkCourseAccess();
+          console.log('Course access:', hasAccess);
+          
+          setUser(prev => prev ? { ...prev, hasCourseAccess: hasAccess } : null);
         } else {
+          console.log('No session found');
           setUser(null);
         }
         setLoading(false);
 
         if (!session?.user && pathname.startsWith('/courses')) {
+          console.log('No session, redirecting to login');
           router.push('/auth/login');
         }
       } catch (error) {
@@ -107,26 +121,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log('Auth state changed:', _event, session);
+      
       if (session?.user) {
+        console.log('User authenticated:', session.user);
         const hasAccess = await checkCourseAccess();
+        console.log('Course access:', hasAccess);
+        
         setUser({
           id: session.user.id,
           email: session.user.email!,
           hasCourseAccess: hasAccess
         });
-        if (!isDevelopment && pathname === '/auth/login') {
+        
+        if (pathname === '/auth/login') {
+          console.log('Redirecting to courses after login');
           router.push('/courses');
         }
       } else {
+        console.log('User signed out');
         setUser(null);
         if (pathname.startsWith('/courses')) {
+          console.log('Redirecting to login after sign out');
           router.push('/auth/login');
         }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [pathname, router, isDevelopment]);
+  }, [pathname, router]);
 
   const signInWithGoogle = async () => {
     try {

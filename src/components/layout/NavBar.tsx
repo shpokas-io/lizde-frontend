@@ -53,8 +53,9 @@ const NavBar = () => {
             <Image
               src="/images/logo-white.png"
               alt="Takadė Logo"
-              fill
-              className="object-contain"
+              width={120}
+              height={40}
+              className="w-full h-full object-contain"
               priority
             />
           </Link>
