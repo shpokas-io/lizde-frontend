@@ -26,7 +26,7 @@ export default function VideoPlayer({
 
   const thumbnailUrl = isYouTubeUrl(videoUrl)
     ? getYouTubeThumbnail(videoUrl, "maxres")
-    : "/images/video-placeholder.jpg";
+    : undefined;
 
   useEffect(() => {
     setIsLoading(true);
@@ -65,11 +65,6 @@ export default function VideoPlayer({
     return (
       <div
         className={`relative w-full h-0 pb-[56.25%] bg-gray-200 rounded-lg ${className}`}
-        style={{
-          backgroundImage: `url(${thumbnailUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
       >
         <div className="absolute inset-0 flex items-center justify-center bg-black/30">
           <div className="w-16 h-16 border-4 border-t-white border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>

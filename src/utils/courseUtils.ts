@@ -1,18 +1,9 @@
-import { getCourseData, getStartHereLesson, getLessonBySlug as getLessonBySlugFromDb } from "@/services/courseService";
+import { getCourseData, getLessonBySlug as getLessonBySlugFromDb } from "@/services/courseService";
 import type { Lesson, CourseSectionData } from "@/types/course";
 
 export async function getAllLessons(): Promise<Lesson[]> {
-  const [courseData, startHereLesson] = await Promise.all([
-    getCourseData(),
-    getStartHereLesson()
-  ]);
-
-  if (!startHereLesson) {
-    console.warn("Start here lesson is not defined");
-    return courseData.flatMap((section) => section.lessons);
-  }
-
-  return [startHereLesson, ...courseData.flatMap((section) => section.lessons)];
+  const courseData = await getCourseData();
+  return courseData.flatMap((section) => section.lessons);
 }
 
 export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
@@ -68,13 +59,12 @@ export async function getAdjacentLessons(currentSlug: string): Promise<{
 export async function getTotalLessonCount(): Promise<number> {
   try {
     const courseData = await getCourseData();
-    const startHereLesson = await getStartHereLesson();
     
     const sectionsCount = courseData.reduce(
       (acc, section) => acc + section.lessons.length,
       0
     );
-    return startHereLesson ? sectionsCount + 1 : sectionsCount;
+    return sectionsCount;
   } catch (error) {
     console.error("Error calculating total lesson count:", error);
     return 0;
