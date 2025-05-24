@@ -36,6 +36,22 @@ body {
   animation: bounceSlow 0.7s infinite;
 }
 
+/* Fade and slide-down animation for expandable course section */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-slide-down {
+  animation: fadeSlideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 html {
   scroll-behavior: smooth;
 }
