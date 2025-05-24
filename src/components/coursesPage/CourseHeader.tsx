@@ -1,11 +1,9 @@
-import ProgressBar from "@/components/common/ProgressBar";
 import Image from "next/image";
 
 interface CourseHeaderProps {
   title: string;
   description: string;
   imageUrl: string;
-  progress: number;
   className?: string;
 }
 
@@ -13,7 +11,6 @@ export default function CourseHeader({
   title,
   description,
   imageUrl,
-  progress,
   className = "",
 }: CourseHeaderProps) {
   return (
@@ -43,17 +40,6 @@ export default function CourseHeader({
               <p className="text-gray-400 leading-relaxed bg-[#232323] p-4 rounded-lg border border-gray-800">
                 {description}
               </p>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-400">
-                  Kūrso progresas
-                </span>
-                <span className="text-sm font-medium text-orange-500">
-                  {progress}%
-                </span>
-              </div>
-              <ProgressBar progress={progress} />
             </div>
           </div>
         </div>

@@ -4,20 +4,14 @@ import { CourseSectionData } from "@/types/course";
 
 interface CourseSectionProps {
   section: CourseSectionData;
-  lessonCompletionMap: Record<string, boolean>;
   headerBgColor?: string;
 }
 
 export default function CourseSection({
   section,
-  lessonCompletionMap,
   headerBgColor = "bg-orange-500/10",
 }: CourseSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const lessonsWithStatus = section.lessons.map((lesson) => ({
-    ...lesson,
-    completed: lessonCompletionMap[lesson.slug] || false,
-  }));
 
   return (
     <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 shadow-sm overflow-hidden">
@@ -42,7 +36,7 @@ export default function CourseSection({
           id={`section-${section.sectionTitle}`}
           className="divide-y divide-gray-800 animate-fade-slide-down"
         >
-          {lessonsWithStatus.map((lesson) => (
+          {section.lessons.map((lesson) => (
             <div key={lesson.slug} className="px-4 py-2">
               <LessonCard lesson={lesson} />
             </div>

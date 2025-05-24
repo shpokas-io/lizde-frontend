@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LessonWithCompletionStatus } from "@/types/course";
-import { PlayIcon, CheckIcon } from "@/components/icons/Index";
+import { Lesson } from "@/types/course";
+import { PlayIcon } from "@/components/icons/Index";
 import { getYouTubeThumbnail, isYouTubeUrl } from "@/utils/videoUtils";
 
 interface LessonCardProps {
-  lesson: LessonWithCompletionStatus;
+  lesson: Lesson;
   className?: string;
 }
 
@@ -48,18 +48,6 @@ export default function LessonCard({
           <p className="text-sm text-gray-400 line-clamp-2 mt-1">
             {lesson.description.split(". ")[0]}...
           </p>
-        </div>
-
-        <div className="flex items-center gap-3 flex-shrink-0">
-          {lesson.completed ? (
-            <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-              <CheckIcon className="text-white" />
-            </div>
-          ) : (
-            <div className="w-6 h-6 rounded-full border-2 border-gray-700 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
-            </div>
-          )}
         </div>
       </div>
     </Link>

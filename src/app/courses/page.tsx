@@ -10,34 +10,20 @@ import { prefetchLesson } from "@/services/courseService";
 export default function CoursesPage() {
   const {
     courseData,
-    getProgress,
-    isLessonCompleted,
     loading: courseLoading,
     error: courseError,
   } = useCourse();
 
-  const [progress, setProgress] = useState(0);
-  const [lessonCompletionMap, setLessonCompletionMap] = useState<
-    Record<string, boolean>
-  >({});
-
   useEffect(() => {
     if (!courseLoading) {
-      setProgress(getProgress());
-      const completionMap: Record<string, boolean> = {};
-
-      // Add all other lessons to completion map and prefetch them
+      // Prefetch the next few lessons for faster navigation
       courseData.forEach((section) => {
         section.lessons.forEach((lesson) => {
-          completionMap[lesson.slug] = isLessonCompleted(lesson.slug);
-          // Prefetch the next few lessons for faster navigation
           prefetchLesson(lesson.slug);
         });
       });
-
-      setLessonCompletionMap(completionMap);
     }
-  }, [courseLoading, getProgress, courseData, isLessonCompleted]);
+  }, [courseLoading, courseData]);
 
   if (courseLoading) {
     return (
@@ -67,16 +53,12 @@ export default function CoursesPage() {
           title="DIY dainų įrašymo pagrindai"
           description="Šis kursas – tai praktinis gidas, kaip namų sąlygomis įrašyti, suvesti ir apdoroti muzikinį kūrinį nuo pradžios iki pabaigos, naudojant prieinamą įrangą ir garso apdorojimo įrankius."
           imageUrl="/images/about-section.jpg"
-          progress={progress}
           className="mb-12"
         />
 
-        {courseData.map((section, index) => (
+        {courseData.map((section) => (
           <div key={section.sectionTitle} className="mb-8">
-            <CourseSection
-              section={section}
-              lessonCompletionMap={lessonCompletionMap}
-            />
+            <CourseSection section={section} />
           </div>
         ))}
       </div>

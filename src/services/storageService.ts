@@ -1,9 +1,6 @@
-import { CourseProgressData } from "@/types/course";
-
 const STORAGE_KEYS = {
   COMPLETED_LESSONS: "completedLessons",
   LAST_ACCESSED: "lastAccessed",
-  COURSE_PROGRESS: "courseProgress",
 };
 
 function isLocalStorageAvailable(): boolean {
@@ -84,30 +81,4 @@ export function getLastAccessedLesson(): {
   timestamp: string;
 } | null {
   return safeGetItem(STORAGE_KEYS.LAST_ACCESSED, null);
-}
-
-export function getCourseProgressData(): CourseProgressData {
-  const completedLessons = getCompletedLessons();
-  const lastAccessed = getLastAccessedLesson();
-
-  return {
-    completedLessons,
-    lastAccessedDate: lastAccessed?.timestamp,
-    lastAccessedLesson: lastAccessed?.slug,
-  };
-}
-
-export function clearCourseProgressData(): boolean {
-  try {
-    if (isLocalStorageAvailable()) {
-      localStorage.removeItem(STORAGE_KEYS.COMPLETED_LESSONS);
-      localStorage.removeItem(STORAGE_KEYS.LAST_ACCESSED);
-      localStorage.removeItem(STORAGE_KEYS.COURSE_PROGRESS);
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error("Error clearing course progress data:", error);
-    return false;
-  }
 }

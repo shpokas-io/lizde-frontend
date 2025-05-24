@@ -6,7 +6,6 @@ import BackButton from "@/components/common/BackButton";
 import VideoPlayer from "@/components/coursesPage/VideoPlayer";
 import LessonNavigation from "@/components/coursesPage/LessonNavigation";
 import LessonMaterials from "@/components/coursesPage/LessonMaterials";
-import { useCourseProgress } from "@/hooks/useCourseProgress";
 import {
   getLessonBySlug,
   getAdjacentLessons,
@@ -27,9 +26,6 @@ export default function LessonDetailPage() {
 
   const params = useParams();
   const slug = params.slug as string;
-
-  const { markLessonAsCompleted, isLessonCompleted } = useCourseProgress();
-  const lessonComplete = lesson ? isLessonCompleted(slug) : false;
 
   useEffect(() => {
     async function fetchLessonData() {
@@ -57,16 +53,6 @@ export default function LessonDetailPage() {
 
     fetchLessonData();
   }, [slug]);
-
-  useEffect(() => {
-    if (!lesson || !videoReady) return;
-
-    try {
-      markLessonAsCompleted(slug);
-    } catch (err) {
-      console.error("Error marking lesson as completed:", err);
-    }
-  }, [slug, markLessonAsCompleted, lesson, videoReady]);
 
   const handleVideoError = (err: Error) => {
     console.error("Video player error:", err);
@@ -142,17 +128,6 @@ export default function LessonDetailPage() {
 
             <h1 className="text-3xl font-bold mt-6 mb-3 text-white">{lesson.title}</h1>
             <div className="h-1 w-20 bg-orange-500 rounded mb-6"></div>
-
-            <div className="mb-4 flex items-center">
-              <div
-                className={`w-3 h-3 rounded-full mr-2 ${
-                  lessonComplete ? "bg-green-500" : "bg-gray-500"
-                }`}
-              ></div>
-              <span className="text-sm text-gray-400">
-                {lessonComplete ? "Completed" : "In Progress"}
-              </span>
-            </div>
 
             <div className="bg-[#232323] p-5 rounded-lg border border-gray-800 shadow-sm">
               <p className="text-gray-300 leading-relaxed">
