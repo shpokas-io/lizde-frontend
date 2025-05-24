@@ -2,11 +2,10 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { CourseSectionData, Lesson } from "@/types/course";
-import { getCourseData, getStartHereLesson } from "@/services/courseService";
+import { getCourseData } from "@/services/courseService";
 
 interface CourseContextType {
   courseData: CourseSectionData[];
-  startHereLesson: Lesson | null;
   completedLessons: string[];
   getProgress: () => number;
   markLessonAsCompleted: (slug: string) => void;
@@ -19,7 +18,6 @@ const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
 export function CourseProvider({ children }: { children: ReactNode }) {
   const [courseData, setCourseData] = useState<CourseSectionData[]>([]);
-  const [startHereLesson, setStartHereLesson] = useState<Lesson | null>(null);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -27,14 +25,8 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadCourseData = async () => {
       try {
-        const [sections, startHere] = await Promise.all([
-          getCourseData(),
-          getStartHereLesson(),
-        ]);
-
+        const sections = await getCourseData();
         setCourseData(sections);
-        setStartHereLesson(startHere);
-
         // Load completed lessons from localStorage
         const savedCompleted = localStorage.getItem("completedLessons");
         if (savedCompleted) {
@@ -46,7 +38,6 @@ export function CourseProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     };
-
     loadCourseData();
   }, []);
 
@@ -55,7 +46,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, [completedLessons]);
 
   const getProgress = (): number => {
-    const totalLessons = courseData.reduce((acc, section) => acc + section.lessons.length, 0) + (startHereLesson ? 1 : 0);
+    const totalLessons = courseData.reduce((acc, section) => acc + section.lessons.length, 0);
     return Math.round((completedLessons.length / totalLessons) * 100);
   };
 
@@ -71,7 +62,6 @@ export function CourseProvider({ children }: { children: ReactNode }) {
 
   const value = {
     courseData,
-    startHereLesson,
     completedLessons,
     getProgress,
     markLessonAsCompleted,

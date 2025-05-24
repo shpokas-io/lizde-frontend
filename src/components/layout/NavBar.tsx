@@ -2,13 +2,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaArrowUp, FaUser } from "react-icons/fa";
-import { useAuth } from "@/contexts/AuthContext";
+import { FaArrowUp } from "react-icons/fa";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { user, signOut } = useAuth();
 
   const navLinks = [
     { label: "About", href: "/#about" },
@@ -71,44 +69,14 @@ const NavBar = () => {
               >
                 About
               </Link>
-              {!user && (
-                <Link
-                  href="/buy"
-                  className="text-gray-200 hover:text-orange-500 text-sm font-medium
-                         transition-colors duration-200"
-                >
-                  Buy
-                </Link>
-              )}
-              {user && (
-                <Link
-                  href="/courses"
-                  className="text-gray-200 hover:text-orange-500 text-sm font-medium
-                         transition-colors duration-200"
-                >
-                  Courses
-                </Link>
-              )}
-            </nav>
-
-            {/* Auth Button */}
-            {user ? (
-              <button
-                onClick={signOut}
-                className="p-2 hover:bg-[#232323] rounded-full transition-colors duration-200
-                         flex items-center justify-center group"
-              >
-                <FaUser className="w-5 h-5 text-gray-300 group-hover:text-orange-500 transition-colors" />
-              </button>
-            ) : (
               <Link
-                href="/auth/login"
-                className="p-2 hover:bg-[#232323] rounded-full transition-colors duration-200
-                         flex items-center justify-center group"
+                href="/courses"
+                className="text-gray-200 hover:text-orange-500 text-sm font-medium
+                       transition-colors duration-200"
               >
-                <FaUser className="w-5 h-5 text-gray-300 group-hover:text-orange-500 transition-colors" />
+                Courses
               </Link>
-            )}
+            </nav>
           </div>
 
           {/* Mobile Menu Button */}
@@ -154,47 +122,14 @@ const NavBar = () => {
             >
               About
             </Link>
-            {!user && (
-              <Link
-                href="/buy"
-                onClick={() => setIsOpen(false)}
-                className="text-gray-200 hover:text-orange-500 text-2xl font-medium
-                       transition-colors duration-200"
-              >
-                Buy
-              </Link>
-            )}
-            {user && (
-              <Link
-                href="/courses"
-                onClick={() => setIsOpen(false)}
-                className="text-gray-200 hover:text-orange-500 text-2xl font-medium
-                       transition-colors duration-200"
-              >
-                Courses
-              </Link>
-            )}
-            {user ? (
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  signOut();
-                }}
-                className="p-4 bg-[#232323] rounded-full transition-colors duration-200
-                         hover:bg-orange-500 group"
-              >
-                <FaUser className="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" />
-              </button>
-            ) : (
-              <Link
-                href="/auth/login"
-                onClick={() => setIsOpen(false)}
-                className="p-4 bg-[#232323] rounded-full transition-colors duration-200
-                         hover:bg-orange-500 group"
-              >
-                <FaUser className="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" />
-              </Link>
-            )}
+            <Link
+              href="/courses"
+              onClick={() => setIsOpen(false)}
+              className="text-gray-200 hover:text-orange-500 text-2xl font-medium
+                     transition-colors duration-200"
+            >
+              Courses
+            </Link>
           </div>
         </div>
       </header>

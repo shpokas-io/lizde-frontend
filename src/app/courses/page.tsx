@@ -6,14 +6,10 @@ import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
 import LessonCard from "@/components/common/LessonCard";
 import { useCourse } from "@/components/lib/CourseContext";
-import { useAuth } from "@/contexts/AuthContext";
-import LockedContent from "@/components/LockedContent";
 
 export default function CoursesPage() {
-  const { user, loading: authLoading } = useAuth();
   const {
     courseData,
-    startHereLesson,
     getProgress,
     isLessonCompleted,
     loading: courseLoading,
@@ -26,16 +22,9 @@ export default function CoursesPage() {
   >({});
 
   useEffect(() => {
-    if (!courseLoading && !authLoading) {
+    if (!courseLoading) {
       setProgress(getProgress());
       const completionMap: Record<string, boolean> = {};
-
-      // Add start here lesson to completion map
-      if (startHereLesson) {
-        completionMap[startHereLesson.slug] = isLessonCompleted(
-          startHereLesson.slug
-        );
-      }
 
       // Add all other lessons to completion map
       courseData.forEach((section) => {
@@ -48,14 +37,13 @@ export default function CoursesPage() {
     }
   }, [
     courseLoading,
-    authLoading,
     getProgress,
     courseData,
-    startHereLesson,
+    
     isLessonCompleted,
   ]);
 
-  if (courseLoading || authLoading) {
+  if (courseLoading) {
     return <div className="min-h-screen bg-[#1a1a1a] p-4">Loading...</div>;
   }
 
@@ -78,43 +66,14 @@ export default function CoursesPage() {
           progress={progress}
         />
 
-        {(!user || !user.hasCourseAccess) && (
-          <LockedContent
-            title="Course Locked"
-            description={
-              user
-                ? "Please purchase the course to access the content."
-                : "Please sign in to access the course content."
-            }
-            isAuthenticated={!!user}
-          />
-        )}
-
-        {user && user.hasCourseAccess && (
-          <>
-            {startHereLesson && (
-              <div className="mb-8">
-                <CourseSection
-                  section={{
-                    sectionTitle: "Start Here",
-                    lessons: [startHereLesson],
-                  }}
-                  lessonCompletionMap={lessonCompletionMap}
-                  headerBgColor="bg-blue-500/10"
-                />
-              </div>
-            )}
-
-            {courseData.map((section, index) => (
-              <div key={section.sectionTitle} className="mb-8">
-                <CourseSection
-                  section={section}
-                  lessonCompletionMap={lessonCompletionMap}
-                />
-              </div>
-            ))}
-          </>
-        )}
+        {courseData.map((section, index) => (
+          <div key={section.sectionTitle} className="mb-8">
+            <CourseSection
+              section={section}
+              lessonCompletionMap={lessonCompletionMap}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

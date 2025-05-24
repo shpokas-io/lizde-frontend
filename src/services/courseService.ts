@@ -10,14 +10,6 @@ export async function getCourseData(): Promise<CourseSectionData[]> {
   return response.json();
 }
 
-export async function getStartHereLesson(): Promise<Lesson | null> {
-  const response = await fetch(`${API_URL}/courses/start-here`);
-  if (!response.ok) {
-    return null;
-  }
-  return response.json();
-}
-
 export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   const response = await fetch(`${API_URL}/courses/lesson/${slug}`);
   if (!response.ok) {
