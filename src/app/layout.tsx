@@ -8,40 +8,39 @@ import "./globals.css";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
-function ClientLayout({ children }: { children: ReactNode }) {
+const toastConfig = {
+  position: "top-center" as const,
+  style: {
+    background: '#333',
+    color: '#fff',
+  },
+  success: {
+    duration: 3000,
+  },
+  error: {
+    duration: 4000,
+  },
+};
+
+const ClientLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const isCoursePage = pathname?.startsWith("/courses");
-  const shouldShowNavbar = !isCoursePage;
 
   return (
     <>
-      {shouldShowNavbar && <NavBar />}
+      {!isCoursePage && <NavBar />}
       <main>{children}</main>
       <Footer />
     </>
   );
-}
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-[#121212] text-gray-200">
         <CourseProgressProvider>
-          <Toaster 
-            position="top-center"
-            toastOptions={{
-              style: {
-                background: '#333',
-                color: '#fff',
-              },
-              success: {
-                duration: 3000,
-              },
-              error: {
-                duration: 4000,
-              },
-            }}
-          />
+          <Toaster toastOptions={toastConfig} />
           <ClientLayout>{children}</ClientLayout>
         </CourseProgressProvider>
       </body>

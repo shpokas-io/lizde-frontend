@@ -1,15 +1,43 @@
 import Image from "next/image";
 import { FaInstagram, FaYoutube, FaSpotify } from "react-icons/fa";
 
+const socialLinks = [
+  { icon: FaSpotify, href: "https://spotify.com", label: "Spotify" },
+  { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" },
+  { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
+];
+
+const SocialLink = ({ icon: Icon, href, label }: typeof socialLinks[0]) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-gray-400 hover:text-orange-500 transition-colors duration-200"
+    aria-label={label}
+  >
+    <Icon className="w-5 h-5" />
+  </a>
+);
+
+const NewsletterForm = () => (
+  <form className="space-y-3">
+    <input
+      type="email"
+      placeholder="Enter your email"
+      className="w-full px-4 py-2 bg-[#1a1a1a] border border-gray-800 
+                 rounded-lg focus:outline-none focus:border-orange-500 text-sm"
+    />
+    <button
+      type="submit"
+      className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 
+                 rounded-lg transition-colors duration-200 text-white text-sm font-medium"
+    >
+      Subscribe
+    </button>
+  </form>
+);
+
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    { icon: FaSpotify, href: "https://spotify.com", label: "Spotify" },
-    { icon: FaYoutube, href: "https://youtube.com", label: "YouTube" },
-    { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-  ];
-
   return (
     <footer className="bg-[#121212] text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -34,23 +62,7 @@ export default function Footer() {
             <h3 className="text-orange-500 font-semibold mb-4 text-center md:text-left">
               Susisiek su mumis
             </h3>
-            <form className="space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 bg-[#1a1a1a] border border-gray-800 
-                           rounded-lg focus:outline-none focus:border-orange-500
-                           text-sm"
-              />
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 
-                           rounded-lg transition-colors duration-200 text-white
-                           text-sm font-medium"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
 
@@ -58,22 +70,12 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-gray-400">
-            © {currentYear} Takade. All rights reserved.
+            © {new Date().getFullYear()} Takade. All rights reserved.
           </div>
 
           <div className="flex space-x-6">
             {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-orange-500 
-                           transition-colors duration-200"
-                aria-label={social.label}
-              >
-                <social.icon className="w-5 h-5" />
-              </a>
+              <SocialLink key={social.label} {...social} />
             ))}
           </div>
         </div>

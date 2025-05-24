@@ -4,34 +4,69 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaArrowUp } from "react-icons/fa";
 
+const navLinks = [
+  { label: "About", href: "/#about" },
+  { label: "Courses", href: "/courses" },
+];
+
+const NavLink = ({ href, label, onClick, className = "" }: { 
+  href: string, 
+  label: string, 
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void,
+  className?: string 
+}) => (
+  <Link
+    href={href}
+    onClick={onClick}
+    className={`text-gray-200 hover:text-orange-500 transition-colors duration-200 ${className}`}
+  >
+    {label}
+  </Link>
+);
+
+const MobileMenu = ({ isOpen, onClose, scrollToAbout }: { 
+  isOpen: boolean, 
+  onClose: () => void,
+  scrollToAbout: (e: React.MouseEvent<HTMLAnchorElement>) => void 
+}) => (
+  <div
+    className={`
+      md:hidden fixed inset-0 z-40 bg-[#121212]/95 backdrop-blur-md
+      transition-transform duration-300 transform
+      ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+    `}
+  >
+    <div className="flex flex-col items-center justify-center h-full space-y-8">
+      {navLinks.map((link) => (
+        <NavLink
+          key={link.href}
+          {...link}
+          onClick={() => {
+            onClose();
+            if (link.href === "/#about") {
+              scrollToAbout({ preventDefault: () => {} } as React.MouseEvent<HTMLAnchorElement>);
+            }
+          }}
+          className="text-2xl font-medium"
+        />
+      ))}
+    </div>
+  </div>
+);
+
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const navLinks = [
-    { label: "About", href: "/#about" },
-    { label: "Courses", href: "/courses" },
-    { label: "Mentors", href: "/#mentors" },
-    { label: "Contact", href: "/contact" },
-  ];
-
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToAbout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const aboutSection = document.getElementById("about");
-    if (aboutSection) {
-      aboutSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -46,7 +81,6 @@ const NavBar = () => {
         `}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-          {/* Logo */}
           <Link href="/" className="relative w-[120px] h-[40px]">
             <Image
               src="/images/logo-white.png"
@@ -58,28 +92,17 @@ const NavBar = () => {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <nav className="flex items-center gap-8">
-              <Link
-                href="/#about"
-                onClick={scrollToAbout}
-                className="text-gray-200 hover:text-orange-500 text-sm font-medium
-                       transition-colors duration-200"
-              >
-                About
-              </Link>
-              <Link
-                href="/courses"
-                className="text-gray-200 hover:text-orange-500 text-sm font-medium
-                       transition-colors duration-200"
-              >
-                Courses
-              </Link>
-            </nav>
-          </div>
+          <nav className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.href}
+                {...link}
+                onClick={link.href === "/#about" ? scrollToAbout : undefined}
+                className="text-sm font-medium"
+              />
+            ))}
+          </nav>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white w-10 h-10 flex items-center justify-center"
             onClick={() => setIsOpen(!isOpen)}
@@ -101,40 +124,10 @@ const NavBar = () => {
             </div>
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`
-            md:hidden fixed inset-0 z-40 bg-[#121212]/95 backdrop-blur-md
-            transition-transform duration-300 transform
-            ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-          `}
-        >
-          <div className="flex flex-col items-center justify-center h-full space-y-8">
-            <Link
-              href="/#about"
-              onClick={(e) => {
-                setIsOpen(false);
-                scrollToAbout(e);
-              }}
-              className="text-gray-200 hover:text-orange-500 text-2xl font-medium
-                     transition-colors duration-200"
-            >
-              About
-            </Link>
-            <Link
-              href="/courses"
-              onClick={() => setIsOpen(false)}
-              className="text-gray-200 hover:text-orange-500 text-2xl font-medium
-                     transition-colors duration-200"
-            >
-              Courses
-            </Link>
-          </div>
-        </div>
       </header>
 
-      {/* Back to Top Button */}
+      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} scrollToAbout={scrollToAbout} />
+
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className={`
