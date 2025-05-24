@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import BackButton from "@/components/common/BackButton";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
-import LessonCard from "@/components/common/LessonCard";
 import { useCourse } from "@/components/lib/CourseContext";
+import { prefetchLesson } from "@/services/courseService";
 
 export default function CoursesPage() {
   const {
@@ -26,25 +26,29 @@ export default function CoursesPage() {
       setProgress(getProgress());
       const completionMap: Record<string, boolean> = {};
 
-      // Add all other lessons to completion map
+      // Add all other lessons to completion map and prefetch them
       courseData.forEach((section) => {
         section.lessons.forEach((lesson) => {
           completionMap[lesson.slug] = isLessonCompleted(lesson.slug);
+          // Prefetch the next few lessons for faster navigation
+          prefetchLesson(lesson.slug);
         });
       });
 
       setLessonCompletionMap(completionMap);
     }
-  }, [
-    courseLoading,
-    getProgress,
-    courseData,
-    
-    isLessonCompleted,
-  ]);
+  }, [courseLoading, getProgress, courseData, isLessonCompleted]);
 
   if (courseLoading) {
-    return <div className="min-h-screen bg-[#1a1a1a] p-4">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-[#1a1a1a] p-4 flex items-center justify-center">
+        <div className="animate-pulse">
+          <div className="h-8 w-48 bg-gray-700 rounded mb-4"></div>
+          <div className="h-4 w-64 bg-gray-700 rounded mb-2"></div>
+          <div className="h-4 w-56 bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    );
   }
 
   if (courseError) {
