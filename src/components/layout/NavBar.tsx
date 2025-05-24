@@ -5,8 +5,10 @@ import Link from "next/link";
 import { FaArrowUp } from "react-icons/fa";
 
 const navLinks = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/#about" },
   { label: "Courses", href: "/courses" },
+  { label: "Buy", href: "/buy" },
 ];
 
 const NavLink = ({ href, label, onClick, className = "" }: { 

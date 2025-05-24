@@ -62,12 +62,13 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-[#1a1a1a] p-4">
       <div className="max-w-4xl mx-auto">
-        <BackButton href="/" label="Atgal" />
+        <BackButton href="/" label="Atgal" className="mb-12" />
         <CourseHeader
           title="DIY dainų įrašymo pagrindai"
           description="Šis kursas – tai praktinis gidas, kaip namų sąlygomis įrašyti, suvesti ir apdoroti muzikinį kūrinį nuo pradžios iki pabaigos, naudojant prieinamą įrangą ir garso apdorojimo įrankius."
           imageUrl="/images/about-section.jpg"
           progress={progress}
+          className="mb-12"
         />
 
         {courseData.map((section, index) => (

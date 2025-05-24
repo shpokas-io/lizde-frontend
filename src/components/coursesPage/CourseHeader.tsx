@@ -6,6 +6,7 @@ interface CourseHeaderProps {
   description: string;
   imageUrl: string;
   progress: number;
+  className?: string;
 }
 
 export default function CourseHeader({
@@ -13,9 +14,10 @@ export default function CourseHeader({
   description,
   imageUrl,
   progress,
+  className = "",
 }: CourseHeaderProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-800">
+    <div className={`bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-800 ${className}`}>
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row items-center gap-10">
           <div className="lg:w-1/2 relative">
