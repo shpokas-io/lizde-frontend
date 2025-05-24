@@ -125,13 +125,7 @@ export default function LessonDetailPage() {
       <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
         <div className="container mx-auto max-w-screen-lg px-4 py-4">
           <div className="flex items-center justify-between">
-            <BackButton href="/courses" label="Back to Courses Page" />
-            {section && (
-              <div className="text-sm text-gray-400">
-                Section:{" "}
-                <span className="font-medium text-orange-500">{section.sectionTitle}</span>
-              </div>
-            )}
+            <BackButton href="/courses" label="Atgal" />
           </div>
         </div>
       </div>

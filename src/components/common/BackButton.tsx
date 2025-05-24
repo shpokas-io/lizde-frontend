@@ -10,7 +10,7 @@ interface BackButtonProps {
 
 const BackButton = ({
   href,
-  label = "Back",
+  label = "Atgal",
   className = "",
   icon = <FaArrowLeft className="h-4 w-4" />,
 }: BackButtonProps) => {
