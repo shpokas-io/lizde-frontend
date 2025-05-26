@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaUser } from "react-icons/fa";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/#about" },
-  { label: "Courses", href: "/courses" },
-  { label: "Buy", href: "/buy" },
+  { label: "Pradžia", href: "/" },
+  { label: "Apie", href: "/#about" },
+  { label: "Kursai", href: "/courses" },
+  { label: "Pirkti", href: "/buy" },
 ];
 
 const NavLink = ({ href, label, onClick, className = "" }: { 
@@ -23,6 +23,16 @@ const NavLink = ({ href, label, onClick, className = "" }: {
     className={`text-gray-200 hover:text-orange-500 transition-colors duration-200 ${className}`}
   >
     {label}
+  </Link>
+);
+
+const LoginButton = () => (
+  <Link
+    href="/login"
+    className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200"
+  >
+    <FaUser className="w-4 h-4" />
+    <span>Prisijungti</span>
   </Link>
 );
 
@@ -52,6 +62,9 @@ const MobileMenu = ({ isOpen, onClose, scrollToAbout }: {
           className="text-2xl font-medium"
         />
       ))}
+      <div className="pt-4">
+        <LoginButton />
+      </div>
     </div>
   </div>
 );
@@ -103,6 +116,9 @@ const NavBar = () => {
                 className="text-sm font-medium"
               />
             ))}
+            <div className="ml-8">
+              <LoginButton />
+            </div>
           </nav>
 
           <button
