@@ -27,14 +27,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient()
 
   useEffect(() => {
+    console.log('AuthContext: Initializing auth state...')
+    
     // Check active sessions and sets the user
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      console.log('AuthContext: Initial session check:', { 
+        hasSession: !!session, 
+        userId: session?.user?.id,
+        userEmail: session?.user?.email 
+      })
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('AuthContext: Auth state changed:', { 
+        event, 
+        hasSession: !!session, 
+        userId: session?.user?.id,
+        userEmail: session?.user?.email 
+      })
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -45,11 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       setError(null)
-      console.log('Attempting to sign in with:', { email, passwordLength: password.length })
+      console.log('AuthContext: Attempting to sign in with:', { email, passwordLength: password.length })
       
       const passwordError = validatePassword(password)
       if (passwordError) {
-        console.log('Password validation failed:', passwordError)
+        console.log('AuthContext: Password validation failed:', passwordError)
         setError(passwordError)
         return { error: new AuthError(passwordError) }
       }
@@ -60,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
 
       if (error) {
-        console.log('Sign in error:', error.message)
+        console.log('AuthContext: Sign in error:', error.message)
         
         // Handle specific error cases
         let errorMessage = error.message
@@ -74,12 +87,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error }
       }
 
-      console.log('Sign in successful:', { userId: data.user?.id })
-      setUser(data.user)
+      console.log('AuthContext: Sign in successful:', { userId: data.user?.id })
+      
+      // Don't manually set user here - let onAuthStateChange handle it
+      // This prevents race conditions and ensures consistency
+      // setUser(data.user) // Removed this line
+      
       return { error: null }
     } catch (error) {
       const authError = error as AuthError
-      console.log('Unexpected auth error:', authError.message)
+      console.log('AuthContext: Unexpected auth error:', authError.message)
       setError(authError.message)
       return { error: authError }
     }
@@ -88,11 +105,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string) => {
     try {
       setError(null)
-      console.log('Attempting to sign up with:', { email, passwordLength: password.length })
+      console.log('AuthContext: Attempting to sign up with:', { email, passwordLength: password.length })
 
       const passwordError = validatePassword(password)
       if (passwordError) {
-        console.log('Password validation failed:', passwordError)
+        console.log('AuthContext: Password validation failed:', passwordError)
         setError(passwordError)
         return { error: new AuthError(passwordError) }
       }
@@ -109,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
 
       if (error) {
-        console.log('Sign up error:', error.message)
+        console.log('AuthContext: Sign up error:', error.message)
         setError(error.message)
         return { error }
       }
@@ -117,27 +134,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // For email confirmation flow
       if (data.user?.identities?.length === 0) {
         const message = 'This email is already registered. Please sign in instead.'
-        console.log('Sign up failed:', message)
+        console.log('AuthContext: Sign up failed:', message)
         setError(message)
         return { error: new AuthError(message) }
       }
 
-      console.log('Sign up successful:', { userId: data.user?.id })
+      console.log('AuthContext: Sign up successful:', { userId: data.user?.id })
       
-      // If user is immediately confirmed (no email confirmation required), set the user
-      if (data.user && !data.user.email_confirmed_at) {
-        // User needs email confirmation, but since you don't want email confirmation,
-        // we should configure Supabase to auto-confirm users
-        console.log('User created but needs email confirmation')
-      } else if (data.user) {
-        // User is immediately available
-        setUser(data.user)
-      }
+      // Don't manually set user here - let onAuthStateChange handle it
+      // This ensures consistency with the auth state management
       
       return { error: null }
     } catch (error) {
       const authError = error as AuthError
-      console.log('Unexpected auth error:', authError.message)
+      console.log('AuthContext: Unexpected auth error:', authError.message)
       setError(authError.message)
       return { error: authError }
     }
@@ -146,14 +156,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       setError(null)
+      console.log('AuthContext: Signing out...')
       const { error } = await supabase.auth.signOut()
       if (error) throw error
-      setUser(null)
+      // Don't manually set user to null - let onAuthStateChange handle it
+      console.log('AuthContext: Sign out successful')
     } catch (error) {
       const authError = error as AuthError
+      console.log('AuthContext: Sign out error:', authError.message)
       setError(authError.message)
     }
   }
+
+  // Log user state changes for debugging
+  useEffect(() => {
+    console.log('AuthContext: User state changed:', { 
+      hasUser: !!user, 
+      userId: user?.id, 
+      userEmail: user?.email,
+      loading 
+    })
+  }, [user, loading])
 
   return (
     <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, error }}>

@@ -17,10 +17,16 @@ export default function LoginPage() {
 
   // Redirect if user is already logged in
   useEffect(() => {
-    console.log('Login page - user state changed:', { user: user?.email, loading });
+    console.log('Login page - user state changed:', { 
+      user: user?.email, 
+      loading, 
+      userExists: !!user 
+    });
+    
     if (!loading && user) {
       console.log('User is logged in, redirecting to courses...');
-      router.push('/courses');
+      // Use replace instead of push to prevent back navigation to login
+      router.replace('/courses');
     }
   }, [user, loading, router]);
 
@@ -31,20 +37,23 @@ export default function LoginPage() {
     try {
       if (isLogin) {
         console.log('Attempting sign in...');
+        console.log('Attempting to sign in with:', { email, passwordLength: password.length });
+        
         const { error: signInError } = await signIn(email, password);
+        
         if (signInError) {
           console.log('Sign in failed:', signInError.message);
           toast.error('Invalid email or password');
           return;
         }
+        
+        console.log('Sign in successful:', { userId: user?.id });
         console.log('Sign in successful, showing success toast...');
         toast.success('Successfully logged in!');
         
-        // Small delay to ensure state is updated
-        setTimeout(() => {
-          console.log('Redirecting to courses...');
-          router.push('/courses');
-        }, 100);
+        // Don't manually redirect here - let the useEffect handle it
+        // The useEffect will trigger when the user state updates
+        
       } else {
         console.log('Attempting sign up...');
         const { error: signUpError } = await signUp(email, password);
@@ -60,11 +69,8 @@ export default function LoginPage() {
         console.log('Sign up successful, showing success toast...');
         toast.success('Account created successfully! You can now access the courses.');
         
-        // Small delay to ensure state is updated
-        setTimeout(() => {
-          console.log('Redirecting to courses...');
-          router.push('/courses');
-        }, 100);
+        // Don't manually redirect here - let the useEffect handle it
+        // The useEffect will trigger when the user state updates
       }
     } catch (err) {
       console.error('Unexpected error during authentication:', err);
