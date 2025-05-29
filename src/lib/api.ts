@@ -1,6 +1,22 @@
 import { createClient } from './supabase'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+// Ensure API URL always has the /api prefix
+const getApiUrl = () => {
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL
+  
+  if (!apiUrl) {
+    console.error('NEXT_PUBLIC_API_URL is not defined')
+    throw new Error('API URL is not configured')
+  }
+  
+  // Ensure the URL ends with /api
+  if (!apiUrl.endsWith('/api')) {
+    apiUrl = apiUrl.replace(/\/$/, '') + '/api'
+    console.log('API URL corrected to include /api prefix:', apiUrl)
+  }
+  
+  return apiUrl
+}
 
 class ApiService {
   private async getAuthHeaders() {
@@ -21,16 +37,9 @@ class ApiService {
 
   async get(endpoint: string) {
     try {
+      const API_URL = getApiUrl()
       console.log(`Making GET request to: ${API_URL}${endpoint}`)
       
-      if (!API_URL) {
-        console.error('API_URL is not defined. Current env:', {
-          NODE_ENV: process.env.NODE_ENV,
-          API_URL: process.env.NEXT_PUBLIC_API_URL
-        })
-        throw new Error('API URL is not configured')
-      }
-
       const headers = await this.getAuthHeaders()
       console.log('Request headers prepared:', { ...headers, Authorization: 'Bearer [REDACTED]' })
       
@@ -63,12 +72,9 @@ class ApiService {
 
   async post(endpoint: string, data?: any) {
     try {
+      const API_URL = getApiUrl()
       console.log(`Making POST request to: ${API_URL}${endpoint}`)
       
-      if (!API_URL) {
-        throw new Error('API URL is not configured')
-      }
-
       const headers = await this.getAuthHeaders()
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
@@ -97,10 +103,8 @@ class ApiService {
 
   async put(endpoint: string, data?: any) {
     try {
-      if (!API_URL) {
-        throw new Error('API URL is not configured')
-      }
-
+      const API_URL = getApiUrl()
+      
       const headers = await this.getAuthHeaders()
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'PUT',
@@ -127,10 +131,8 @@ class ApiService {
 
   async delete(endpoint: string) {
     try {
-      if (!API_URL) {
-        throw new Error('API URL is not configured')
-      }
-
+      const API_URL = getApiUrl()
+      
       const headers = await this.getAuthHeaders()
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'DELETE',

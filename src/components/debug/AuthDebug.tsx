@@ -4,6 +4,22 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 
+// Ensure API URL always has the /api prefix
+const getApiUrl = () => {
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL
+  
+  if (!apiUrl) {
+    return null
+  }
+  
+  // Ensure the URL ends with /api
+  if (!apiUrl.endsWith('/api')) {
+    apiUrl = apiUrl.replace(/\/$/, '') + '/api'
+  }
+  
+  return apiUrl
+}
+
 export default function AuthDebug() {
   const { user, loading } = useAuth()
   const [sessionInfo, setSessionInfo] = useState<any>(null)
@@ -28,9 +44,11 @@ export default function AuthDebug() {
     })
 
     // Get environment info
+    const apiUrl = getApiUrl()
     setEnvInfo({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+      CORRECTED_API_URL: apiUrl,
       NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
       NODE_ENV: process.env.NODE_ENV,
       currentOrigin: typeof window !== 'undefined' ? window.location.origin : 'SSR'
@@ -39,7 +57,7 @@ export default function AuthDebug() {
     // Test health endpoint (no auth required)
     const testHealth = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL
+        const apiUrl = getApiUrl()
         if (!apiUrl) {
           setHealthTest({ error: 'API_URL not configured' })
           return
@@ -62,7 +80,7 @@ export default function AuthDebug() {
       } catch (error) {
         setHealthTest({
           error: error instanceof Error ? error.message : 'Unknown error',
-          url: process.env.NEXT_PUBLIC_API_URL
+          url: getApiUrl()
         })
       }
     }
@@ -70,7 +88,7 @@ export default function AuthDebug() {
     // Test courses endpoint (auth required)
     const testCourses = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL
+        const apiUrl = getApiUrl()
         if (!apiUrl) {
           setCoursesTest({ error: 'API_URL not configured' })
           return
@@ -110,7 +128,7 @@ export default function AuthDebug() {
       } catch (error) {
         setCoursesTest({
           error: error instanceof Error ? error.message : 'Unknown error',
-          url: process.env.NEXT_PUBLIC_API_URL
+          url: getApiUrl()
         })
       }
     }

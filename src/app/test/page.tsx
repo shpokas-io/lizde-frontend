@@ -5,6 +5,22 @@ import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
 import { apiService } from '@/lib/api'
 
+// Ensure API URL always has the /api prefix
+const getApiUrl = () => {
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL
+  
+  if (!apiUrl) {
+    return null
+  }
+  
+  // Ensure the URL ends with /api
+  if (!apiUrl.endsWith('/api')) {
+    apiUrl = apiUrl.replace(/\/$/, '') + '/api'
+  }
+  
+  return apiUrl
+}
+
 interface TestResult {
   success: boolean
   data?: any
@@ -41,14 +57,16 @@ export default function TestPage() {
   }
 
   const testHealth = () => runTest('health', async () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const apiUrl = getApiUrl()
+    if (!apiUrl) throw new Error('API URL not configured')
     const response = await fetch(`${apiUrl}/health`)
     if (!response.ok) throw new Error(`${response.status} ${response.statusText}`)
     return await response.json()
   })
 
   const testCoursesRaw = () => runTest('coursesRaw', async () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const apiUrl = getApiUrl()
+    if (!apiUrl) throw new Error('API URL not configured')
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     
@@ -99,6 +117,7 @@ export default function TestPage() {
               {JSON.stringify({
                 NODE_ENV: process.env.NODE_ENV,
                 API_URL: process.env.NEXT_PUBLIC_API_URL,
+                CORRECTED_API_URL: getApiUrl(),
                 SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
                 USER_LOGGED_IN: !!user,
                 USER_EMAIL: user?.email
