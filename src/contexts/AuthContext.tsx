@@ -55,6 +55,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      console.log('AuthContext: Clearing session on page exit...')
+      supabase.auth.signOut()
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [])
+
   const signIn = async (email: string, password: string) => {
     try {
       setError(null)
