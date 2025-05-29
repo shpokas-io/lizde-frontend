@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaArrowUp, FaUser } from "react-icons/fa";
+import { FaArrowUp, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { label: "Pradžia", href: "/" },
@@ -26,48 +27,98 @@ const NavLink = ({ href, label, onClick, className = "" }: {
   </Link>
 );
 
-const LoginButton = () => (
-  <Link
-    href="/login"
-    className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200"
-  >
-    <FaUser className="w-4 h-4" />
-    <span>Prisijungti</span>
-  </Link>
-);
+const AuthButton = () => {
+  const { user, signOut } = useAuth();
+
+  if (user) {
+    return (
+      <div className="flex items-center gap-4">
+        <span className="text-gray-200 text-sm">
+          {user.email}
+        </span>
+        <button
+          onClick={signOut}
+          className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200"
+        >
+          <FaSignOutAlt className="w-4 h-4" />
+          <span>Atsijungti</span>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href="/login"
+      className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200"
+    >
+      <FaUser className="w-4 h-4" />
+      <span>Prisijungti</span>
+    </Link>
+  );
+};
 
 const MobileMenu = ({ isOpen, onClose, scrollToAbout }: { 
   isOpen: boolean, 
   onClose: () => void,
   scrollToAbout: (e: React.MouseEvent<HTMLAnchorElement>) => void 
-}) => (
-  <div
-    className={`
-      md:hidden fixed inset-0 z-40 bg-[#121212]/95 backdrop-blur-md
-      transition-transform duration-300 transform
-      ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-    `}
-  >
-    <div className="flex flex-col items-center justify-center h-full space-y-8">
-      {navLinks.map((link) => (
-        <NavLink
-          key={link.href}
-          {...link}
-          onClick={() => {
-            onClose();
-            if (link.href === "/#about") {
-              scrollToAbout({ preventDefault: () => {} } as React.MouseEvent<HTMLAnchorElement>);
-            }
-          }}
-          className="text-2xl font-medium"
-        />
-      ))}
-      <div className="pt-4">
-        <LoginButton />
+}) => {
+  const { user, signOut } = useAuth();
+
+  return (
+    <div
+      className={`
+        md:hidden fixed inset-0 z-40 bg-[#121212]/95 backdrop-blur-md
+        transition-transform duration-300 transform
+        ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+      `}
+    >
+      <div className="flex flex-col items-center justify-center h-full space-y-8">
+        {navLinks.map((link) => (
+          <NavLink
+            key={link.href}
+            {...link}
+            onClick={() => {
+              onClose();
+              if (link.href === "/#about") {
+                scrollToAbout({ preventDefault: () => {} } as React.MouseEvent<HTMLAnchorElement>);
+              }
+            }}
+            className="text-2xl font-medium"
+          />
+        ))}
+        <div className="pt-4 flex flex-col items-center gap-4">
+          {user ? (
+            <>
+              <span className="text-gray-200 text-lg">
+                {user.email}
+              </span>
+              <button
+                onClick={() => {
+                  signOut();
+                  onClose();
+                }}
+                className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200 text-xl"
+              >
+                <FaSignOutAlt className="w-5 h-5" />
+                <span>Atsijungti</span>
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              onClick={onClose}
+              className="flex items-center gap-2 text-gray-200 hover:text-orange-500 transition-colors duration-200 text-xl"
+            >
+              <FaUser className="w-5 h-5" />
+              <span>Prisijungti</span>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +168,7 @@ const NavBar = () => {
               />
             ))}
             <div className="ml-8">
-              <LoginButton />
+              <AuthButton />
             </div>
           </nav>
 

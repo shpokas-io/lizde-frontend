@@ -6,6 +6,7 @@ import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
 import { useCourse } from "@/components/lib/CourseContext";
 import { prefetchLesson } from "@/services/courseService";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function CoursesPage() {
   const {
@@ -46,22 +47,24 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] p-4">
-      <div className="max-w-4xl mx-auto">
-        <BackButton href="/" label="Atgal" className="mb-12" />
-        <CourseHeader
-          title="DIY dainų įrašymo pagrindai"
-          description="Šis kursas – tai praktinis gidas, kaip namų sąlygomis įrašyti, suvesti ir apdoroti muzikinį kūrinį nuo pradžios iki pabaigos, naudojant prieinamą įrangą ir garso apdorojimo įrankius."
-          imageUrl="/images/about-section.jpg"
-          className="mb-12"
-        />
+    <ProtectedRoute>
+      <div className="min-h-screen bg-[#1a1a1a] p-4">
+        <div className="max-w-4xl mx-auto">
+          <BackButton href="/" label="Atgal" className="mb-12" />
+          <CourseHeader
+            title="DIY dainų įrašymo pagrindai"
+            description="Šis kursas – tai praktinis gidas, kaip namų sąlygomis įrašyti, suvesti ir apdoroti muzikinį kūrinį nuo pradžios iki pabaigos, naudojant prieinamą įrangą ir garso apdorojimo įrankius."
+            imageUrl="/images/about-section.jpg"
+            className="mb-12"
+          />
 
-        {courseData.map((section) => (
-          <div key={section.sectionTitle} className="mb-8">
-            <CourseSection section={section} />
-          </div>
-        ))}
+          {courseData.map((section) => (
+            <div key={section.sectionTitle} className="mb-8">
+              <CourseSection section={section} />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

@@ -1,6 +1,5 @@
 import { CourseSectionData, Lesson } from "@/types/course";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { apiService } from "@/lib/api";
 
 // Cache for course data
 let courseDataCache: CourseSectionData[] | null = null;
@@ -17,15 +16,15 @@ export async function getCourseData(forceRefresh = false): Promise<CourseSection
     return courseDataPromise;
   }
 
-  // Create new request
-  courseDataPromise = fetch(`${API_URL}/courses`)
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch course data');
-      }
-      const data = await response.json();
+  // Create new request using authenticated API service
+  courseDataPromise = apiService.get('/courses')
+    .then((data) => {
       courseDataCache = data;
       return data;
+    })
+    .catch((error) => {
+      console.error('Failed to fetch course data:', error);
+      throw new Error('Failed to fetch course data');
     })
     .finally(() => {
       courseDataPromise = null;
@@ -50,14 +49,14 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
     return lessonCache.get(slug) || null;
   }
 
-  const response = await fetch(`${API_URL}/courses/lesson/${slug}`);
-  if (!response.ok) {
+  try {
+    const lesson = await apiService.get(`/courses/lesson/${slug}`);
+    lessonCache.set(slug, lesson);
+    return lesson;
+  } catch (error) {
+    console.error(`Failed to fetch lesson ${slug}:`, error);
     return null;
   }
-  
-  const lesson = await response.json();
-  lessonCache.set(slug, lesson);
-  return lesson;
 }
 
 // Prefetch a specific lesson

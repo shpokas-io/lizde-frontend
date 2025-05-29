@@ -1,9 +1,62 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import Image from 'next/image';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, error, user } = useAuth();
+  const router = useRouter();
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      router.push('/courses');
+    }
+  }, [user, router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      if (isLogin) {
+        const { error: signInError } = await signIn(email, password);
+        if (signInError) {
+          toast.error('Invalid email or password');
+          return;
+        }
+        toast.success('Successfully logged in!');
+        router.push('/courses');
+      } else {
+        const { error: signUpError } = await signUp(email, password);
+        if (signUpError) {
+          if (signUpError.message.includes('already registered')) {
+            toast.error('This email is already registered. Please sign in instead.');
+            setIsLogin(true);
+          } else {
+            toast.error(signUpError.message || 'Failed to create account');
+          }
+          return;
+        }
+        toast.success('Account created successfully! You can now access the courses.');
+        // After successful signup, automatically redirect to courses
+        router.push('/courses');
+      }
+    } catch (err) {
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="relative min-h-screen bg-[#121212] overflow-hidden">
       {/* Background Image with Overlays */}
@@ -32,30 +85,72 @@ export default function LoginPage() {
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold">
               <span className="bg-gradient-to-r from-orange-500 to-orange-300 bg-clip-text text-transparent">
-                Sveiki atvykę
+                {isLogin ? 'Sveiki atvykę' : 'Registracija'}
               </span>
             </h2>
             <p className="text-gray-300">
-              Prašome prisijungti norėdami tęsti
+              {isLogin ? 'Prašome prisijungti norėdami tęsti' : 'Sukurkite naują paskyrą'}
             </p>
           </div>
           
-          <div className="mt-8">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+                El. paštas
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+                className="mt-1 block w-full px-4 py-3 bg-white/5 border border-orange-500/20 rounded-lg 
+                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+                         focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                placeholder="jusu@pastas.lt"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+                Slaptažodis
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+                className="mt-1 block w-full px-4 py-3 bg-white/5 border border-orange-500/20 rounded-lg 
+                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+                         focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                placeholder="••••••••"
+              />
+            </div>
+
             <button
-              className="w-full flex items-center justify-center px-6 py-4 
-                       bg-white/5 hover:bg-white/10 border border-orange-500/20 
-                       rounded-full shadow-lg text-base font-medium text-white 
-                       hover:text-orange-500 transition-all duration-300 
-                       transform hover:scale-105 focus:outline-none 
-                       focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 
-                       focus:ring-offset-[#121212]"
-              onClick={() => {
-                // Google login logic will be implemented later
-                console.log('Google login clicked');
-              }}
+              type="submit"
+              disabled={isLoading}
+              className="w-full px-6 py-4 bg-gradient-to-r from-orange-500 to-orange-400 
+                       rounded-full text-white font-medium shadow-lg 
+                       hover:from-orange-600 hover:to-orange-500 
+                       focus:outline-none focus:ring-2 focus:ring-orange-500 
+                       focus:ring-offset-2 focus:ring-offset-[#121212] 
+                       transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FcGoogle className="h-6 w-6 mr-3" />
-              Sign in with Google
+              {isLoading ? 'Palaukite...' : (isLogin ? 'Prisijungti' : 'Registruotis')}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              disabled={isLoading}
+              className="text-orange-500 hover:text-orange-400 text-sm font-medium disabled:opacity-50"
+            >
+              {isLogin ? 'Neturite paskyros? Registruokitės' : 'Jau turite paskyrą? Prisijunkite'}
             </button>
           </div>
         </div>

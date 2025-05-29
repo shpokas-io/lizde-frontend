@@ -6,6 +6,7 @@ import NavBar from "@/components/layout/NavBar";
 import "./globals.css";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from '@/contexts/AuthContext'
 
 const toastConfig = {
   position: "top-center" as const,
@@ -38,8 +39,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-[#121212] text-gray-200">
-        <Toaster toastOptions={toastConfig} />
-        <ClientLayout>{children}</ClientLayout>
+        <AuthProvider>
+          <Toaster position="top-right" />
+          <ClientLayout>{children}</ClientLayout>
+        </AuthProvider>
       </body>
     </html>
   );
