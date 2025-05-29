@@ -12,15 +12,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, error, user } = useAuth();
+  const { signIn, signUp, error, user, loading } = useAuth();
   const router = useRouter();
 
   // Redirect if user is already logged in
   useEffect(() => {
-    if (user) {
+    console.log('Login page - user state changed:', { user: user?.email, loading });
+    if (!loading && user) {
+      console.log('User is logged in, redirecting to courses...');
       router.push('/courses');
     }
-  }, [user, router]);
+  }, [user, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,14 +30,23 @@ export default function LoginPage() {
     
     try {
       if (isLogin) {
+        console.log('Attempting sign in...');
         const { error: signInError } = await signIn(email, password);
         if (signInError) {
+          console.log('Sign in failed:', signInError.message);
           toast.error('Invalid email or password');
           return;
         }
+        console.log('Sign in successful, showing success toast...');
         toast.success('Successfully logged in!');
-        router.push('/courses');
+        
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          console.log('Redirecting to courses...');
+          router.push('/courses');
+        }, 100);
       } else {
+        console.log('Attempting sign up...');
         const { error: signUpError } = await signUp(email, password);
         if (signUpError) {
           if (signUpError.message.includes('already registered')) {
@@ -46,16 +57,34 @@ export default function LoginPage() {
           }
           return;
         }
+        console.log('Sign up successful, showing success toast...');
         toast.success('Account created successfully! You can now access the courses.');
-        // After successful signup, automatically redirect to courses
-        router.push('/courses');
+        
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          console.log('Redirecting to courses...');
+          router.push('/courses');
+        }, 100);
       }
     } catch (err) {
+      console.error('Unexpected error during authentication:', err);
       toast.error('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <section className="relative min-h-screen bg-[#121212] overflow-hidden flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p>Checking authentication...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative min-h-screen bg-[#121212] overflow-hidden">
