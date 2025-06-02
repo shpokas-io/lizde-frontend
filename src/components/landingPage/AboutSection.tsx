@@ -154,7 +154,7 @@ const AboutSection = () => {
             alt="Engineer recording drums"
             width={600}
             height={400}
-            className="rounded-2xl shadow-2xl w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto transform hover:scale-105 transition-transform duration-300"
+            className="rounded-2xl shadow-2xl w-full max-w-full md:max-w-md lg:max-w-lg object-cover mx-auto"
           />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -179,7 +179,7 @@ const AboutSection = () => {
                 Paprastais būdais įrašyti būgnus, gitaras ir kitus instrumentus
                 net namų sąlygomis.
               </li>
-              <li>Aiškiu takelių tvarkymu ir routing’u tavo DAW’e.</li>
+              <li>Aiškiu takelių tvarkymu ir routing'u tavo DAW'e.</li>
               <li>
                 Svarbiausiais garso apdorojimo įrankiais – EQ, kompresoriumi,
                 efektų siuntimais.

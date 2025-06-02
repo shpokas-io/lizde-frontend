@@ -31,9 +31,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen bg-[#121212] overflow-hidden">
-      {/* Background Image with Overlays */}
       <div className="absolute inset-0 z-0">
-        {/* Main Background Image */}
         <Image
           src="/images/background.jpg"
           alt="Music Studio Setup"
@@ -43,18 +41,14 @@ const HeroSection = () => {
           quality={100}
         />
         
-        {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-transparent to-[#121212]/80" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/50 to-transparent" />
         
-        {/* Optional: Texture Overlay */}
         <div className="absolute inset-0 bg-[#121212]/30" />
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 h-screen flex items-center">
         <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
-          {/* Left Content */}
           <div className="text-white space-y-8">
             <div className="space-y-4">
               <h2 className="text-orange-500 font-medium text-xl uppercase tracking-wider">
@@ -95,15 +89,12 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Content - We can remove or modify this since we have a background image */}
           <div className="hidden lg:block relative h-[600px] w-full">
-            {/* Optional: Add floating elements or highlights here */}
             <div className="absolute inset-0 bg-gradient-radial from-orange-500/10 to-transparent rounded-full blur-3xl" />
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
       {showScrollIndicator && (
         <button
           onClick={scrollToAbout}
