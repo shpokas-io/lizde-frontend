@@ -2,7 +2,7 @@ import { User, AuthError } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
 import { sessionService } from './session.service'
 import { apiService } from '@/lib/api'
-import { AuthCredentials, AuthResult, AuthEvent, AuthEventHandler } from '@/types/auth'
+import { AuthCredentials, RegisterCredentials, AuthResult, AuthEvent, AuthEventHandler } from '@/types/auth'
 
 class AuthService {
   private supabase = createClient()
@@ -28,7 +28,7 @@ class AuthService {
     }
   }
 
-  async signUp({ email, password }: AuthCredentials): Promise<AuthResult> {
+  async signUp({ email, password }: RegisterCredentials): Promise<AuthResult> {
     try {
       const { data, error } = await this.supabase.auth.signUp({
         email,
@@ -36,10 +36,6 @@ class AuthService {
       })
 
       if (error) return { error }
-
-      if (data.user) {
-        this.notifyHandlers('SIGNED_IN', data.user)
-      }
 
       return { error: null }
     } catch (error) {

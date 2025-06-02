@@ -11,13 +11,17 @@ export interface AuthCredentials {
   password: string
 }
 
+export interface RegisterCredentials extends AuthCredentials {
+  confirmPassword: string
+}
+
 export interface AuthResult {
   error: AuthError | null
 }
 
 export interface AuthContextType extends AuthState {
   signIn: (credentials: AuthCredentials) => Promise<AuthResult>
-  signUp: (credentials: AuthCredentials) => Promise<AuthResult>
+  signUp: (credentials: RegisterCredentials) => Promise<AuthResult>
   signOut: () => Promise<void>
   clearError: () => void
 }

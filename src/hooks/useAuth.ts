@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { AuthContext } from '@/contexts/AuthContext'
-import { AuthCredentials } from '@/types/auth'
+import { AuthCredentials, RegisterCredentials } from '@/types/auth'
 
 export function useAuth() {
   const context = useContext(AuthContext)
@@ -25,14 +25,13 @@ export function useAuth() {
     return result
   }
 
-  const signUp = async (credentials: AuthCredentials) => {
+  const signUp = async (credentials: RegisterCredentials) => {
     const result = await context.signUp(credentials)
     
     if (result.error) {
       toast.error(result.error.message)
     } else {
-      toast.success('Account created successfully')
-      router.push('/dashboard')
+      toast.success('Paskyra sukurta sėkmingai! Dabar prisijunkite.')
     }
     
     return result

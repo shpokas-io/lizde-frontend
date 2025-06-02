@@ -5,12 +5,16 @@ import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthState } from '@/hooks/useAuthState';
+import { validatePassword, validatePasswordMatch } from '@/utils/password-validation';
 
 function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [passwordMatchError, setPasswordMatchError] = useState('');
   const { signIn, signUp } = useAuth();
   const { user, loading } = useAuthState();
   const router = useRouter();
@@ -24,6 +28,23 @@ function LoginForm() {
     }
   }, [user, loading, router, searchParams]);
 
+  useEffect(() => {
+    if (!isLogin && password) {
+      const validation = validatePassword(password);
+      setPasswordErrors(validation.errors);
+    } else {
+      setPasswordErrors([]);
+    }
+  }, [password, isLogin]);
+
+  useEffect(() => {
+    if (!isLogin && confirmPassword && password !== confirmPassword) {
+      setPasswordMatchError('Slaptažodžiai nesutampa');
+    } else {
+      setPasswordMatchError('');
+    }
+  }, [password, confirmPassword, isLogin]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -32,13 +53,35 @@ function LoginForm() {
       if (isLogin) {
         await signIn({ email, password });
       } else {
-        await signUp({ email, password });
+        const passwordValidation = validatePassword(password);
+        const passwordsMatch = validatePasswordMatch(password, confirmPassword);
+        
+        if (!passwordValidation.isValid || !passwordsMatch) {
+          return;
+        }
+        
+        const result = await signUp({ email, password, confirmPassword });
+        
+        if (!result.error) {
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          setIsLogin(true);
+        }
       }
     } catch (err) {
       console.error('Unexpected error during authentication:', err);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleModeSwitch = () => {
+    setIsLogin(!isLogin);
+    setPassword('');
+    setConfirmPassword('');
+    setPasswordErrors([]);
+    setPasswordMatchError('');
   };
 
   if (loading) {
@@ -123,11 +166,41 @@ function LoginForm() {
                          focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
                 placeholder="••••••••"
               />
+              {!isLogin && passwordErrors.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {passwordErrors.map((error, index) => (
+                    <p key={index} className="text-red-400 text-sm">{error}</p>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {!isLogin && (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
+                  Pakartokite slaptažodį
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="mt-1 block w-full px-4 py-3 bg-white/5 border border-orange-500/20 rounded-lg 
+                           text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+                           focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
+                  placeholder="••••••••"
+                />
+                {passwordMatchError && (
+                  <p className="mt-2 text-red-400 text-sm">{passwordMatchError}</p>
+                )}
+              </div>
+            )}
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || (!isLogin && (passwordErrors.length > 0 || !!passwordMatchError))}
               className="w-full px-6 py-4 bg-gradient-to-r from-orange-500 to-orange-400 
                        rounded-full text-white font-medium shadow-lg 
                        hover:from-orange-600 hover:to-orange-500 
@@ -141,7 +214,7 @@ function LoginForm() {
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={handleModeSwitch}
               disabled={isLoading}
               className="text-orange-500 hover:text-orange-400 text-sm font-medium disabled:opacity-50"
             >

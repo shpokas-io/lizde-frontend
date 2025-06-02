@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { authService } from '@/services/auth.service'
 import { sessionService } from '@/services/session.service'
-import { AuthContextType, AuthCredentials, AuthResult } from '@/types/auth'
+import { AuthContextType, AuthCredentials, RegisterCredentials, AuthResult } from '@/types/auth'
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return result
   }
 
-  const signUp = async (credentials: AuthCredentials): Promise<AuthResult> => {
+  const signUp = async (credentials: RegisterCredentials): Promise<AuthResult> => {
     setError(null)
     const result = await authService.signUp(credentials)
     
