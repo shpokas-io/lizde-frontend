@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-export default function LoginPage() {
+function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -196,5 +196,24 @@ export default function LoginPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+function LoginFallback() {
+  return (
+    <section className="relative min-h-screen bg-[#121212] overflow-hidden flex items-center justify-center">
+      <div className="text-white text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+        <p>Loading...</p>
+      </div>
+    </section>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginForm />
+    </Suspense>
   );
 } 
