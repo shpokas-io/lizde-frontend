@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import BackButton from "@/components/common/BackButton";
 import CourseHeader from "@/components/coursesPage/CourseHeader";
 import CourseSection from "@/components/coursesPage/CourseSection";
-import { useCourse } from "@/components/lib/CourseContext";
+import { useCourse } from "@/contexts/CourseContext";
 import { prefetchLesson } from "@/services/courseService";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
