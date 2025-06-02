@@ -1,20 +1,17 @@
 import { CourseSectionData, Lesson } from "@/types/course";
 import { apiService } from "@/lib/api";
 
-// Cache for course data
 let courseDataCache: CourseSectionData[] | null = null;
 let courseDataPromise: Promise<CourseSectionData[]> | null = null;
 
 export async function getCourseData(forceRefresh = false): Promise<CourseSectionData[]> {
   console.log('getCourseData called with forceRefresh:', forceRefresh);
   
-  // Return cached data if available and not forcing refresh
   if (courseDataCache && !forceRefresh) {
     console.log('Returning cached course data');
     return courseDataCache;
   }
 
-  // If there's an ongoing request, return that promise
   if (courseDataPromise && !forceRefresh) {
     console.log('Returning existing course data promise');
     return courseDataPromise;
@@ -22,7 +19,6 @@ export async function getCourseData(forceRefresh = false): Promise<CourseSection
 
   console.log('Making new course data request');
   
-  // Create new request using authenticated API service
   courseDataPromise = apiService.get('/courses')
     .then((data) => {
       console.log('Course data received successfully:', data);
@@ -53,13 +49,11 @@ export function prefetchCourseData() {
   }
 }
 
-// Cache for individual lessons
 const lessonCache = new Map<string, Lesson>();
 
 export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   console.log('getLessonBySlug called with slug:', slug);
   
-  // Return cached lesson if available
   if (lessonCache.has(slug)) {
     console.log('Returning cached lesson for slug:', slug);
     return lessonCache.get(slug) || null;
@@ -77,7 +71,6 @@ export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
   }
 }
 
-// Prefetch a specific lesson
 export function prefetchLesson(slug: string) {
   console.log('Prefetching lesson:', slug);
   if (!lessonCache.has(slug)) {
