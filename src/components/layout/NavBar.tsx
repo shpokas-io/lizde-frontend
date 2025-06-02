@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowUp, FaUser, FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const NavLink = ({ href, label, onClick, className = "" }: { 
   href: string, 

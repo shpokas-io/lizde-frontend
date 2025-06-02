@@ -1,6 +1,5 @@
 export { sessionService } from '../session.service';
 export { SessionManager } from '../session-manager';
-export { AuthSessionService } from '../auth-session.service';
 
 export type {
   SessionConfig,

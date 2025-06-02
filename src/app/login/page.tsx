@@ -1,36 +1,25 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
+import { useAuthState } from '@/hooks/useAuthState';
 
 function LoginForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, error, user, loading } = useAuth();
+  const { signIn, signUp } = useAuth();
+  const { user, loading } = useAuthState();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Redirect if user is already logged in
   useEffect(() => {
-    console.log('Login page - user state changed:', { 
-      user: user?.email, 
-      loading, 
-      userExists: !!user 
-    });
-    
     if (!loading && user) {
-      console.log('User is logged in, redirecting...');
-      // Check for redirectTo parameter
       const redirectTo = searchParams.get('redirectTo');
       const destination = redirectTo && redirectTo.startsWith('/courses') ? redirectTo : '/courses';
-      console.log('Redirecting to:', destination);
-      // Use replace instead of push to prevent back navigation to login
       router.replace(destination);
     }
   }, [user, loading, router, searchParams]);
@@ -41,51 +30,17 @@ function LoginForm() {
     
     try {
       if (isLogin) {
-        console.log('Attempting sign in...');
-        console.log('Attempting to sign in with:', { email, passwordLength: password.length });
-        
-        const { error: signInError } = await signIn(email, password);
-        
-        if (signInError) {
-          console.log('Sign in failed:', signInError.message);
-          toast.error('Invalid email or password');
-          return;
-        }
-        
-        console.log('Sign in successful:', { userId: user?.id });
-        console.log('Sign in successful, showing success toast...');
-        toast.success('Successfully logged in!');
-        
-        // Don't manually redirect here - let the useEffect handle it
-        // The useEffect will trigger when the user state updates
-        
+        await signIn({ email, password });
       } else {
-        console.log('Attempting sign up...');
-        const { error: signUpError } = await signUp(email, password);
-        if (signUpError) {
-          if (signUpError.message.includes('already registered')) {
-            toast.error('This email is already registered. Please sign in instead.');
-            setIsLogin(true);
-          } else {
-            toast.error(signUpError.message || 'Failed to create account');
-          }
-          return;
-        }
-        console.log('Sign up successful, showing success toast...');
-        toast.success('Account created successfully! You can now access the courses.');
-        
-        // Don't manually redirect here - let the useEffect handle it
-        // The useEffect will trigger when the user state updates
+        await signUp({ email, password });
       }
     } catch (err) {
       console.error('Unexpected error during authentication:', err);
-      toast.error('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Show loading state while checking authentication
   if (loading) {
     return (
       <section className="relative min-h-screen bg-[#121212] overflow-hidden flex items-center justify-center">

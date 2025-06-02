@@ -6,21 +6,7 @@ import NavBar from "@/components/layout/NavBar";
 import "./globals.css";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider } from '@/contexts/AuthContext'
-
-const toastConfig = {
-  position: "top-center" as const,
-  style: {
-    background: '#333',
-    color: '#fff',
-  },
-  success: {
-    duration: 3000,
-  },
-  error: {
-    duration: 4000,
-  },
-};
+import { AuthProvider } from '@/auth'
 
 const ClientLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();

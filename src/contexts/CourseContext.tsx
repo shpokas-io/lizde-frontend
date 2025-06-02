@@ -9,7 +9,7 @@ import {
 } from "react";
 import { CourseSectionData } from "@/types/course";
 import { getCourseData, prefetchCourseData } from "@/services/courseService";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuthState } from "@/hooks/useAuthState";
 
 interface CourseContextType {
   courseData: CourseSectionData[];
@@ -24,7 +24,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   const [courseData, setCourseData] = useState<CourseSectionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuthState();
 
   const loadCourseData = async (forceRefresh = false) => {
     try {

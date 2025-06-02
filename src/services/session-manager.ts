@@ -4,7 +4,7 @@ import { TimerManager } from '@/utils/session-timers';
 import { ActivityTracker } from '@/utils/activity-tracker';
 import { CallbackManager } from '@/utils/callback-manager';
 import { validateSession, createInitialSessionState, updateSessionActivity, resetSessionStart } from '@/utils/session-validator';
-import { AuthSessionService } from './auth-session.service';
+import { createClient } from '@/lib/supabase';
 
 export class SessionManager {
   private config: SessionConfig;
@@ -12,7 +12,7 @@ export class SessionManager {
   private timerManager = new TimerManager();
   private activityTracker = new ActivityTracker();
   private callbackManager = new CallbackManager();
-  private authService = new AuthSessionService();
+  private supabase = createClient();
 
   constructor(config: Partial<SessionConfig> = {}) {
     this.config = createSessionConfig(config);
@@ -56,17 +56,17 @@ export class SessionManager {
 
   async refresh(): Promise<boolean> {
     try {
-      const success = await this.authService.refreshSession();
+      const { data, error } = await this.supabase.auth.refreshSession();
       
-      if (success) {
-        this.state = resetSessionStart(this.state);
-        this.restartTimers();
-        this.scheduleTokenRefresh();
-        this.callbackManager.triggerRefreshCallbacks();
-        return true;
+      if (error || !data.session) {
+        return false;
       }
       
-      return false;
+      this.state = resetSessionStart(this.state);
+      this.restartTimers();
+      this.scheduleTokenRefresh();
+      this.callbackManager.triggerRefreshCallbacks();
+      return true;
     } catch {
       return false;
     }
@@ -86,12 +86,12 @@ export class SessionManager {
 
   private startTimers(): void {
     this.timerManager.setActivityTimer(
-      () => this.handleTimeout('inactivity'),
+      () => this.handleTimeout(),
       this.config
     );
 
     this.timerManager.setSessionTimer(
-      () => this.handleTimeout('absolute'),
+      () => this.handleTimeout(),
       this.config
     );
 
@@ -108,7 +108,7 @@ export class SessionManager {
 
   private restartActivityTimers(): void {
     this.timerManager.setActivityTimer(
-      () => this.handleTimeout('inactivity'),
+      () => this.handleTimeout(),
       this.config
     );
 
@@ -122,7 +122,7 @@ export class SessionManager {
     this.activityTracker.start(() => this.recordActivity());
   }
 
-  private handleTimeout(_reason: SessionTimeoutReason): void {
+  private handleTimeout(): void {
     this.state.isActive = false;
     this.cleanup();
     this.callbackManager.triggerTimeoutCallbacks();
@@ -144,7 +144,7 @@ export class SessionManager {
       if (success) {
         this.scheduleTokenRefresh();
       } else {
-        this.handleTimeout('absolute');
+        this.handleTimeout();
       }
     });
   }
