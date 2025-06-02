@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LessonCard from "@/components/common/LessonCard";
 import { CourseSectionData } from "@/types/course";
 
@@ -13,11 +13,26 @@ export default function CourseSection({
 }: CourseSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    const savedState = localStorage.getItem(`section-${section.sectionTitle}`);
+    if (savedState !== null) {
+      setIsOpen(JSON.parse(savedState));
+    }
+  }, [section.sectionTitle]);
+
+  const toggleSection = () => {
+    setIsOpen((prev) => {
+      const newState = !prev;
+      localStorage.setItem(`section-${section.sectionTitle}`, JSON.stringify(newState));
+      return newState;
+    });
+  };
+
   return (
     <div className="bg-[#1a1a1a] rounded-xl border border-gray-800 shadow-sm overflow-hidden">
       <button
         className={`w-full flex items-center justify-between px-6 py-4 border-b border-gray-800 ${headerBgColor} focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors`}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={toggleSection}
         aria-expanded={isOpen}
         aria-controls={`section-${section.sectionTitle}`}
       >
