@@ -2,7 +2,7 @@
 import Button from "@/components/common/Button";
 
 const MentorSection = () => {
-  const videoUrl = "https://www.youtube.com/watch?v=9Q_4vUDimdI";
+  const videoUrl = "https://www.youtube.com/watch?v=NyxhJWJDfjc";
 
   const getEmbedUrl = (url: string) => url.replace("watch?v=", "embed/");
 
