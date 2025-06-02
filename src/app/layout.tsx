@@ -7,7 +7,6 @@ import "./globals.css";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from '@/contexts/AuthContext'
-import AuthDebug from '@/components/debug/AuthDebug'
 
 const toastConfig = {
   position: "top-center" as const,
@@ -32,7 +31,6 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
       {!isCoursePage && <NavBar />}
       <main>{children}</main>
       <Footer />
-      <AuthDebug />
     </>
   );
 };
