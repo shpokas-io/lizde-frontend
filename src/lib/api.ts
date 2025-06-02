@@ -192,6 +192,66 @@ class ApiService {
       throw error
     }
   }
+
+  async logout() {
+    try {
+      const API_URL = getApiUrl()
+      console.log(`Making POST request to: ${API_URL}/auth/logout`)
+      
+      const headers = await this.getAuthHeaders()
+      const response = await this.makeRequest(`${API_URL}/auth/logout`, {
+        method: 'POST',
+        headers,
+      });
+
+      console.log(`Response status: ${response.status} ${response.statusText}`)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`API logout request failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          errorText
+        })
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      }
+
+      return response.json()
+    } catch (error) {
+      console.error('API logout request error:', error)
+      throw error
+    }
+  }
+
+  async getSessionStatus() {
+    try {
+      const API_URL = getApiUrl()
+      console.log(`Making POST request to: ${API_URL}/auth/session/status`)
+      
+      const headers = await this.getAuthHeaders()
+      const response = await this.makeRequest(`${API_URL}/auth/session/status`, {
+        method: 'POST',
+        headers,
+      });
+
+      console.log(`Response status: ${response.status} ${response.statusText}`)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`API session status request failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          errorText
+        })
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      }
+
+      return response.json()
+    } catch (error) {
+      console.error('API session status request error:', error)
+      throw error
+    }
+  }
 }
 
 export const apiService = new ApiService() 

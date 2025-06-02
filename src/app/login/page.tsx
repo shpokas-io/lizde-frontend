@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp, error, user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Redirect if user is already logged in
   useEffect(() => {
@@ -24,11 +25,15 @@ export default function LoginPage() {
     });
     
     if (!loading && user) {
-      console.log('User is logged in, redirecting to courses...');
+      console.log('User is logged in, redirecting...');
+      // Check for redirectTo parameter
+      const redirectTo = searchParams.get('redirectTo');
+      const destination = redirectTo && redirectTo.startsWith('/courses') ? redirectTo : '/courses';
+      console.log('Redirecting to:', destination);
       // Use replace instead of push to prevent back navigation to login
-      router.replace('/courses');
+      router.replace(destination);
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

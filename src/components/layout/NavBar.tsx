@@ -5,13 +5,6 @@ import Link from "next/link";
 import { FaArrowUp, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 
-const navLinks = [
-  { label: "Pradžia", href: "/" },
-  { label: "Apie", href: "/#about" },
-  { label: "Kursai", href: "/courses" },
-  { label: "Pirkti", href: "/buy" },
-];
-
 const NavLink = ({ href, label, onClick, className = "" }: { 
   href: string, 
   label: string, 
@@ -65,6 +58,26 @@ const MobileMenu = ({ isOpen, onClose, scrollToAbout }: {
 }) => {
   const { user, signOut } = useAuth();
 
+  // Create navigation links based on authentication status
+  const getNavLinks = () => {
+    const baseLinks = [
+      { label: "Pradžia", href: "/" },
+      { label: "Apie", href: "/#about" },
+      { label: "Pirkti", href: "/buy" },
+    ];
+
+    // Only add courses link if user is authenticated
+    if (user) {
+      return [
+        ...baseLinks.slice(0, 2), // Pradžia, Apie
+        { label: "Kursai", href: "/courses" },
+        ...baseLinks.slice(2), // Pirkti
+      ];
+    }
+
+    return baseLinks;
+  };
+
   return (
     <div
       className={`
@@ -74,7 +87,7 @@ const MobileMenu = ({ isOpen, onClose, scrollToAbout }: {
       `}
     >
       <div className="flex flex-col items-center justify-center h-full space-y-8">
-        {navLinks.map((link) => (
+        {getNavLinks().map((link) => (
           <NavLink
             key={link.href}
             {...link}
@@ -123,6 +136,7 @@ const MobileMenu = ({ isOpen, onClose, scrollToAbout }: {
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -133,6 +147,26 @@ const NavBar = () => {
   const scrollToAbout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     document.getElementById("about")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Create navigation links based on authentication status
+  const getNavLinks = () => {
+    const baseLinks = [
+      { label: "Pradžia", href: "/" },
+      { label: "Apie", href: "/#about" },
+      { label: "Pirkti", href: "/buy" },
+    ];
+
+    // Only add courses link if user is authenticated
+    if (user) {
+      return [
+        ...baseLinks.slice(0, 2), // Pradžia, Apie
+        { label: "Kursai", href: "/courses" },
+        ...baseLinks.slice(2), // Pirkti
+      ];
+    }
+
+    return baseLinks;
   };
 
   return (
@@ -159,7 +193,7 @@ const NavBar = () => {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {getNavLinks().map((link) => (
               <NavLink
                 key={link.href}
                 {...link}

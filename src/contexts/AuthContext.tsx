@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, AuthError } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
+import { sessionService } from '@/services/session.service'
+import { apiService } from '@/lib/api'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 type AuthContextType = {
   user: User | null
@@ -25,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     console.log('AuthContext: Initializing auth state...')
@@ -36,7 +41,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userId: session?.user?.id,
         userEmail: session?.user?.email 
       })
-      setUser(session?.user ?? null)
+      
+      if (session?.user) {
+        setUser(session.user)
+        // Initialize session management when user is authenticated
+        sessionService.initializeSession()
+      }
       setLoading(false)
     })
 
@@ -48,7 +58,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userId: session?.user?.id,
         userEmail: session?.user?.email 
       })
-      setUser(session?.user ?? null)
+      
+      if (session?.user) {
+        setUser(session.user)
+        // Initialize session management when user signs in
+        if (event === 'SIGNED_IN') {
+          sessionService.initializeSession()
+        }
+      } else {
+        setUser(null)
+        // End session management when user signs out
+        sessionService.endSession()
+      }
       setLoading(false)
     })
 
@@ -56,30 +77,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      console.log('AuthContext: Clearing session on page exit...')
-      supabase.auth.signOut()
-    }
+    // Set up session timeout handler
+    const unsubscribeTimeout = sessionService.onSessionTimeout(() => {
+      console.log('Session timeout - signing out user')
+      toast.error('Session expired. Please log in again.')
+      handleSignOut()
+    })
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
+    // Set up session warning handler
+    const unsubscribeWarning = sessionService.onSessionWarning((minutesLeft) => {
+      console.log(`Session warning: ${minutesLeft} minutes left`)
+      toast.error(`Your session will expire in ${minutesLeft} minute(s). Please save your work.`)
+    })
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      unsubscribeTimeout()
+      unsubscribeWarning()
     }
   }, [])
 
   const signIn = async (email: string, password: string) => {
     try {
       setError(null)
-      console.log('AuthContext: Attempting to sign in with:', { email, passwordLength: password.length })
+      console.log('AuthContext: Attempting sign in...')
       
-      const passwordError = validatePassword(password)
-      if (passwordError) {
-        console.log('AuthContext: Password validation failed:', passwordError)
-        setError(passwordError)
-        return { error: new AuthError(passwordError) }
-      }
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -87,29 +108,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) {
         console.log('AuthContext: Sign in error:', error.message)
-        
-        // Handle specific error cases
-        let errorMessage = error.message
-        if (error.message === 'Invalid login credentials') {
-          errorMessage = 'Invalid email or password'
-        } else if (error.message === 'Email not confirmed') {
-          errorMessage = 'Your account needs to be activated. Please check your email for a confirmation link, or contact support if you need help.'
-        }
-        
-        setError(errorMessage)
+        setError(error.message)
         return { error }
       }
 
       console.log('AuthContext: Sign in successful:', { userId: data.user?.id })
-      
-      // Don't manually set user here - let onAuthStateChange handle it
-      // This prevents race conditions and ensures consistency
-      // setUser(data.user) // Removed this line
-      
       return { error: null }
     } catch (error) {
       const authError = error as AuthError
-      console.log('AuthContext: Unexpected auth error:', authError.message)
+      console.log('AuthContext: Unexpected sign in error:', authError.message)
       setError(authError.message)
       return { error: authError }
     }
@@ -118,24 +125,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string) => {
     try {
       setError(null)
-      console.log('AuthContext: Attempting to sign up with:', { email, passwordLength: password.length })
-
-      const passwordError = validatePassword(password)
-      if (passwordError) {
-        console.log('AuthContext: Password validation failed:', passwordError)
-        setError(passwordError)
-        return { error: new AuthError(passwordError) }
-      }
-
+      console.log('AuthContext: Attempting sign up...')
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          data: {
-            email,
-          }
-        }
       })
 
       if (error) {
@@ -144,41 +138,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error }
       }
 
-      // For email confirmation flow
-      if (data.user?.identities?.length === 0) {
-        const message = 'This email is already registered. Please sign in instead.'
-        console.log('AuthContext: Sign up failed:', message)
-        setError(message)
-        return { error: new AuthError(message) }
-      }
-
       console.log('AuthContext: Sign up successful:', { userId: data.user?.id })
-      
-      // Don't manually set user here - let onAuthStateChange handle it
-      // This ensures consistency with the auth state management
-      
       return { error: null }
     } catch (error) {
       const authError = error as AuthError
-      console.log('AuthContext: Unexpected auth error:', authError.message)
+      console.log('AuthContext: Unexpected sign up error:', authError.message)
       setError(authError.message)
       return { error: authError }
     }
   }
 
-  const signOut = async () => {
+  const handleSignOut = async () => {
     try {
       setError(null)
       console.log('AuthContext: Signing out...')
+      
+      // End session management first
+      sessionService.endSession()
+      
+      // Try to call backend logout endpoint
+      try {
+        await apiService.logout()
+        console.log('Backend logout successful')
+      } catch (error) {
+        console.warn('Backend logout failed, continuing with client logout:', error)
+      }
+      
+      // Clear any stored session data
+      localStorage.clear()
+      sessionStorage.clear()
+      
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut()
       if (error) throw error
-      // Don't manually set user to null - let onAuthStateChange handle it
+      
+      // Redirect to login page
+      router.push('/login')
+      
       console.log('AuthContext: Sign out successful')
     } catch (error) {
       const authError = error as AuthError
       console.log('AuthContext: Sign out error:', authError.message)
       setError(authError.message)
     }
+  }
+
+  const signOut = async () => {
+    await handleSignOut()
   }
 
   // Log user state changes for debugging
