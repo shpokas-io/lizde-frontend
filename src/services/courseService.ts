@@ -4,7 +4,9 @@ import { apiService } from "@/lib/api";
 let courseDataCache: CourseSectionData[] | null = null;
 let courseDataPromise: Promise<CourseSectionData[]> | null = null;
 
-export async function getCourseData(forceRefresh = false): Promise<CourseSectionData[]> {
+export async function getCourseData(
+  forceRefresh = false
+): Promise<CourseSectionData[]> {
   if (courseDataCache && !forceRefresh) {
     return courseDataCache;
   }
@@ -12,8 +14,9 @@ export async function getCourseData(forceRefresh = false): Promise<CourseSection
   if (courseDataPromise && !forceRefresh) {
     return courseDataPromise;
   }
-  
-  courseDataPromise = apiService.get('/courses')
+
+  courseDataPromise = apiService
+    .get("/courses")
     .then((data) => {
       courseDataCache = data;
       return data;
@@ -28,7 +31,6 @@ export async function getCourseData(forceRefresh = false): Promise<CourseSection
   return courseDataPromise;
 }
 
-// Prefetch course data
 export function prefetchCourseData() {
   if (!courseDataCache && !courseDataPromise) {
     getCourseData();

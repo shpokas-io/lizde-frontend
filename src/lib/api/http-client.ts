@@ -1,6 +1,6 @@
-import { ApiRequestOptions, ApiError, HttpMethod } from '@/types/api';
-import { API_CONFIG } from './config';
-import { authManager } from './auth-manager';
+import { ApiRequestOptions, ApiError, HttpMethod } from "@/types/api";
+import { API_CONFIG } from "./config";
+import { authManager } from "./auth-manager";
 
 export class HttpClient {
   private config = API_CONFIG;
@@ -13,16 +13,19 @@ export class HttpClient {
     return error;
   }
 
-  private withTimeout(promise: Promise<Response>, timeoutMs: number): Promise<Response> {
+  private withTimeout(
+    promise: Promise<Response>,
+    timeoutMs: number
+  ): Promise<Response> {
     const timeout = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), timeoutMs);
+      setTimeout(() => reject(new Error("Request timeout")), timeoutMs);
     });
 
     return Promise.race([promise, timeout]);
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async request(
@@ -44,7 +47,7 @@ export class HttpClient {
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const authHeaders = await authManager.getAuthHeaders();
-        
+
         const requestOptions: RequestInit = {
           method,
           headers: {
@@ -64,7 +67,6 @@ export class HttpClient {
         }
 
         if (!response.ok) {
-          const errorText = await response.text();
           throw this.createApiError(
             `API request failed: ${response.status} ${response.statusText}`,
             response
@@ -72,10 +74,9 @@ export class HttpClient {
         }
 
         return response;
-
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt >= retries || (error as ApiError).status) {
           break;
         }
@@ -84,28 +85,43 @@ export class HttpClient {
       }
     }
 
-    throw lastError || new Error('Request failed after all retries');
+    throw lastError || new Error("Request failed after all retries");
   }
 
   async get(endpoint: string, options?: ApiRequestOptions): Promise<Response> {
-    return this.request('GET', endpoint, options);
+    return this.request("GET", endpoint, options);
   }
 
-  async post(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<Response> {
-    return this.request('POST', endpoint, { ...options, body: data });
+  async post(
+    endpoint: string,
+    data?: any,
+    options?: ApiRequestOptions
+  ): Promise<Response> {
+    return this.request("POST", endpoint, { ...options, body: data });
   }
 
-  async put(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<Response> {
-    return this.request('PUT', endpoint, { ...options, body: data });
+  async put(
+    endpoint: string,
+    data?: any,
+    options?: ApiRequestOptions
+  ): Promise<Response> {
+    return this.request("PUT", endpoint, { ...options, body: data });
   }
 
-  async delete(endpoint: string, options?: ApiRequestOptions): Promise<Response> {
-    return this.request('DELETE', endpoint, options);
+  async delete(
+    endpoint: string,
+    options?: ApiRequestOptions
+  ): Promise<Response> {
+    return this.request("DELETE", endpoint, options);
   }
 
-  async patch(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<Response> {
-    return this.request('PATCH', endpoint, { ...options, body: data });
+  async patch(
+    endpoint: string,
+    data?: any,
+    options?: ApiRequestOptions
+  ): Promise<Response> {
+    return this.request("PATCH", endpoint, { ...options, body: data });
   }
 }
 
-export const httpClient = new HttpClient(); 
+export const httpClient = new HttpClient();

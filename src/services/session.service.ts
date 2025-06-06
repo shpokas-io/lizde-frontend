@@ -51,15 +51,15 @@ class SessionService {
   private startSessionTimer(): void {
     this.clearTimers();
 
-    // Set warning timer
     this.warningTimeout = setTimeout(() => {
-      this.warningCallbacks.forEach(callback => callback(this.WARNING_BEFORE_TIMEOUT_MINUTES));
+      this.warningCallbacks.forEach((callback) =>
+        callback(this.WARNING_BEFORE_TIMEOUT_MINUTES)
+      );
     }, (this.SESSION_TIMEOUT_MINUTES - this.WARNING_BEFORE_TIMEOUT_MINUTES) * 60 * 1000);
 
-    // Set session timeout timer
     this.sessionTimeout = setTimeout(() => {
       this.sessionActive = false;
-      this.timeoutCallbacks.forEach(callback => callback());
+      this.timeoutCallbacks.forEach((callback) => callback());
     }, this.SESSION_TIMEOUT_MINUTES * 60 * 1000);
   }
 
@@ -75,4 +75,4 @@ class SessionService {
   }
 }
 
-export const sessionService = new SessionService(); 
+export const sessionService = new SessionService();
