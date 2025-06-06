@@ -1,47 +1,77 @@
-import { SessionManager } from './session-manager';
-import { SessionConfig, SessionState, SessionEventCallback, SessionWarningCallback } from '@/types/session';
-
 class SessionService {
-  private sessionManager = new SessionManager();
+  private sessionActive = false;
+  private timeoutCallbacks: (() => void)[] = [];
+  private warningCallbacks: ((minutes: number) => void)[] = [];
+  private sessionTimeout: NodeJS.Timeout | null = null;
+  private warningTimeout: NodeJS.Timeout | null = null;
+
+  private readonly SESSION_TIMEOUT_MINUTES = 30;
+  private readonly WARNING_BEFORE_TIMEOUT_MINUTES = 5;
 
   initializeSession(): void {
-    this.sessionManager.initialize();
-  }
-
-  updateConfig(newConfig: Partial<SessionConfig>): void {
-    this.sessionManager.updateConfig(newConfig);
-  }
-
-  recordActivity(): void {
-    this.sessionManager.recordActivity();
-  }
-
-  getSessionState(): SessionState {
-    return this.sessionManager.getState();
-  }
-
-  isSessionValid(): boolean {
-    return this.sessionManager.isValid();
+    this.sessionActive = true;
+    this.startSessionTimer();
   }
 
   endSession(): void {
-    this.sessionManager.end();
+    this.sessionActive = false;
+    this.clearTimers();
   }
 
-  async refreshSession(): Promise<boolean> {
-    return this.sessionManager.refresh();
+  recordActivity(): void {
+    if (this.sessionActive) {
+      this.startSessionTimer();
+    }
   }
 
-  onSessionTimeout(callback: SessionEventCallback): () => void {
-    return this.sessionManager.onTimeout(callback);
+  isSessionValid(): boolean {
+    return this.sessionActive;
   }
 
-  onSessionWarning(callback: SessionWarningCallback): () => void {
-    return this.sessionManager.onWarning(callback);
+  onSessionTimeout(callback: () => void): () => void {
+    this.timeoutCallbacks.push(callback);
+    return () => {
+      const index = this.timeoutCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.timeoutCallbacks.splice(index, 1);
+      }
+    };
   }
 
-  onSessionRefresh(callback: SessionEventCallback): () => void {
-    return this.sessionManager.onRefresh(callback);
+  onSessionWarning(callback: (minutes: number) => void): () => void {
+    this.warningCallbacks.push(callback);
+    return () => {
+      const index = this.warningCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.warningCallbacks.splice(index, 1);
+      }
+    };
+  }
+
+  private startSessionTimer(): void {
+    this.clearTimers();
+
+    // Set warning timer
+    this.warningTimeout = setTimeout(() => {
+      this.warningCallbacks.forEach(callback => callback(this.WARNING_BEFORE_TIMEOUT_MINUTES));
+    }, (this.SESSION_TIMEOUT_MINUTES - this.WARNING_BEFORE_TIMEOUT_MINUTES) * 60 * 1000);
+
+    // Set session timeout timer
+    this.sessionTimeout = setTimeout(() => {
+      this.sessionActive = false;
+      this.timeoutCallbacks.forEach(callback => callback());
+    }, this.SESSION_TIMEOUT_MINUTES * 60 * 1000);
+  }
+
+  private clearTimers(): void {
+    if (this.sessionTimeout) {
+      clearTimeout(this.sessionTimeout);
+      this.sessionTimeout = null;
+    }
+    if (this.warningTimeout) {
+      clearTimeout(this.warningTimeout);
+      this.warningTimeout = null;
+    }
   }
 }
 

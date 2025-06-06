@@ -7,56 +7,48 @@ import VideoPlayer from "@/components/coursesPage/VideoPlayer";
 import LessonNavigation from "@/components/coursesPage/LessonNavigation";
 import LessonMaterials from "@/components/coursesPage/LessonMaterials";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import {
-  getLessonBySlug,
-  getAdjacentLessons,
-  getSectionByLessonSlug,
-} from "@/utils/courseUtils";
-import type { Lesson, CourseSectionData } from "@/types/course";
+import { getLessonBySlug, getAdjacentLessons } from "@/utils/courseUtils";
+import { useCourse } from "@/contexts/CourseContext";
+import type { Lesson } from "@/types/course";
 
 export default function LessonDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [section, setSection] = useState<CourseSectionData | undefined>();
   const [adjacentLessons, setAdjacentLessons] = useState<{ prevLesson: Lesson | null; nextLesson: Lesson | null }>({
     prevLesson: null,
     nextLesson: null,
   });
 
+  const { courseData } = useCourse();
   const params = useParams();
   const slug = params.slug as string;
 
   useEffect(() => {
-    async function fetchLessonData() {
-      try {
-        const [lessonData, sectionData, adjacentData] = await Promise.all([
-          getLessonBySlug(slug),
-          getSectionByLessonSlug(slug),
-          getAdjacentLessons(slug),
-        ]);
+    if (courseData.length === 0) return;
 
-        if (!lessonData) {
-          throw new Error("Lesson not found");
-        }
+    try {
+      const lessonData = getLessonBySlug(courseData, slug);
+      const adjacentData = getAdjacentLessons(courseData, slug);
 
-        setLesson(lessonData);
-        setSection(sectionData);
-        setAdjacentLessons(adjacentData);
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error fetching lesson data:", err);
-        setError(err instanceof Error ? err : new Error("Failed to load lesson"));
-        setIsLoading(false);
+      if (!lessonData) {
+        throw new Error("Lesson not found");
       }
-    }
 
-    fetchLessonData();
-  }, [slug]);
+      setLesson(lessonData);
+      setAdjacentLessons({
+        prevLesson: adjacentData.previousLesson,
+        nextLesson: adjacentData.nextLesson,
+      });
+      setIsLoading(false);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Failed to load lesson"));
+      setIsLoading(false);
+    }
+  }, [courseData, slug]);
 
   const handleVideoError = (err: Error) => {
-    console.error("Video player error:", err);
     setError(err);
     setIsLoading(false);
   };

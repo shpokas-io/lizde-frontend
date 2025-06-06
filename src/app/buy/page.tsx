@@ -3,7 +3,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCheck, FaPlay } from "react-icons/fa";
-import { getEmbedUrl } from "../../utils/videoUtils";
+import { createYouTubeEmbedUrl, extractYouTubeVideoId } from "../../utils/videoUtils";
+import Button from "@/components/common/Button";
+import { CheckIcon } from "@/components/icons/Index";
 
 const features = [
   "Prieiga prie visų vaizdo pamokų be laiko ribojimo",
@@ -43,7 +45,7 @@ export default function BuyPage() {
           <div className="bg-[#1a1a1a] rounded-2xl p-8 mb-12 border border-gray-800">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <iframe
-                src={getEmbedUrl("https://youtu.be/Zg8tIG9SkC8")}
+                src={createYouTubeEmbedUrl(extractYouTubeVideoId("https://youtu.be/Zg8tIG9SkC8")!)}
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

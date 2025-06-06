@@ -1,92 +1,112 @@
-import { getCourseData, getLessonBySlug as getLessonBySlugFromDb } from "@/services/courseService";
 import type { Lesson, CourseSectionData } from "@/types/course";
 
-export async function getAllLessons(): Promise<Lesson[]> {
-  const courseData = await getCourseData();
-  return courseData.flatMap((section) => section.lessons);
-}
-
-export async function getLessonBySlug(slug: string): Promise<Lesson | null> {
-  if (!slug) {
-    console.error("Invalid slug provided to getLessonBySlug");
+export function getLessonBySlug(
+  courseData: CourseSectionData[],
+  slug: string
+): Lesson | null {
+  if (!slug || typeof slug !== "string") {
     return null;
   }
 
-  return await getLessonBySlugFromDb(slug);
+  for (const section of courseData) {
+    const lesson = section.lessons.find((lesson) => lesson.slug === slug);
+    if (lesson) {
+      return lesson;
+    }
+  }
+
+  return null;
 }
 
-export async function getSectionByLessonSlug(
+export function getSectionByLessonSlug(
+  courseData: CourseSectionData[],
   slug: string
-): Promise<CourseSectionData | undefined> {
-  if (!slug) return undefined;
+): CourseSectionData | null {
+  if (!slug || typeof slug !== "string") {
+    return null;
+  }
 
-  const courseData = await getCourseData();
   return courseData.find((section) =>
     section.lessons.some((lesson) => lesson.slug === slug)
-  );
+  ) || null;
 }
 
-export async function getAdjacentLessons(currentSlug: string): Promise<{
-  prevLesson: Lesson | null;
+export function getAdjacentLessons(
+  courseData: CourseSectionData[],
+  currentSlug: string
+): {
+  previousLesson: Lesson | null;
   nextLesson: Lesson | null;
-}> {
-  if (!currentSlug) {
-    console.error("Invalid slug provided to getAdjacentLessons");
-    return { prevLesson: null, nextLesson: null };
+} {
+  if (!currentSlug || typeof currentSlug !== "string") {
+    return {
+      previousLesson: null,
+      nextLesson: null,
+    };
   }
 
   try {
-    const allLessons = await getAllLessons();
-    const currentIndex = allLessons.findIndex((l) => l.slug === currentSlug);
+    const allLessons: Lesson[] = [];
+    courseData.forEach((section) => {
+      allLessons.push(...section.lessons);
+    });
+
+    const currentIndex = allLessons.findIndex(
+      (lesson) => lesson.slug === currentSlug
+    );
 
     if (currentIndex === -1) {
-      return { prevLesson: null, nextLesson: null };
+      return {
+        previousLesson: null,
+        nextLesson: null,
+      };
     }
 
-    const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
-    const nextLesson =
-      currentIndex < allLessons.length - 1
-        ? allLessons[currentIndex + 1]
-        : null;
-
-    return { prevLesson, nextLesson };
+    return {
+      previousLesson: currentIndex > 0 ? allLessons[currentIndex - 1] : null,
+      nextLesson:
+        currentIndex < allLessons.length - 1
+          ? allLessons[currentIndex + 1]
+          : null,
+    };
   } catch (error) {
-    console.error("Error getting adjacent lessons:", error);
-    return { prevLesson: null, nextLesson: null };
+    return {
+      previousLesson: null,
+      nextLesson: null,
+    };
   }
 }
 
-export async function getTotalLessonCount(): Promise<number> {
+export function getTotalLessonCount(courseData: CourseSectionData[]): number {
   try {
-    const courseData = await getCourseData();
-    
-    const sectionsCount = courseData.reduce(
-      (acc, section) => acc + section.lessons.length,
+    return courseData.reduce(
+      (total, section) => total + section.lessons.length,
       0
     );
-    return sectionsCount;
   } catch (error) {
-    console.error("Error calculating total lesson count:", error);
     return 0;
   }
 }
 
-export async function getLessonsBySections(): Promise<{
+export function getAllLessons(courseData: CourseSectionData[]): Lesson[] {
+  return courseData.flatMap((section) => section.lessons);
+}
+
+export function getLessonsBySections(courseData: CourseSectionData[]): {
   sectionTitle: string;
   lessons: Lesson[];
-}[]> {
-  const courseData = await getCourseData();
+}[] {
   return courseData.map((section) => ({
     sectionTitle: section.sectionTitle,
     lessons: section.lessons,
   }));
 }
 
-export async function getSectionCompletion(
+export function getSectionCompletion(
+  courseData: CourseSectionData[],
   sectionTitle: string,
   completedLessons: string[]
-): Promise<number> {
-  const courseData = await getCourseData();
+): number {
   const section = courseData.find((s) => s.sectionTitle === sectionTitle);
   if (!section) return 0;
 

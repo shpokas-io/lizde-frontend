@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaArrowLeft, FaArrowRight, FaPlay } from "react-icons/fa";
 import { Lesson } from "@/types/course";
-import { getYouTubeThumbnail } from "@/utils/videoUtils";
+import { getYouTubeThumbnail, extractYouTubeVideoId } from "@/utils/videoUtils";
 
 interface LessonNavigationProps {
   prevLesson: Lesson | null;
@@ -49,7 +49,7 @@ export default function LessonNavigation({
           >
             <div className="relative">
               <Image
-                src={getYouTubeThumbnail(nextLesson.videoUrl)}
+                src={getYouTubeThumbnail(extractYouTubeVideoId(nextLesson.videoUrl)!)}
                 alt={nextLesson.title}
                 width={320}
                 height={180}

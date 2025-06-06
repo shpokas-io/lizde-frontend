@@ -1,32 +1,26 @@
 import { createClient } from '@/lib/supabase';
-import { AuthHeaders } from '@/types/api';
 
 export class AuthManager {
   private supabase = createClient();
 
-  async getAuthHeaders(): Promise<AuthHeaders> {
+  async getAuthHeaders(): Promise<Record<string, string>> {
     const { data: { session } } = await this.supabase.auth.getSession();
     
-    if (!session?.access_token) {
-      console.error('No authentication token available');
-      throw new Error('No authentication token available');
+    if (session?.access_token) {
+      return {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      };
     }
-
-    console.log('Auth token available, making authenticated request');
+    
     return {
-      'Authorization': `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
     };
   }
 
   async isAuthenticated(): Promise<boolean> {
-    try {
-      const { data: { session } } = await this.supabase.auth.getSession();
-      return !!session?.access_token;
-    } catch (error) {
-      console.error('Error checking authentication status:', error);
-      return false;
-    }
+    const { data: { session } } = await this.supabase.auth.getSession();
+    return !!session;
   }
 
   async getSession() {

@@ -43,8 +43,6 @@ export class HttpClient {
 
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        console.log(`Making ${method} request to: ${url} (attempt ${attempt + 1}/${retries + 1})`);
-
         const authHeaders = await authManager.getAuthHeaders();
         
         const requestOptions: RequestInit = {
@@ -57,30 +55,16 @@ export class HttpClient {
           ...restOptions,
         };
 
-        console.log('Request headers prepared:', { 
-          ...requestOptions.headers, 
-          Authorization: 'Bearer [REDACTED]' 
-        });
-
         const fetchPromise = fetch(url, requestOptions);
         const response = await this.withTimeout(fetchPromise, timeout);
 
-        console.log(`Response status: ${response.status} ${response.statusText}`);
-
         if (response.status === 401 && attempt < retries) {
-          console.log(`Got 401, retrying... (attempt ${attempt + 1}/${retries})`);
           await this.delay(this.config.retryDelay);
           continue;
         }
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error(`API request failed:`, {
-            status: response.status,
-            statusText: response.statusText,
-            url,
-            errorText
-          });
           throw this.createApiError(
             `API request failed: ${response.status} ${response.statusText}`,
             response
@@ -96,12 +80,10 @@ export class HttpClient {
           break;
         }
 
-        console.log(`Request failed, retrying... (attempt ${attempt + 1}/${retries})`);
         await this.delay(this.config.retryDelay);
       }
     }
 
-    console.error('API request error:', lastError);
     throw lastError || new Error('Request failed after all retries');
   }
 

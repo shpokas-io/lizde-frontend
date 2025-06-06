@@ -7,7 +7,6 @@ export class ApiService {
   async get<T = any>(endpoint: string, options?: ApiRequestOptions): Promise<T> {
     const response = await httpClient.get(endpoint, options);
     const data = await response.json();
-    console.log('API request successful, data received:', data);
     return data;
   }
 
@@ -31,14 +30,13 @@ export class ApiService {
     return response.json();
   }
 
-  async logout(): Promise<any> {
-    console.log('Making logout request');
-    return this.post('/auth/logout');
+  async logout(): Promise<void> {
+    await httpClient.post('/auth/logout');
   }
 
   async getSessionStatus(): Promise<any> {
-    console.log('Making session status request');
-    return this.post('/auth/session/status');
+    const response = await httpClient.get('/auth/session');
+    return response.json();
   }
 
   async isAuthenticated(): Promise<boolean> {

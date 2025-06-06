@@ -3,52 +3,106 @@ const STORAGE_KEYS = {
   LAST_ACCESSED: "lastAccessed",
 };
 
-function isLocalStorageAvailable(): boolean {
-  try {
-    const testKey = "__test__";
-    localStorage.setItem(testKey, testKey);
-    localStorage.removeItem(testKey);
-    return true;
-  } catch (e) {
-    console.warn("localStorage is not available:", e);
-    return false;
+class StorageService {
+  private isLocalStorageAvailable(): boolean {
+    try {
+      const test = '__localStorage_test__';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  get<T>(key: string, defaultValue?: T): T | null {
+    if (!this.isLocalStorageAvailable()) {
+      return defaultValue || null;
+    }
+
+    try {
+      const item = localStorage.getItem(key);
+      if (item === null) {
+        return defaultValue || null;
+      }
+      return JSON.parse(item);
+    } catch (error) {
+      return defaultValue || null;
+    }
+  }
+
+  set<T>(key: string, value: T): boolean {
+    if (!this.isLocalStorageAvailable()) {
+      return false;
+    }
+
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  remove(key: string): boolean {
+    if (!this.isLocalStorageAvailable()) {
+      return false;
+    }
+
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  clear(): boolean {
+    if (!this.isLocalStorageAvailable()) {
+      return false;
+    }
+
+    try {
+      localStorage.clear();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  has(key: string): boolean {
+    if (!this.isLocalStorageAvailable()) {
+      return false;
+    }
+
+    return localStorage.getItem(key) !== null;
+  }
+
+  keys(): string[] {
+    if (!this.isLocalStorageAvailable()) {
+      return [];
+    }
+
+    return Object.keys(localStorage);
+  }
+
+  size(): number {
+    if (!this.isLocalStorageAvailable()) {
+      return 0;
+    }
+
+    return localStorage.length;
   }
 }
 
-function safeGetItem<T>(key: string, defaultValue: T): T {
-  if (!isLocalStorageAvailable()) {
-    return defaultValue;
-  }
-
-  try {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : defaultValue;
-  } catch (error) {
-    console.error(`Error retrieving ${key} from localStorage:`, error);
-    return defaultValue;
-  }
-}
-
-function safeSetItem<T>(key: string, value: T): boolean {
-  if (!isLocalStorageAvailable()) {
-    return false;
-  }
-
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (error) {
-    console.error(`Error storing ${key} in localStorage:`, error);
-    return false;
-  }
-}
+export const storageService = new StorageService();
 
 export function getCompletedLessons(): string[] {
-  return safeGetItem<string[]>(STORAGE_KEYS.COMPLETED_LESSONS, []);
+  return storageService.get<string[]>(STORAGE_KEYS.COMPLETED_LESSONS) || [];
 }
 
 export function saveCompletedLessons(completedLessons: string[]): boolean {
-  return safeSetItem(STORAGE_KEYS.COMPLETED_LESSONS, completedLessons);
+  return storageService.set(STORAGE_KEYS.COMPLETED_LESSONS, completedLessons);
 }
 
 export function isLessonCompleted(
@@ -73,12 +127,12 @@ export function markLessonAsCompleted(
 
 export function saveLastAccessedLesson(slug: string): boolean {
   const now = new Date().toISOString();
-  return safeSetItem(STORAGE_KEYS.LAST_ACCESSED, { slug, timestamp: now });
+  return storageService.set(STORAGE_KEYS.LAST_ACCESSED, { slug, timestamp: now });
 }
 
 export function getLastAccessedLesson(): {
   slug: string;
   timestamp: string;
 } | null {
-  return safeGetItem(STORAGE_KEYS.LAST_ACCESSED, null);
+  return storageService.get(STORAGE_KEYS.LAST_ACCESSED, null);
 }

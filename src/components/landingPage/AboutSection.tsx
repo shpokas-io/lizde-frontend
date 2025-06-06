@@ -179,7 +179,7 @@ const AboutSection = () => {
                 Paprastais būdais įrašyti būgnus, gitaras ir kitus instrumentus
                 net namų sąlygomis.
               </li>
-              <li>Aiškiu takelių tvarkymu ir routing'u tavo DAW'e.</li>
+              <li>Aiškiu takelių tvarkymu ir routing&apos;u tavo DAW&apos;e.</li>
               <li>
                 Svarbiausiais garso apdorojimo įrankiais – EQ, kompresoriumi,
                 efektų siuntimais.

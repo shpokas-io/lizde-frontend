@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import {
-  getEmbedUrl,
-  isYouTubeUrl,
-  getYouTubeId,
+  createYouTubeEmbedUrl,
+  isValidYouTubeUrl,
+  extractYouTubeVideoId,
 } from "@/utils/videoUtils";
 
 interface VideoPlayerProps {
@@ -25,12 +25,12 @@ export default function VideoPlayer({
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    if (!isYouTubeUrl(videoUrl)) {
+    if (!isValidYouTubeUrl(videoUrl)) {
       setError(new Error("Unsupported video URL format"));
       setIsLoading(false);
       return;
     }
-    const videoId = getYouTubeId(videoUrl);
+    const videoId = extractYouTubeVideoId(videoUrl);
     if (!videoId) {
       setError(new Error("Invalid YouTube video URL"));
       setIsLoading(false);
@@ -61,12 +61,13 @@ export default function VideoPlayer({
   }
 
   // Render a simple YouTube iframe
+  const videoId = extractYouTubeVideoId(videoUrl);
   return (
     <div className={`relative w-full h-0 pb-[56.25%] overflow-hidden rounded-lg shadow-lg ${className}`}>
       <iframe
         id={playerId.current}
         className="absolute top-0 left-0 w-full h-full"
-        src={getEmbedUrl(videoUrl)}
+        src={createYouTubeEmbedUrl(videoId!)}
         title={title}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

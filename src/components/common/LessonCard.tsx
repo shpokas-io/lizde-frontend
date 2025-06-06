@@ -1,9 +1,9 @@
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Lesson } from "@/types/course";
+import { useState } from "react";
+import { getYouTubeThumbnail, isValidYouTubeUrl, extractYouTubeVideoId } from "@/utils/videoUtils";
 import { PlayIcon } from "@/components/icons/Index";
-import { getYouTubeThumbnail, isYouTubeUrl } from "@/utils/videoUtils";
 
 interface LessonCardProps {
   lesson: Lesson;
@@ -16,10 +16,14 @@ export default function LessonCard({
 }: LessonCardProps) {
   const [thumbnailError, setThumbnailError] = useState(false);
 
-  const thumbnailUrl =
-    !thumbnailError && isYouTubeUrl(lesson.videoUrl)
-      ? getYouTubeThumbnail(lesson.videoUrl, "hq")
-      : lesson.videoThumbnail || "/images/video-placeholder.jpg";
+  const handleThumbnailError = () => {
+    setThumbnailError(true);
+  };
+
+  const videoId = extractYouTubeVideoId(lesson.videoUrl);
+  const thumbnailUrl = videoId && !thumbnailError && isValidYouTubeUrl(lesson.videoUrl)
+    ? getYouTubeThumbnail(videoId, "high")
+    : "/images/default-thumbnail.jpg";
 
   return (
     <Link href={`/courses/${lesson.slug}`}>
@@ -33,7 +37,7 @@ export default function LessonCard({
             width={120}
             height={68}
             className="object-cover h-full w-full"
-            onError={() => setThumbnailError(true)}
+            onError={handleThumbnailError}
             priority={false}
           />
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">

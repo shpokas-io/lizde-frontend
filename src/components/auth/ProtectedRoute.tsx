@@ -1,7 +1,8 @@
 "use client";
 
-import { useAuthState } from "@/hooks/useAuthState";
-import { useRouter } from "next/navigation";
+import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from "react";
 
 interface ProtectedRouteProps {
@@ -9,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, loading } = useAuthState();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {

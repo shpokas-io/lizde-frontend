@@ -1,33 +1,26 @@
-import { ApiConfig } from '@/types/api';
+export interface ApiConfig {
+  baseUrl: string;
+  timeout: number;
+  maxRetries: number;
+  retryDelay: number;
+}
 
-const normalizeApiUrl = (url: string): string => {
-  if (!url.endsWith('/api')) {
-    const cleanUrl = url.replace(/\/$/, '');
-    return `${cleanUrl}/api`;
-  }
-  return url;
-};
-
-export const getApiConfig = (): ApiConfig => {
+const getBaseUrl = (): string => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
   if (!apiUrl) {
-    console.error('NEXT_PUBLIC_API_URL is not defined');
-    throw new Error('API URL is not configured');
+    throw new Error('NEXT_PUBLIC_API_URL environment variable is required');
   }
 
-  const normalizedUrl = normalizeApiUrl(apiUrl);
-  
-  if (normalizedUrl !== apiUrl) {
-    console.log('API URL corrected to include /api prefix:', normalizedUrl);
-  }
-
-  return {
-    baseUrl: normalizedUrl,
-    timeout: 30000, // 30 seconds
-    maxRetries: 2,
-    retryDelay: 1000, // 1 second
-  };
+  const normalizedUrl = apiUrl.endsWith('/api') ? apiUrl : `${apiUrl}/api`;
+  return normalizedUrl;
 };
 
-export const API_CONFIG = getApiConfig(); 
+export const API_CONFIG: ApiConfig = {
+  baseUrl: getBaseUrl(),
+  timeout: 30000,
+  maxRetries: 3,
+  retryDelay: 1000,
+};
+
+export const getApiConfig = (): ApiConfig => API_CONFIG; 

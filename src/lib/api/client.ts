@@ -1,75 +1,51 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+import { httpClient } from './http-client';
+import { ApiRequestOptions } from '@/types/api';
 
-export const apiClient = {
-  get: async (url: string, config?: any) => {
-    const response = await fetch(`${API_URL}${url}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers,
-      },
-      ...config,
-    });
-    return response;
-  },
-  post: async (url: string, data?: any, config?: any) => {
-    const response = await fetch(`${API_URL}${url}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers,
-      },
-      body: JSON.stringify(data),
-      ...config,
-    });
-    return response;
-  },
-  put: async (url: string, data?: any, config?: any) => {
-    const response = await fetch(`${API_URL}${url}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers,
-      },
-      body: JSON.stringify(data),
-      ...config,
-    });
-    return response;
-  },
-  delete: async (url: string, config?: any) => {
-    const response = await fetch(`${API_URL}${url}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers,
-      },
-      ...config,
-    });
-    return response;
-  },
-  interceptors: {
-    response: {
-      use: (onFulfilled?: any, onRejected?: any) => {
-        // This is a simplified implementation for compatibility
-        // You may need to implement proper interceptor logic based on your needs
-      }
+export class ApiClient {
+  async get<T = any>(endpoint: string, options?: ApiRequestOptions): Promise<T> {
+    try {
+      const response = await httpClient.get(endpoint, options);
+      return await response.json();
+    } catch (error) {
+      throw error;
     }
   }
-};
 
-// Create a wrapper to maintain axios-like interface
-const createClient = () => ({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Error handling interceptor
-apiClient.interceptors.response.use(
-  (response: any) => response,
-  (error: any) => {
-    console.error('API Error:', error);
-    return Promise.reject(error);
+  async post<T = any>(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<T> {
+    try {
+      const response = await httpClient.post(endpoint, data, options);
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
   }
-); 
+
+  async put<T = any>(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<T> {
+    try {
+      const response = await httpClient.put(endpoint, data, options);
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async delete<T = any>(endpoint: string, options?: ApiRequestOptions): Promise<T> {
+    try {
+      const response = await httpClient.delete(endpoint, options);
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async patch<T = any>(endpoint: string, data?: any, options?: ApiRequestOptions): Promise<T> {
+    try {
+      const response = await httpClient.patch(endpoint, data, options);
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+export const apiClient = new ApiClient(); 

@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuthState } from '@/hooks/useAuthState';
 import { validatePassword, validatePasswordMatch } from '@/utils/password-validation';
 
 function LoginForm() {
@@ -15,8 +14,7 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [passwordMatchError, setPasswordMatchError] = useState('');
-  const { signIn, signUp } = useAuth();
-  const { user, loading } = useAuthState();
+  const { signIn, signUp, user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -70,7 +68,7 @@ function LoginForm() {
         }
       }
     } catch (err) {
-      console.error('Unexpected error during authentication:', err);
+      // Error handling is done by the auth service
     } finally {
       setIsLoading(false);
     }

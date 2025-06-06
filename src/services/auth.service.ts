@@ -50,7 +50,7 @@ class AuthService {
       try {
         await apiService.logout()
       } catch (error) {
-        console.warn('Backend logout failed:', error)
+        // Backend logout failed, continue with client logout
       }
       
       this.clearStorageData()
@@ -60,7 +60,6 @@ class AuthService {
       
       this.notifyHandlers('SIGNED_OUT', null)
     } catch (error) {
-      console.error('Sign out error:', error)
       throw error
     }
   }
