@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
-import BackButton from "@/components/common/BackButton";
+import CoursesNavBar from "@/components/coursesPage/CoursesNavBar";
 import VideoPlayer from "@/components/coursesPage/VideoPlayer";
 import LessonNavigation from "@/components/coursesPage/LessonNavigation";
 import LessonMaterials from "@/components/coursesPage/LessonMaterials";
@@ -57,11 +57,7 @@ export default function LessonDetailPage() {
     return (
       <ProtectedRoute>
         <div className="bg-[#121212] min-h-screen text-gray-200">
-          <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
-            <div className="container mx-auto max-w-screen-lg px-4 py-4">
-              <BackButton href="/courses" label="Back to Courses Page" />
-            </div>
-          </div>
+          <CoursesNavBar backHref="/courses" backLabel="Back to Courses Page" />
           <div className="container mx-auto max-w-screen-lg px-4 py-8">
             <div className="mt-6 bg-[#1a1a1a] p-4 rounded-lg border border-red-500/50 text-red-400">
               <h2 className="text-lg font-medium mb-2">Error Loading Lesson</h2>
@@ -83,11 +79,7 @@ export default function LessonDetailPage() {
     return (
       <ProtectedRoute>
         <div className="bg-[#121212] min-h-screen text-gray-200">
-          <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
-            <div className="container mx-auto max-w-screen-lg px-4 py-4">
-              <BackButton href="/courses" label="Back to Courses Page" />
-            </div>
-          </div>
+          <CoursesNavBar backHref="/courses" backLabel="Back to Courses Page" />
           <div className="container mx-auto max-w-screen-lg px-4 py-8">
             <div className="mt-6 bg-[#1a1a1a] p-6 rounded-lg border border-gray-800 flex items-center justify-center">
               <div className="text-center py-12">
@@ -106,13 +98,7 @@ export default function LessonDetailPage() {
   return (
     <ProtectedRoute>
       <div className="bg-[#121212] min-h-screen text-gray-200">
-        <div className="sticky top-0 z-50 bg-[#1a1a1a]/80 backdrop-blur-md border-b border-gray-800/50">
-          <div className="container mx-auto max-w-screen-lg px-4 py-4">
-            <div className="flex items-center justify-between">
-              <BackButton href="/courses" label="Atgal" />
-            </div>
-          </div>
-        </div>
+        <CoursesNavBar backHref="/courses" backLabel="Atgal" />
 
         <div className="container mx-auto max-w-screen-lg px-4 py-8">
           <div className="mt-6 bg-[#1a1a1a] p-6 rounded-lg border border-gray-800 flex flex-col lg:flex-row gap-8">
