@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAuth";
 import { validatePassword } from "@/utils/password-validation";
@@ -20,6 +20,20 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const handlePasswordChange = (password: string) => {
     setNewPassword(password);
@@ -62,7 +76,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 min-h-screen">
       <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg shadow-lg w-full max-w-md">
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <h2 className="text-xl font-semibold text-gray-200">Keisti slaptažodį</h2>
