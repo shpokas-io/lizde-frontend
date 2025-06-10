@@ -30,7 +30,7 @@ export default function UserMenu() {
         <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
           <FaUser className="w-4 h-4 text-white" />
         </div>
-        <span className="text-gray-200 text-sm max-w-[120px] truncate">
+        <span className="text-gray-200 text-sm">
           {user.email}
         </span>
         <FaChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -41,7 +41,7 @@ export default function UserMenu() {
           <div className="p-2">
             <div className="px-3 py-2 border-b border-gray-800 mb-2">
               <p className="text-xs text-gray-500">Prisijungęs kaip</p>
-              <p className="text-sm text-gray-200 truncate">{user.email}</p>
+              <p className="text-sm text-gray-200">{user.email}</p>
             </div>
             <button
               onClick={signOut}
