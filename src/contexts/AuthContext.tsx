@@ -87,6 +87,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const updatePassword = async (newPassword: string): Promise<AuthResult> => {
+    setError(null)
+    const result = await authService.updatePassword(newPassword)
+    
+    if (result.error) {
+      setError(result.error.message)
+    }
+    
+    return result
+  }
+
+  const updateEmail = async (newEmail: string): Promise<AuthResult> => {
+    setError(null)
+    const result = await authService.updateEmail(newEmail)
+    
+    if (result.error) {
+      setError(result.error.message)
+    }
+    
+    return result
+  }
+
+  const deleteAccount = async (): Promise<AuthResult> => {
+    setError(null)
+    const result = await authService.deleteAccount()
+    
+    if (result.error) {
+      setError(result.error.message)
+    }
+    
+    return result
+  }
+
   const clearError = (): void => {
     setError(null)
   }
@@ -99,6 +132,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn,
       signUp,
       signOut,
+      updatePassword,
+      updateEmail,
+      deleteAccount,
       clearError,
     }}>
       {children}

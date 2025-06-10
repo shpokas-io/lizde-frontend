@@ -47,10 +47,54 @@ export function useAuth() {
     }
   }
 
+  const updatePassword = async (newPassword: string) => {
+    const result = await context.updatePassword(newPassword)
+    
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success('Slaptažodis sėkmingai pakeistas')
+    }
+    
+    return result
+  }
+
+  const updateEmail = async (newEmail: string) => {
+    const result = await context.updateEmail(newEmail)
+    
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success('El. pašto keitimo užklausa išsiųsta')
+    }
+    
+    return result
+  }
+
+  const deleteAccount = async () => {
+    const result = await context.deleteAccount()
+    
+    if (result.error) {
+      if (result.error.name === "NotImplementedError") {
+        toast.error("Paskyros trynimas šiuo metu negalimas. Susisiekite su administracija.")
+      } else {
+        toast.error(result.error.message)
+      }
+    } else {
+      toast.success('Paskyra sėkmingai ištrinta')
+      router.push('/login')
+    }
+    
+    return result
+  }
+
   return {
     ...context,
     signIn,
     signUp,
     signOut,
+    updatePassword,
+    updateEmail,
+    deleteAccount,
   }
 } 

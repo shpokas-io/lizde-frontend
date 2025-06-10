@@ -23,6 +23,9 @@ export interface AuthContextType extends AuthState {
   signIn: (credentials: AuthCredentials) => Promise<AuthResult>
   signUp: (credentials: RegisterCredentials) => Promise<AuthResult>
   signOut: () => Promise<void>
+  updatePassword: (newPassword: string) => Promise<AuthResult>
+  updateEmail: (newEmail: string) => Promise<AuthResult>
+  deleteAccount: () => Promise<AuthResult>
   clearError: () => void
 }
 

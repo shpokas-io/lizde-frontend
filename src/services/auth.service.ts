@@ -94,6 +94,53 @@ class AuthService {
     localStorage.clear();
     sessionStorage.clear();
   }
+
+  async updatePassword(newPassword: string): Promise<AuthResult> {
+    try {
+      const { error } = await this.supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) return { error };
+
+      return { error: null };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
+
+  async updateEmail(newEmail: string): Promise<AuthResult> {
+    try {
+      const { error } = await this.supabase.auth.updateUser({
+        email: newEmail
+      });
+
+      if (error) return { error };
+
+      return { error: null };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
+
+  async deleteAccount(): Promise<AuthResult> {
+    try {
+      // First sign out to clear session
+      await this.signOut();
+      
+      // Note: Supabase doesn't have a direct deleteUser method in the client
+      // This would typically require a server-side function or admin API call
+      // For now, we'll return an error indicating this needs backend implementation
+      return { 
+        error: { 
+          message: "Account deletion requires backend implementation",
+          name: "NotImplementedError"
+        } as AuthError 
+      };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
 }
 
 export const authService = new AuthService();
