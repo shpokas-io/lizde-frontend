@@ -16,7 +16,7 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
     <>
       {!isCoursePage && <NavBar />}
       <main>{children}</main>
-      <Footer />
+      {!isCoursePage && <Footer />}
     </>
   );
 };
