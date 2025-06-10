@@ -16,10 +16,11 @@ export default function CoursesNavBar({
 }: CoursesNavBarProps) {
   return (
     <div className="sticky top-0 z-50 bg-[#1a1a1a]/90 backdrop-blur-md border-b border-gray-800/50">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="relative w-[100px] h-[32px]">
+          {/* Left section - Logo and Back Button */}
+          <div className="flex items-center gap-3 sm:gap-6 min-w-0 flex-1">
+            <Link href="/" className="relative w-[80px] h-[26px] sm:w-[100px] sm:h-[32px] flex-shrink-0">
               <Image
                 src="/images/logo-white.png"
                 alt="Takadė Logo"
@@ -30,10 +31,26 @@ export default function CoursesNavBar({
               />
             </Link>
             {showBackButton && (
-              <BackButton href={backHref} label={backLabel} />
+              <div className="min-w-0">
+                <BackButton 
+                  href={backHref} 
+                  label={backLabel}
+                  className="hidden sm:inline-flex"
+                />
+                {/* Mobile back button - icon only */}
+                <BackButton 
+                  href={backHref} 
+                  label=""
+                  className="sm:hidden text-sm"
+                />
+              </div>
             )}
           </div>
-          <UserMenu />
+          
+          {/* Right section - User Menu */}
+          <div className="flex-shrink-0">
+            <UserMenu />
+          </div>
         </div>
       </div>
     </div>

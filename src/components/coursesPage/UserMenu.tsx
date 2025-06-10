@@ -37,15 +37,15 @@ export default function UserMenu() {
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#232323] hover:bg-[#2a2a2a] border border-gray-800 transition-colors"
+          className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg bg-[#232323] hover:bg-[#2a2a2a] border border-gray-800 transition-colors"
         >
-          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-            <FaUser className="w-4 h-4 text-white" />
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <FaUser className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
           </div>
-          <span className="text-gray-200 text-sm">
+          <span className="hidden sm:block text-gray-200 text-sm max-w-[120px] md:max-w-[200px] truncate">
             {user.email}
           </span>
-          <FaChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <FaChevronDown className={`w-3 h-3 text-gray-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isOpen && (
@@ -53,7 +53,7 @@ export default function UserMenu() {
             <div className="p-2">
               <div className="px-3 py-2 border-b border-gray-800 mb-2">
                 <p className="text-xs text-gray-500">Prisijungęs kaip</p>
-                <p className="text-sm text-gray-200">{user.email}</p>
+                <p className="text-sm text-gray-200 break-all">{user.email}</p>
               </div>
               
               <div className="space-y-1">
