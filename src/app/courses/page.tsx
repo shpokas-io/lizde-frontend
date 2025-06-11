@@ -16,12 +16,13 @@ export default function CoursesPage() {
   } = useCourse();
 
   useEffect(() => {
-    if (!courseLoading) {
-      // Prefetch the next few lessons for faster navigation
-      courseData.forEach((section) => {
-        section.lessons.forEach((lesson) => {
-          prefetchLesson(lesson.slug);
-        });
+    if (!courseLoading && courseData.length > 0) {
+      const firstFewLessons = courseData
+        .flatMap(section => section.lessons)
+        .slice(0, 3);
+      
+      firstFewLessons.forEach((lesson) => {
+        prefetchLesson(lesson.slug);
       });
     }
   }, [courseLoading, courseData]);

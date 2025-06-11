@@ -2,13 +2,19 @@ import { createClient } from '@/lib/supabase';
 
 export class AuthManager {
   private supabase = createClient();
+  private cachedSession: any = null;
+  private sessionExpiry: number = 0;
 
   async getAuthHeaders(): Promise<Record<string, string>> {
-    const { data: { session } } = await this.supabase.auth.getSession();
+    if (!this.cachedSession || Date.now() > this.sessionExpiry) {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      this.cachedSession = session;
+      this.sessionExpiry = Date.now() + (5 * 60 * 1000);
+    }
     
-    if (session?.access_token) {
+    if (this.cachedSession?.access_token) {
       return {
-        'Authorization': `Bearer ${session.access_token}`,
+        'Authorization': `Bearer ${this.cachedSession.access_token}`,
         'Content-Type': 'application/json',
       };
     }
@@ -19,8 +25,12 @@ export class AuthManager {
   }
 
   async isAuthenticated(): Promise<boolean> {
-    const { data: { session } } = await this.supabase.auth.getSession();
-    return !!session;
+    if (!this.cachedSession || Date.now() > this.sessionExpiry) {
+      const { data: { session } } = await this.supabase.auth.getSession();
+      this.cachedSession = session;
+      this.sessionExpiry = Date.now() + (5 * 60 * 1000);
+    }
+    return !!this.cachedSession;
   }
 
   async getSession() {
@@ -28,6 +38,8 @@ export class AuthManager {
   }
 
   async signOut() {
+    this.cachedSession = null;
+    this.sessionExpiry = 0;
     return this.supabase.auth.signOut();
   }
 }
